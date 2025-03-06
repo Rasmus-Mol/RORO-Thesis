@@ -1,0 +1,12 @@
+{
+    "name": "FINLANDIA",
+    "IMO": 9198721,
+    "lighship_weight": 5772.53,
+    "lightship_lcg": 71,
+    "lightship_tcg": -0.187,
+    "lightship_vcg": 8.729,
+    "beam": 20.60,
+    "height_of_shaft_above_BL": 2.6,
+    "propeller_diameter": 5.0,
+    "draft_min": 5.0
+}
