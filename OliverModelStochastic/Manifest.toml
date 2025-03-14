@@ -2,7 +2,7 @@
 
 julia_version = "1.11.3"
 manifest_format = "2.0"
-project_hash = "6244d387bacf63b84c92e7517367219168ba90b0"
+project_hash = "0cc77f539f91406e6081ecefa1b00a67cc35ed22"
 
 [[deps.Adapt]]
 deps = ["LinearAlgebra", "Requires"]
@@ -409,6 +409,18 @@ version = "1.3.14+1"
 git-tree-sha1 = "53bb909d1151e57e2484c3d1b53e19552b887fb2"
 uuid = "42e2da0e-8278-4e71-bc24-59509adca0fe"
 version = "1.0.2"
+
+[[deps.Gurobi]]
+deps = ["Gurobi_jll", "Libdl", "MathOptInterface", "PrecompileTools"]
+git-tree-sha1 = "0af671809e0cde0131a2f8607397197fd3648084"
+uuid = "2e9cd046-0924-5485-92f1-d5272153d98b"
+version = "1.7.0"
+
+[[deps.Gurobi_jll]]
+deps = ["Artifacts", "JLLWrappers", "Libdl"]
+git-tree-sha1 = "62862ec8309813a9f115e57996c36d5a2824ef87"
+uuid = "c018c7e6-a5b0-4aea-8f80-9c1ef9991411"
+version = "12.0.1"
 
 [[deps.HTTP]]
 deps = ["Base64", "CodecZlib", "ConcurrentUtilities", "Dates", "ExceptionUnwrapping", "Logging", "LoggingExtras", "MbedTLS", "NetworkOptions", "OpenSSL", "PrecompileTools", "Random", "SimpleBufferStream", "Sockets", "URIs", "UUIDs"]

@@ -8,6 +8,21 @@
     timestamp::DateTime = now()
 end
 
+# Generate StochasticStowageProblem
+@kwdef struct StochasticStowageProblem
+    # Core components
+    vessel::Vessel
+    slots::SlotCollection
+    cargo::CargoCollectionScenarios   
+    unknown_weights::Vector{Int64}
+    known_weights::Vector{Int64}
+    scenarios::Int64
+    probability::Vector{Float64}
+    # Problem metadata
+    name::String
+    timestamp::DateTime = now()
+end
+
 function load_data(vessel_name::String, instance_name::String, instance_type::String)
     # Load vessel data
     vessel = Vessel(vessel_name)
@@ -26,5 +41,23 @@ function load_data(vessel_name::String, instance_name::String, instance_type::St
         slots = slots,
         cargo = cargo,
         name = metadata.name
+    )
+end
+
+# Generates the stochastic problem
+# Generate CargoCollectionScenarios. s is number of scenarios, n is number of random cargos with weight changed
+# generate_method is a function that generates scenarios, default is generate_simple_cargo_scenarios
+function create_stochastic_problem(problem::StowageProblem, s::Int64,n::Int64, ids = nothing, generate_method::Function = generate_simple_cargo_scenarios)
+    ids = isnothing(ids) ? random_ids(problem.cargo,n) : ids # if ids are not given, generate random ids
+    cargo_scenarios, probability = generate_method(problem.cargo, s, ids)
+    return StochasticStowageProblem(
+        vessel = problem.vessel,
+        slots = problem.slots,
+        cargo = cargo_scenarios,
+        unknown_weights = sort(ids),
+        known_weights = sort(setdiff([i for i in 1:length(problem.cargo.items)],ids)),
+        scenarios = s,
+        probability = probability,
+        name = problem.name
     )
 end

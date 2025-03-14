@@ -3,6 +3,9 @@ using StowagePlanner
 using JuMP
 
 problem = load_data("finlandia", "no_cars_medium_100_haz_eq_0.1", "hazardous")
+n_cargo = length(problem.cargo.items)
+stochastic_problem = create_stochastic_problem(problem, 10, Int(floor(n_cargo/2)))
+
 
 model = create_model(problem)
 

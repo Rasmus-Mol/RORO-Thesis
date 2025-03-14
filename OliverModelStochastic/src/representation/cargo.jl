@@ -1,3 +1,4 @@
+
 @kwdef struct CargoTypeInfo
     id::Int
     name::String
@@ -15,12 +16,10 @@ const CARGO_TYPES = Dict(
 
 @enum CargoType Unknown Truck Car Machine Secu
 
-# Now has array of weights for each scenario
 @kwdef struct Cargo
     id::Int
     cargo_type_id::Int64
-    #weight::Float64  # tons
-    weight::Array{Float64, 1}
+    weight::Float64  # tons
     loading_port::Int64
     discharge_port::Int64
     priority::Int64 = 1
@@ -28,10 +27,7 @@ const CARGO_TYPES = Dict(
     requires_ventilation::Bool = false
     hazardous::Int = 0
     refers::Bool = false
-    # New
-    known_weight::Bool = true
 end
-
 
 # Update the get_type_info function to work with cargo_type_id instead of CargoType
 function get_type_info(cargo::Cargo)
@@ -68,22 +64,29 @@ function Base.show(io::IO, cargo::Cargo)
     print(io, "Cargo($(cargo.id), $(cargo.cargo_type_id), $(get_length(cargo))×$(get_width(cargo))×$(get_height(cargo))m, Hazardous: $(cargo.hazardous > 0 ? ", $(cargo.hazardous) ☣️, " : "None"), Refers: $(cargo.refers ? "Yes ❄️" : "No"))")
 end
 
-# total weight is now an array of weights for each scenario
 struct CargoCollection
     items::StructArray{Cargo}
-    #total_weight::Float64
-    total_weight::Array{Float64, 1}
+    total_weight::Float64
     cargo_types::Array{Int, 1}
-    # How many cargos have known weight
-    known_weights::Int64
     
     # Inner constructor to calculate total weight and unique cargo types
     function CargoCollection(items::Vector{Cargo})
-        struct_items = StructArray(items)'
-        known_weights = sum(struct_items.known_weight)
+        struct_items = StructArray(items)
         total_weight = sum(struct_items.weight)
         cargo_types = unique(item.cargo_type_id for item in items)
         new(struct_items, total_weight, cargo_types)
+    end
+end
+
+# A struct for each CargoCollection for each scenario
+struct CargoCollectionScenarios
+    items::StructArray{CargoCollection}
+    total_weights::Vector{Float64}
+    # constructor
+    function CargoCollectionScenarios(items::Vector{CargoCollection})
+        struct_items = StructArray(items)
+        total_weights = [item.total_weight for item in items]
+        new(struct_items, total_weights)
     end
 end
 
@@ -160,7 +163,8 @@ function Base.show(io::IO, ::MIME"text/plain", collection::CargoCollection)
     end
 end
 
-function generate_random_cargo(id::String)
+#function generate_random_cargo(id::String)
+function generate_random_cargo(id::Int)
     cargo_types = [Car, Truck, Machine, Secu]
     cargo_type = rand(cargo_types)
     type_info = CARGO_TYPES[string(cargo_type)]
@@ -195,7 +199,7 @@ function generate_random_cargo(id::String)
 end
 
 function generate_test_collection(n::Int)
-    cargos = [generate_random_cargo("CARGO_$(lpad(i,3,'0'))") for i in 1:n]
+    #cargos = [generate_random_cargo("CARGO_$(lpad(i,3,'0'))") for i in 1:n]
+    cargos = [generate_random_cargo(i) for i in 1:n]
     CargoCollection(cargos)
 end
-

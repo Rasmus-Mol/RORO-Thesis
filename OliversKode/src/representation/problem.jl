@@ -8,6 +8,17 @@
     timestamp::DateTime = now()
 end
 
+# Stochastic stowage problem
+@kwdef struct StochasticStowageProblem  
+    # Core components
+    vessel::Vessel
+    slots::SlotCollection
+    cargoscenarios::CargoCollectionScenarios 
+    # Problem metadata
+    name::String
+    timestamp::DateTime = now()
+end
+
 function load_data(vessel_name::String, instance_name::String, instance_type::String)
     # Load vessel data
     vessel = Vessel(vessel_name)

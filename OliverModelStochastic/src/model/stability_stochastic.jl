@@ -2,7 +2,6 @@
 function calculate_vcg_slopes(vessel::Vessel)
 	n_tanks = length(vessel.ballast_tanks)
 	slopes = zeros(n_tanks)
-
 	for tank_idx in 1:n_tanks
 		# Get tank properties
 		tank = vessel.ballast_tanks[tank_idx]
@@ -11,8 +10,10 @@ function calculate_vcg_slopes(vessel::Vessel)
 	end
 	return slopes
 end
+
 # Rasmus: Add stability constraints to the model
-function add_stability!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo, tcg_cargo, vcg_cargo)
+# pos_weight_cargo, lcg_cargo, tcg_cargo, vcg_cargo are scenario dependent
+function add_stability_stochastic!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo, tcg_cargo, vcg_cargo, scenarios)
 	vcg_slope = calculate_vcg_slopes(vessel)
 
 	n_positions = length(vessel.frame_positions)
@@ -45,21 +46,23 @@ function add_stability!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo, tcg_
 	# Rasmus: Find the weight of the ship at each frame section and add a 0 at the beginning of the array
 	ship_position_weight = prepend!(diff([f.lightship_weight_cumulative for f in vessel.frame_positions]), 0.0)
 
-	@variable(model, ballast_volume[1:n_ballast_tanks] >= 0)  # Ballast volumes
-	@variable(model, cumulative_weight[1:n_positions] >= 0)
+	@variable(model, ballast_volume[1:n_ballast_tanks,1:scenarios] >= 0)  # Ballast volumes
+	@variable(model, cumulative_weight[1:n_positions,1:scenarios] >= 0)
+	# Unsure if z should be two-stage or first-stage
 	@variable(model, z_min[draft_index_min:draft_index_max], Bin)
 	@variable(model, z_max[draft_index_min:draft_index_max], Bin)
 
 	# Force variables
+	# Unsure if they should be two-stage or first-stage
 	@variable(model, buoyancy[1:n_positions])
-	@variable(model, shear[1:n_positions])
-	@variable(model, bending[1:n_positions])
+	@variable(model, shear[1:n_positions,1:scenarios])
+	@variable(model, bending[1:n_positions,1:scenarios])
 
 	# Ballast water constraints. Constraint (9)
 	@constraint(
 		model,
-		[t = 1:n_ballast_tanks],
-		ballast_volume[t] <= vessel.ballast_tanks[t].max_vol * ρ
+		[t = 1:n_ballast_tanks,sc=1:scenarios],
+		ballast_volume[t,sc] <= vessel.ballast_tanks[t].max_vol * ρ
 	)
 
 	# Draft index constraints. Constraint (3), (4), (5)
@@ -68,8 +71,8 @@ function add_stability!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo, tcg_
 	@constraint(model, [b = draft_index_min:draft_index_max-1], z_min[b] - z_max[b+1] == 0)
 
 	# Calculate ballast tank weights per position. Constraint (10)
-	@expression(model, pos_weight_tank[p = 1:n_positions],
-    sum(ballast_volume[t] * vessel.ballast_tank_frame_overlap[t, p]
+	@expression(model, pos_weight_tank[p = 1:n_positions, sc = 1:scenarios],
+    sum(ballast_volume[t,sc] * vessel.ballast_tank_frame_overlap[t, p]
         for t in 1:n_ballast_tanks)
 	)
 
@@ -78,23 +81,23 @@ function add_stability!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo, tcg_
 			for t in 1:length(vessel.deadweight_tanks))
 	)
 	# Modify the total weight calculation to include deadweight tanks. Constraint (1)
-	@constraint(model, [p = 1:n_positions],
-		cumulative_weight[p] == (p == 1 ? 0 : cumulative_weight[p-1]) +
-								pos_weight_cargo[p] +
-								pos_weight_tank[p] +
+	@constraint(model, [p = 1:n_positions, sc = 1:scenarios],
+		cumulative_weight[p,sc] == (p == 1 ? 0 : cumulative_weight[p-1,sc]) +
+								pos_weight_cargo[p,sc] +
+								pos_weight_tank[p,sc] +
 								pos_weight_deadweight[p] +  # Add this line
 								ship_position_weight[p]
 	)
 
 	# Draft constraints. Constraint (6)
-	@constraint(model, dis_min,
+	@constraint(model, dis_min[sc = 1:scenarios],
 		sum(displacement[b] * z_min[b] for b in draft_index_min:draft_index_max) - 
-		cumulative_weight[end] <= 0
+		cumulative_weight[end,sc] <= 0
 	)
 	# Constraint (7)
-	@constraint(model, dis_max,
+	@constraint(model, dis_max[sc = 1:scenarios],
 		sum(displacement[b] * z_max[b] for b in draft_index_min:draft_index_max) - 
-		cumulative_weight[end] >= 0
+		cumulative_weight[end,sc] >= 0
 	)
 
 	# Buoyancy calculations using vessel's buoyancy matrix
@@ -106,92 +109,93 @@ function add_stability!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo, tcg_
 	# # Force relationships
 	@constraint(model, buoyancy .== buoyancy_interpolated)
 
-	# Constraint (17)
+	# Constraint (17) - Different than in article???
 	@constraint(model, shear .== cumulative_weight .- buoyancy)
 
 	# @constraint(model, -100 <= sum(shear[i] * frame_length[i] for i in 1:n_positions-1) <= 100)
 
-	@constraint(model, bending[1] == 0)
-	@constraint(model, bending[end] == 0)
+	@constraint(model,[sc = 1:scenarios], bending[1,sc] == 0)
+	@constraint(model,[sc = 1:scenarios], bending[end,sc] == 0)
 	# Constraint (19). 
 	# Rasmus: Index for frame i i-1, because of the diff() function to calculate frame_length
-	@constraint(model, [i = 2:n_positions],
-		bending[i] == bending[i-1] + (shear[i] + shear[i-1]) / 2 * frame_length[i-1]
+	@constraint(model, [i = 2:n_positions, sc = 1:scenarios],
+		bending[i] == bending[i-1,sc] + (shear[i,sc] + shear[i-1,sc]) / 2 * frame_length[i-1]
 	)
-
 	stress_positions = [s.position for s in stress_limits]
 	# Find the corresponding frame indices for these positions
 	stress_frame_indices = [findmin(abs.(frame_positions .- pos))[2] for pos in stress_positions]
 
 	# Stress limits. Constraint (18), (20)
-	@constraint(model, [i in 1:length(stress_limits)],
-		shear[stress_frame_indices[i]] >= shear_min[i])
-	@constraint(model, [i in 1:length(stress_limits)],
-		shear[stress_frame_indices[i]] <= shear_max[i])
-	@constraint(model, [i in 1:length(stress_limits)],
-		bending[stress_frame_indices[i]] <= bending_max[i])
+	@constraint(model, [i in 1:length(stress_limits),sc = 1:scenarios],
+		shear[stress_frame_indices[i],sc] >= shear_min[i])
+	@constraint(model, [i in 1:length(stress_limits),sc = 1:scenarios],
+		shear[stress_frame_indices[i],sc] <= shear_max[i])
+	@constraint(model, [i in 1:length(stress_limits),sc = 1:scenarios],
+		bending[stress_frame_indices[i],sc] <= bending_max[i])
+
+# NÅET HER TIL MED MODELLEN
 
 	# # Center of gravity constraints.
-	@expression(model, lcg_ballast,
-		sum(vessel.ballast_tanks[t].lcg * ballast_volume[t] for t in 1:n_ballast_tanks)
+	@expression(model, lcg_ballast[sc = 1:scenarios],
+		sum(vessel.ballast_tanks[t].lcg * ballast_volume[t,sc] for t in 1:n_ballast_tanks)
 	)
 	@expression(model, lcg_deadweight,
     sum(vessel.deadweight_tanks[t].lcg * vessel.deadweight_tanks[t].weight 
         for t in 1:length(vessel.deadweight_tanks))
 	)
 	# Left-hand side of constraint (11) & (12)
-	@expression(model, lcg_total,
-    	lcg_cargo + lcg_ballast + lcg_deadweight + 
+	@expression(model, lcg_total[sc = 1:scenarios],
+    	lcg_cargo[sc] + lcg_ballast[sc] + lcg_deadweight + 
     vessel.lightship_lcg * vessel.lighship_weight
 	)
 	# Constraint (11)
-	@constraint(model, lcg_max,
-		lcg_total <= sum(lcb[b] * displacement[b] * z_max[b]
+	@constraint(model, lcg_max[sc = 1:scenarios],
+		lcg_total[sc] <= sum(lcb[b] * displacement[b] * z_max[b]
 						 for b in draft_index_min:draft_index_max)
 	)
 	# Constraint (12)
-	@constraint(model, lcg_min,
-		lcg_total >= sum(lcb[b] * displacement[b] * z_min[b]
+	@constraint(model, lcg_min[sc = 1:scenarios],
+		lcg_total[sc] >= sum(lcb[b] * displacement[b] * z_min[b]
 						 for b in draft_index_min:draft_index_max)
 	)
 	# Left-hand side of constraint (13) & (14)
-	@expression(model, tcg_ballast,
-		sum(vessel.ballast_tanks[t].tcg * ballast_volume[t] for t in 1:n_ballast_tanks)
+	@expression(model, tcg_ballast[sc = 1:scenarios],
+		sum(vessel.ballast_tanks[t].tcg * ballast_volume[t,sc] for t in 1:n_ballast_tanks)
 	)
 	@expression(model, tcg_deadweight,
     sum(vessel.deadweight_tanks[t].tcg * vessel.deadweight_tanks[t].weight 
         for t in 1:length(vessel.deadweight_tanks))
 	)
-	@expression(model, tcg_total,
-		tcg_cargo + tcg_ballast + tcg_deadweight + 
+	@expression(model, tcg_total[sc = 1:scenarios],
+		tcg_cargo[sc] + tcg_ballast[sc] + tcg_deadweight + 
 		vessel.lightship_tcg * vessel.lighship_weight
 	)
 	# Constraint (13)
-	@constraint(model, tcg_max,
-		tcg_total <= TCGmax * cumulative_weight[end]
+	@constraint(model, tcg_max[sc = 1:scenarios],
+		tcg_total[sc] <= TCGmax * cumulative_weight[end]
 	)
 	# Constraint (14)
-	@constraint(model, tcg_min,
-		tcg_total >= TCGmin * cumulative_weight[end]
+	@constraint(model, tcg_min[sc = 1:scenarios],
+		tcg_total[sc] >= TCGmin * cumulative_weight[end]
 	)
 	# Some of the left-hand side of constraint (15) & (16)
-	# Rasmus: vcg_slope is m_{hat}^{V,T} in paper?
-	@expression(model, vcg_ballast,
-		sum(vcg_slope[t] * ballast_volume[t] for t in 1:n_ballast_tanks)
+	# Rasmus: vcg_slope relates to m_{hat}^{V,T} in the paper
+	@expression(model, vcg_ballast[sc = 1:scenarios],
+		sum(vcg_slope[t] * ballast_volume[t,sc] for t in 1:n_ballast_tanks)
 	)
 	@expression(model, vcg_deadweight,
     	sum(vessel.deadweight_tanks[t].vcg * vessel.deadweight_tanks[t].weight 
         for t in 1:length(vessel.deadweight_tanks))
 	)
-	@expression(model, vcg_total,
-		vcg_cargo + vcg_ballast + vcg_deadweight + 
+	@expression(model, vcg_total[sc = 1:scenarios],
+		vcg_cargo[sc] + vcg_ballast[sc] + vcg_deadweight + 
 		vessel.lightship_vcg * vessel.lightship_vcg
 	)
 
 	# # Metacentric height constraint. Constraint (15)
-	@constraint(model, metacentric_height,
+	@constraint(model, metacentric_height[sc = 1:scenarios],
 		sum(gm[b] * displacement[b] * z_min[b] for b in draft_index_min:draft_index_max) <=
-		sum(metacenter[b] * displacement[b] * z_max[b] for b in draft_index_min:draft_index_max) - vcg_total
+		sum(metacenter[b] * displacement[b] * z_max[b] for b in draft_index_min:draft_index_max) - vcg_total[sc]
 	)
 
 	# KG constraint
@@ -199,8 +203,8 @@ function add_stability!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo, tcg_
 		sum(kg[b] * displacement[b] * z_min[b] for b in draft_index_min:draft_index_max)
 	)
 	# Constraint (16)
-	@constraint(model, kg_constraint,
-		kg_min_total >= vcg_total
+	@constraint(model, kg_constraint[sc = 1:scenarios],
+		kg_min_total >= vcg_total[sc]
 	)
 
 	return model
