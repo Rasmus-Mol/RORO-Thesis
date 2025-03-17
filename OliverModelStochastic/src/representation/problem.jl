@@ -47,9 +47,9 @@ end
 # Generates the stochastic problem
 # Generate CargoCollectionScenarios. s is number of scenarios, n is number of random cargos with weight changed
 # generate_method is a function that generates scenarios, default is generate_simple_cargo_scenarios
-function create_stochastic_problem(problem::StowageProblem, s::Int64,n::Int64, ids = nothing, generate_method::Function = generate_simple_cargo_scenarios)
-    ids = isnothing(ids) ? random_ids(problem.cargo,n) : ids # if ids are not given, generate random ids
-    cargo_scenarios, probability = generate_method(problem.cargo, s, ids)
+function create_stochastic_problem(problem::StowageProblem, s::Int64,n::Int64, ids = [], generate_method::Function = generate_simple_cargo_scenarios)
+    ids = ids == [] ? random_ids(problem.cargo,n) : ids # if ids are not given, generate random ids
+    cargo_scenarios, probability = generate_method(problem, s, ids)
     return StochasticStowageProblem(
         vessel = problem.vessel,
         slots = problem.slots,

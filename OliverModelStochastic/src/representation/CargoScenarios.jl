@@ -45,9 +45,10 @@ function random_weight_CarcoCollection(cargoC::CargoCollection,ids)
         return CargoCollection(new_cargoC) # return new CargoCollection with some weights changed
 end
 # Generate CargoCollectionScenarios. s is number of scenarios
-function generate_simple_cargo_scenarios(cargoC::CargoCollection,s::Int64, ids)
+function generate_simple_cargo_scenarios(problem::StowageProblem,s::Int64, ids)
         cargo_scenarios = Vector{CargoCollection}() # array with CargoCollections 
         probability = fill(1/s,s) # equal probability for each scenario
+        cargoC = problem.cargo
         for i in 1:s
                 push!(cargo_scenarios,random_weight_CarcoCollection(cargoC,ids))
         end
@@ -58,21 +59,63 @@ end
 
 # Finds mean and variance of each cargo type
 function mean_var_car(problem::StowageProblem)
-        cargo1 = filter(x -> x.id == 1,problem.cargo.items) # find cargo fo type 1
-        cargo2 = filter(x -> x.id == 2,problem.cargo.items) # find cargo fo type 2
-        cargo3 = filter(x -> x.id == 3,problem.cargo.items) # find cargo fo type 3
-        cargo4 = filter(x -> x.id == 4,problem.cargo.items) # find cargo fo type 4
-        weight1 = [cargo.weight for cargo in cargo1] # get weights
-        weight2 = [cargo.weight for cargo in cargo2]
-        weight3 = [cargo.weight for cargo in cargo3]
-        weight4 = [cargo.weight for cargo in cargo4]
-        means = [mean(weight1),mean(weight2),mean(weight3),mean(weight4)] # calculate mean
-        variances = [var(weight1),var(weight2),var(weight3),var(weight4)] # calculate variance
+        # Get weights for each type car
+        weight1 = [cargo.weight for cargo in filter(x -> x.cargo_type_id == 1,problem.cargo.items)] 
+        weight2 = [cargo.weight for cargo in filter(x -> x.cargo_type_id == 2,problem.cargo.items)] 
+        weight3 = [cargo.weight for cargo in filter(x -> x.cargo_type_id == 3,problem.cargo.items)] 
+        weight4 = [cargo.weight for cargo in filter(x -> x.cargo_type_id == 4,problem.cargo.items)] 
+        weights = [weight1,weight2,weight3,weight4]
+        means = []
+        variances = []
+        for w in weights  # 4 types of cargo 
+                if length(w)>0
+                        push!(means,mean(w)) # calculate mean
+                        push!(variances,var(w)) # calculate variance
+                else
+                        push!(means,-1)
+                        push!(variances,-1)
+                end
+        end
         return means,variances
 end
-# Monto Carlo sampling for cargo weights. Weight for each cargo is assumed normal distributed
-function Monto_Carlo_sampling()
+# Monto Carlo sampling for cargo weights. Weight for each cargo type is assumed normal distributed
+function Monto_Carlo_sampling(problem::StowageProblem,sc::Int64,ids)
+        means,variances = mean_var_car(problem) # get means and variances
+        # Normal distributions for each cargo type
+        distributions = []
+        for i in 1:4
+                if means[i] != -1 # -1 indicates that there is no cargo of that type
+                        push!(distributions,Normal(means[i],sqrt(variances[i])))
+                else
+                        push!(distributions,-1)
+                end
+        end
+        n_items = length(problem.cargo.items) # number of cargos
+        #sample_weight = 0
+        cargo_scenarios = Vector{CargoCollection}() # array with CargoCollections
 
+        for i in 1:sc # number of scenarios to generate
+                new_cargoC = Vector{Cargo}() # new CargoCollection
+                for j in 1:n_items
+                        current_cargo = problem.cargo.items[j]
+                        if j in ids # generate random weight
+                                sample_weight = rand(distributions[problem.cargo.items[j].cargo_type_id]) # generate random weight
+                                push!(new_cargoC,Cargo(id = current_cargo.id,
+                                cargo_type_id = current_cargo.cargo_type_id,
+                                weight = sample_weight,
+                                loading_port = current_cargo.loading_port,
+                                discharge_port = current_cargo.discharge_port,
+                                priority = current_cargo.priority,
+                                requires_lashing = current_cargo.requires_lashing,
+                                requires_ventilation = current_cargo.requires_ventilation,
+                                hazardous = current_cargo.hazardous,refers = current_cargo.refers))
+                        else
+                                push!(new_cargoC,current_cargo) # copy cargo
+                        end
+                end
+                push!(cargo_scenarios,CargoCollection(new_cargoC)) # add new CargoCollection to array
+        end
+        return CargoCollectionScenarios(cargo_scenarios), fill(1/sc,sc) # return CargoCollectionScenarios
 end
 
 # Needs to return CargoCollectionScenarios() and probability
