@@ -126,4 +126,47 @@ savefig("Results_Plots/ballastdif_gen_sc_$(sc)_n_c_un_$(n_c_un).png")
 plot(1:repetitions, [fitted_sol.ballast_weight-solution_det.ballast_weight for fitted_sol in fitted_sol_monte], label="Monte Carlo scenario", xlabel="Repetitions", ylabel="Ballast weight (t)", title="Difference in ballast weight,\n scenarios: $sc, unknown weight: $n_c_un")
 savefig("Results_Plots/ballastdif_monte_sc_$(sc)_n_c_un_$(n_c_un).png")
 
+# Total cargo weight
+for i in 1:repetitions
+    plot(1:sc, [item.total_weight-problem_det.cargo.total_weight for item in problems_gen[i].cargo.items], 
+    label="Repetition $i", xlabel="Scenarios", ylabel="Total cargo weight difference (t)", 
+    title="Total cargo weight difference,\n scenarios: $sc, unknown weight: $n_c_un, rep: $i")
+    for j in 1:sc
+        temp = problems_gen[i].cargo.items[j].total_weight-problem_det.cargo.total_weight
+        annotate!(j, temp+20 , text(round(temp,digits = 1),7))
+    end
+    savefig("Results_Plots/totalweightdiff_gen_sc_$(sc)_n_c_un_$(n_c_un)_rep_$(i).png")
+
+    plot(1:sc, [item.total_weight-problem_det.cargo.total_weight for item in problems_monte[i].cargo.items], 
+    label="Repetition $i", xlabel="Scenarios", ylabel="Total cargo weight difference (t)", 
+    title="Total cargo weight difference,\n scenarios: $sc, unknown weight: $n_c_un, rep: $i")
+    for j in 1:sc
+        temp = problems_monte[i].cargo.items[j].total_weight-problem_det.cargo.total_weight
+        annotate!(j, temp+10 , text(round(temp,digits = 1),7))
+    end
+    savefig("Results_Plots/totalweightdiff_monte_sc_$(sc)_n_c_un_$(n_c_un)_rep_$(i).png")
+end
+# all repetitions in same plot
+for i in 1:repetitions
+    if i == 1
+        p = plot(1:sc, [item.total_weight-problem_det.cargo.total_weight for item in problems_gen[i].cargo.items],
+        label="Repetition $i", xlabel="Scenarios", ylabel="Total argo weight difference (t)", 
+    title="Total cargo weight difference,\n scenarios: $sc, unknown weight: $n_c_un")
+    else
+        plot!(1:sc, [item.total_weight-problem_det.cargo.total_weight for item in problems_gen[i].cargo.items],label="Repetition $i")
+    end
+end
+savefig("Results_Plots/totalweightdiffAll_gen_sc_$(sc)_n_c_un_$(n_c_un).png")
+for i in 1:repetitions
+    if i == 1
+        p = plot(1:sc, [item.total_weight-problem_det.cargo.total_weight for item in problems_monte[i].cargo.items],
+        label="Repetition $i", xlabel="Scenarios", ylabel="Total argo weight difference (t)", 
+    title="Total cargo weight difference,\n scenarios: $sc, unknown weight: $n_c_un")
+    else
+        plot!(1:sc, [item.total_weight-problem_det.cargo.total_weight for item in problems_monte[i].cargo.items],label="Repetition $i")
+    end
+end
+savefig("Results_Plots/totalweightdiffAll_monte_sc_$(sc)_n_c_un_$(n_c_un).png")
+
+
 
