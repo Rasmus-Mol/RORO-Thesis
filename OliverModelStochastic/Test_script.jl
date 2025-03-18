@@ -46,7 +46,7 @@ include("src/plots/weight_plots.jl")
 plots_gen = plot_cargo_weights(stochastic_problem1,[1,2,3]) # plot for multiple scenarios
 plots_monte = plot_cargo_weights(stochastic_problem2,[1,2,3])
 for i in 1:length(plots_gen)
-    display(plots_plots_gen[i])
+    display(plots_gen[i])
 end
 OG_plot = plot_cargo_OG(problem) # plot for original problem
 display(OG_plot[1])
@@ -97,7 +97,7 @@ include("src/solution.jl")
 solution_stochastic1 = extract_stochastic_solution(stochastic_problem1, model_stochastic1)
 solution_stochastic2 = extract_stochastic_solution(stochastic_problem2, model_stochastic2)
 solution_deterministic = extract_solution(problem, model_deterministic)
-
+println("-----------------------------------")
 println("Stochastic model time, default scenarios: ", solution_stochastic1.time)
 println("Stochastic model cargo loaded, default scenarios: ", solution_stochastic1.n_cargo_loaded)
 println("Stochastic model status, default scenarios: ", solution_stochastic1.status)
@@ -107,7 +107,7 @@ println("Stochastic model status, Monte Carlo scenarios: ", solution_stochastic2
 println("Deterministic model time: ", solution_deterministic.time)
 println("Deterministic model cargo loaded: ", solution_deterministic.n_cargo_loaded)
 println("Deterministic model status: ", solution_deterministic.status)
-
+println("-----------------------------------")
 # Get solution, when knowing all cargo weights
 include("src/model/second_stage_model.jl")
 cs_gen = solution_stochastic1.cs
@@ -123,6 +123,7 @@ optimize!(new_model_monte)
 fitted_solution_gen = get_solution_second_stage(problem, new_model_gen, solution_stochastic1)
 fitted_solution_monte = get_solution_second_stage(problem, new_model_monte, solution_stochastic2)
 # Do something with this information
+println("-----------------------------------")
 println("Second stage model cargo loaded, Gen: ", fitted_solution_gen.n_cargo_loaded)
 println("Second stage model ballast weight, Gen: ", fitted_solution_gen.ballast_weight)
 println("Second stage model cargo weight, Gen: ", fitted_solution_gen.cargo_weight)
@@ -130,7 +131,7 @@ println("Second stage model cargo weight, Gen: ", fitted_solution_gen.cargo_weig
 println("Second stage model cargo loaded, Monte: ", fitted_solution_monte.n_cargo_loaded)
 println("Second stage model ballast weight, Monte: ", fitted_solution_monte.ballast_weight)
 println("Second stage model cargo weight, Monte: ", fitted_solution_monte.cargo_weight)
-
+println("-----------------------------------")
 # only works ids is numerated from 1
 weight_diff = 0
 for i in 1:length(problem.cargo)
@@ -144,13 +145,14 @@ for i in 1:length(problem.cargo)
 end
 println("Total weight difference: ", weight_diff)
 println("Check: ", fitted_solution_gen.cargo_weight - fitted_solution_monte.cargo_weight)
-
+println("-----------------------------------")
 
 
 # Plot solution
 include("src/plots/solution.jl")
 plot_solution(solution_deterministic)
 plot_solution_stochastic(solution_stochastic1,1)
+plot_solution_stochastic(solution_stochastic2,1)
 
 # Compare / print
 include("src/CompareSolutions.jl")
