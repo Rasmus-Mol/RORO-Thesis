@@ -5,7 +5,6 @@ function random_ids(cargo::CargoCollection,n)
         ids = cargo.items.id
         return sample(ids,n,replace = false)
 end
-
 # Random weight depending on type. Range is from cargo.jl
 function random_weight(type)
         Rweight = 0
@@ -57,6 +56,9 @@ end
 
 ###########################
 
+
+#########
+# Outdated sampling - do not use
 # Finds mean and variance of each cargo type
 function mean_var_car(problem::StowageProblem)
         # Get weights for each type car
@@ -117,6 +119,7 @@ function Monto_Carlo_sampling(problem::StowageProblem,sc::Int64,ids)
         end
         return CargoCollectionScenarios(cargo_scenarios), fill(1/sc,sc) # return CargoCollectionScenarios
 end
+############3 
 
 # Needs to return CargoCollectionScenarios() and probability
 

@@ -2,10 +2,18 @@
 
 # Save problem
 # Save 1 cargo collection
-function write_problem(problem::StowageProblem,filename::String)
+function write_problem(problem::StowageProblem,foldername::String,filename::String)
+    # Creates folder for results
+    if !isdir("Results/"*foldername)
+        mkdir("Results/"*foldername)
+    end
     cargo = [i for i in problem.cargo]
-    open(joinpath("Results",filename*".json"), "w") do file
+    open(joinpath("Results",foldername,filename*".json"), "w") do file
         JSON.print(file, cargo, 4)  # Pretty-print with indentation
+    end
+    info = [problem.name,problem.timestamp]
+    open(joinpath("Results",foldername,filename*"_info"*".json"), "w") do file
+        JSON.print(file, info, 4)  # Pretty-print with indentation
     end
 end
 # Saves the cargo collection of a stochastic problem
@@ -21,7 +29,7 @@ function write_problem_stochastic(problem::StochasticStowageProblem,foldername::
         end
     end
     info = [problem.name,problem.unknown_weights,problem.known_weights,problem.scenarios,problem.probability,problem.timestamp]
-    open(joinpath("Results",foldername,filename*"_other_info"*".json"), "w") do file
+    open(joinpath("Results",foldername,filename*"_info"*".json"), "w") do file
         JSON.print(file, info, 4)  
     end
 end
@@ -73,9 +81,31 @@ end
 
 
 # Get data back from JSON files
+# Returns deterministic problem
+function get_deterministic_problem(foldername::String,filename::String,problemname1,problemname2,problemname3)
+    open(joinpath("Results",foldername,filename*".json"), "r") do file
+        cargo = JSON3.read(read(file, String), Vector{Cargo})
+        open
+        # load ship data
+        problem = load_data(problemname1, problemname2, problemname3)
+        open(joinpath("Results",foldername,filename*"_info"*".json"), "r") do file
+            info = JSON3.read(read(file, String), Vector{Any})
+            name = info[1]
+            timestamp = info[2]
+            det_pro = StowageProblem(
+                vessel = problem.vessel,
+                slots = problem.slots,
+                cargo = CargoCollection(cargo),
+                name = name,
+                timestamp = DateTime(timestamp)
+            )
+            return det_pro
+        end
+    end
+end
 # Returns stochastic problem
 function get_stochastic_problem(foldername::String,filename::String,problemname1,problemname2,problemname3)
-    open(joinpath("Results",foldername,filename*"_other_info"*".json"), "r") do file
+    open(joinpath("Results",foldername,filename*"_info"*".json"), "r") do file
         info = JSON3.read(read(file, String), Vector{Any})
         name = info[1]
         unknown_weights = info[2]

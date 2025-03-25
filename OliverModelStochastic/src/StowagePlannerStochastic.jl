@@ -44,6 +44,7 @@ include("CompareSolutions.jl")
 include("plots/weight_plots.jl")
 include("representation/CargoScenarios.jl")
 include("model/second_stage_model.jl")
+include("utils/SaveData.jl")
 
 #include("loadmaster/types.jl")
 #include("loadmaster/api.jl")
@@ -65,6 +66,10 @@ export StochasticStowageProblem, SolutionStochastic
 export plot_cargo_weights, plot_cargo_OG
 # EVP
 export expected_value_problem
+# Save data to JSON files
+export write_problem, write_problem_stochastic, write_solution, write_solution_stochastic
+# Get data from JSON files
+export get_deterministic_problem, get_stochastic_problem, get_solution_deterministic, get_solution_stochastic
 
 # Functions to connect to LoadMaster
 #export LoadMaster, getcurrentvessel, resetvessel, upload_solution, getresults, parse_result, uri, headers, struct_to_json
