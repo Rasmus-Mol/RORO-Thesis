@@ -49,12 +49,12 @@ function add_stability_stochastic!(vessel::Vessel, model, pos_weight_cargo, lcg_
 	@variable(model, ballast_volume[1:n_ballast_tanks,1:scenarios] >= 0)  # Ballast volumes
 	@variable(model, cumulative_weight[1:n_positions,1:scenarios] >= 0)
 	# Unsure if z should be two-stage or first-stage
-	@variable(model, z_min[draft_index_min:draft_index_max], Bin)
-	@variable(model, z_max[draft_index_min:draft_index_max], Bin)
+	@variable(model, z_min[draft_index_min:draft_index_max,1:scenarios], Bin)
+	@variable(model, z_max[draft_index_min:draft_index_max,1:scenarios], Bin)
 
 	# Force variables
 	# Unsure if they should be two-stage or first-stage
-	@variable(model, buoyancy[1:n_positions])
+	@variable(model, buoyancy[1:n_positions,1:scenarios])
 	@variable(model, shear[1:n_positions,1:scenarios])
 	@variable(model, bending[1:n_positions,1:scenarios])
 
@@ -66,16 +66,15 @@ function add_stability_stochastic!(vessel::Vessel, model, pos_weight_cargo, lcg_
 	)
 
 	# Draft index constraints. Constraint (3), (4), (5)
-	@constraint(model, sum(z_min) == 1)
-	@constraint(model, sum(z_max) == 1)
-	@constraint(model, [b = draft_index_min:draft_index_max-1], z_min[b] - z_max[b+1] == 0)
+	@constraint(model, [sc = 1:scenarios], sum(z_min[i,sc] for i in draft_index_min:draft_index_max) == 1)
+	@constraint(model, [sc = 1:scenarios], sum(z_max[i,sc] for i in draft_index_min:draft_index_max) == 1)
+	@constraint(model, [b = draft_index_min:draft_index_max-1,sc=1:scenarios], z_min[b,sc] - z_max[b+1,sc] == 0)
 
 	# Calculate ballast tank weights per position. Constraint (10)
 	@expression(model, pos_weight_tank[p = 1:n_positions, sc = 1:scenarios],
     sum(ballast_volume[t,sc] * vessel.ballast_tank_frame_overlap[t, p]
         for t in 1:n_ballast_tanks)
 	)
-
 	@expression(model, pos_weight_deadweight[p = 1:n_positions],
 		sum(vessel.deadweight_tanks[t].weight * vessel.deadweight_tank_frame_overlap[t, p]
 			for t in 1:length(vessel.deadweight_tanks))
@@ -88,29 +87,28 @@ function add_stability_stochastic!(vessel::Vessel, model, pos_weight_cargo, lcg_
 								pos_weight_deadweight[p] +  # Add this line
 								ship_position_weight[p]
 	)
-
 	# Draft constraints. Constraint (6)
 	@constraint(model, dis_min[sc = 1:scenarios],
-		sum(displacement[b] * z_min[b] for b in draft_index_min:draft_index_max) - 
+		sum(displacement[b] * z_min[b,sc] for b in draft_index_min:draft_index_max) - 
 		cumulative_weight[end,sc] <= 0
 	)
 	# Constraint (7)
 	@constraint(model, dis_max[sc = 1:scenarios],
-		sum(displacement[b] * z_max[b] for b in draft_index_min:draft_index_max) - 
+		sum(displacement[b] * z_max[b,sc] for b in draft_index_min:draft_index_max) - 
 		cumulative_weight[end,sc] >= 0
 	)
-
 	# Buoyancy calculations using vessel's buoyancy matrix
 	# Rasmus: I think this should be constraint (8) but it doesn't look right
-	@expression(model, buoyancy_interpolated,
-		sum(vessel.buoyancy_displacement_weight_cumulative[b, :] .* z_min[b]
+	@expression(model, buoyancy_interpolated[sc = 1:scenarios],
+		sum(vessel.buoyancy_displacement_weight_cumulative[b, :] .* z_min[b,sc]
 			for b in draft_index_min:draft_index_max)
 	)
 	# # Force relationships
-	@constraint(model, buoyancy .== buoyancy_interpolated)
+	@constraint(model, [sc = 1:scenarios], buoyancy[:,sc] .== buoyancy_interpolated[sc])
 
-	# Constraint (17) - Different than in article???
+	# Constraint (17) - Unsure what is correct
 	@constraint(model, shear .== cumulative_weight .- buoyancy)
+	#@constraint(model, shear .== cumulative_weight .+ buoyancy)
 
 	# @constraint(model, -100 <= sum(shear[i] * frame_length[i] for i in 1:n_positions-1) <= 100)
 
@@ -119,7 +117,7 @@ function add_stability_stochastic!(vessel::Vessel, model, pos_weight_cargo, lcg_
 	# Constraint (19). 
 	# Rasmus: Index for frame i i-1, because of the diff() function to calculate frame_length
 	@constraint(model, [i = 2:n_positions, sc = 1:scenarios],
-		bending[i] == bending[i-1,sc] + (shear[i,sc] + shear[i-1,sc]) / 2 * frame_length[i-1]
+		bending[i,sc] == bending[i-1,sc] + (shear[i,sc] + shear[i-1,sc]) / 2 * frame_length[i-1]
 	)
 	stress_positions = [s.position for s in stress_limits]
 	# Find the corresponding frame indices for these positions
@@ -132,8 +130,6 @@ function add_stability_stochastic!(vessel::Vessel, model, pos_weight_cargo, lcg_
 		shear[stress_frame_indices[i],sc] <= shear_max[i])
 	@constraint(model, [i in 1:length(stress_limits),sc = 1:scenarios],
 		bending[stress_frame_indices[i],sc] <= bending_max[i])
-
-# NÅET HER TIL MED MODELLEN
 
 	# # Center of gravity constraints.
 	@expression(model, lcg_ballast[sc = 1:scenarios],
@@ -150,12 +146,12 @@ function add_stability_stochastic!(vessel::Vessel, model, pos_weight_cargo, lcg_
 	)
 	# Constraint (11)
 	@constraint(model, lcg_max[sc = 1:scenarios],
-		lcg_total[sc] <= sum(lcb[b] * displacement[b] * z_max[b]
+		lcg_total[sc] <= sum(lcb[b] * displacement[b] * z_max[b,sc]
 						 for b in draft_index_min:draft_index_max)
 	)
 	# Constraint (12)
 	@constraint(model, lcg_min[sc = 1:scenarios],
-		lcg_total[sc] >= sum(lcb[b] * displacement[b] * z_min[b]
+		lcg_total[sc] >= sum(lcb[b] * displacement[b] * z_min[b,sc]
 						 for b in draft_index_min:draft_index_max)
 	)
 	# Left-hand side of constraint (13) & (14)
@@ -192,20 +188,19 @@ function add_stability_stochastic!(vessel::Vessel, model, pos_weight_cargo, lcg_
 		vessel.lightship_vcg * vessel.lightship_vcg
 	)
 
-	# # Metacentric height constraint. Constraint (15)
+	# # Metacentric height constraint. Constraint (15) - NB DIFFERENT THAN IN ARTICLE
 	@constraint(model, metacentric_height[sc = 1:scenarios],
-		sum(gm[b] * displacement[b] * z_min[b] for b in draft_index_min:draft_index_max) <=
-		sum(metacenter[b] * displacement[b] * z_max[b] for b in draft_index_min:draft_index_max) - vcg_total[sc]
+		sum(gm[b] * displacement[b] * z_min[b,sc] for b in draft_index_min:draft_index_max) <=
+		sum(metacenter[b] * displacement[b] * z_min[b,sc] for b in draft_index_min:draft_index_max) - vcg_total[sc]
 	)
 
-	# KG constraint
-	@expression(model, kg_min_total,
-		sum(kg[b] * displacement[b] * z_min[b] for b in draft_index_min:draft_index_max)
+	# KG constraint - NB DIFFERENT THAN IN ARTICLE
+	@expression(model, kg_min_total[sc = 1:scenarios],
+		sum(kg[b] * displacement[b] * z_max[b,sc] for b in draft_index_min:draft_index_max)
 	)
 	# Constraint (16)
 	@constraint(model, kg_constraint[sc = 1:scenarios],
-		kg_min_total >= vcg_total[sc]
+		kg_min_total[sc] >= vcg_total[sc]
 	)
-
 	return model
 end

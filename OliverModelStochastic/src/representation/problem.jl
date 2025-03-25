@@ -61,3 +61,35 @@ function create_stochastic_problem(problem::StowageProblem, s::Int64,n::Int64, i
         name = problem.name
     )
 end
+
+
+# Create expected value problem from stochastic problem
+function expected_value_problem(problem::StochasticStowageProblem)
+    n_cargo = length(problem.cargo.items[1])
+    cargos = Vector{Cargo}()
+    # Find mean weight for each cargo
+    for i in 1:n_cargo
+        weight = 0
+        for j in 1:problem.scenarios
+            weight += problem.cargo.items[j].items[i].weight
+        end
+        push!(cargos, Cargo(
+            id = problem.cargo.items[1].items[i].id,
+            cargo_type_id = problem.cargo.items[1].items[i].cargo_type_id,
+            weight = weight/problem.scenarios,
+            loading_port = problem.cargo.items[1].items[i].loading_port,
+            discharge_port = problem.cargo.items[1].items[i].discharge_port,
+            priority = problem.cargo.items[1].items[i].priority,
+            requires_lashing = problem.cargo.items[1].items[i].requires_lashing,
+            requires_ventilation = problem.cargo.items[1].items[i].requires_ventilation,
+            hazardous = problem.cargo.items[1].items[i].hazardous,
+            refers = problem.cargo.items[1].items[i].refers
+        ))
+    end
+    return StowageProblem(
+        vessel = problem.vessel,
+        slots = problem.slots,
+        cargo = CargoCollection(cargos),
+        name = problem.name
+    )
+end

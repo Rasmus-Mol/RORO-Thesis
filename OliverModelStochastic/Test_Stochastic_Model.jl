@@ -52,6 +52,8 @@ println("Deterministic model time: ", solution_det.time)
 println("Deterministic model cargo loaded: ", solution_det.n_cargo_loaded)
 println("Deterministic model status: ", solution_det.status)
 
+################################################################
+# Compares the two scenario generation methods and their accuracy.
 # Creates Stochastic problem and model
 # parameters
 scenarios = [10,20,50]
@@ -110,7 +112,7 @@ for i in 1:repetitions
     fitted_sol = get_solution_second_stage(problem_det, second_stage_m, sol_sto)
     push!(fitted_sol_monte, fitted_sol)
 end
-
+################################################################
 
 # plot
 plot(1:repetitions, [sol.time for sol in sol_gen], label="Generalized scenario", xlabel="Repetitions", ylabel="Time (s)", title="Time to solve model,\n scenarios: $sc, unknown weight: $n_c_un")
@@ -126,7 +128,7 @@ savefig("Results_Plots/ballastdif_gen_sc_$(sc)_n_c_un_$(n_c_un).png")
 plot(1:repetitions, [fitted_sol.ballast_weight-solution_det.ballast_weight for fitted_sol in fitted_sol_monte], label="Monte Carlo scenario", xlabel="Repetitions", ylabel="Ballast weight (t)", title="Difference in ballast weight,\n scenarios: $sc, unknown weight: $n_c_un")
 savefig("Results_Plots/ballastdif_monte_sc_$(sc)_n_c_un_$(n_c_un).png")
 
-# Total cargo weight
+# Total cargo weight compared to deterministic
 for i in 1:repetitions
     plot(1:sc, [item.total_weight-problem_det.cargo.total_weight for item in problems_gen[i].cargo.items], 
     label="Repetition $i", xlabel="Scenarios", ylabel="Total cargo weight difference (t)", 
@@ -150,7 +152,7 @@ end
 for i in 1:repetitions
     if i == 1
         p = plot(1:sc, [item.total_weight-problem_det.cargo.total_weight for item in problems_gen[i].cargo.items],
-        label="Repetition $i", xlabel="Scenarios", ylabel="Total argo weight difference (t)", 
+        label="Repetition $i", xlabel="Scenarios", ylabel="Total cargo weight difference (t)", 
     title="Total cargo weight difference,\n scenarios: $sc, unknown weight: $n_c_un")
     else
         plot!(1:sc, [item.total_weight-problem_det.cargo.total_weight for item in problems_gen[i].cargo.items],label="Repetition $i")
@@ -160,7 +162,7 @@ savefig("Results_Plots/totalweightdiffAll_gen_sc_$(sc)_n_c_un_$(n_c_un).png")
 for i in 1:repetitions
     if i == 1
         p = plot(1:sc, [item.total_weight-problem_det.cargo.total_weight for item in problems_monte[i].cargo.items],
-        label="Repetition $i", xlabel="Scenarios", ylabel="Total argo weight difference (t)", 
+        label="Repetition $i", xlabel="Scenarios", ylabel="Total cargo weight difference (t)", 
     title="Total cargo weight difference,\n scenarios: $sc, unknown weight: $n_c_un")
     else
         plot!(1:sc, [item.total_weight-problem_det.cargo.total_weight for item in problems_monte[i].cargo.items],label="Repetition $i")
@@ -168,5 +170,7 @@ for i in 1:repetitions
 end
 savefig("Results_Plots/totalweightdiffAll_monte_sc_$(sc)_n_c_un_$(n_c_un).png")
 
+################################################################
 
-
+temp = problems_gen[1]
+EVP = expected_value_problem(temp)

@@ -20,6 +20,7 @@ using URIs
 using Statistics
 using Distributions
 using HypothesisTests 
+using StructTypes
 
 include("representation/cargo.jl")
 include("representation/deck.jl")
@@ -29,7 +30,7 @@ include("representation/instance.jl")
 include("representation/problem.jl")
 
 include("model/base_model.jl")
-include("model/hazardous.jl")
+#include("model/hazardous.jl")
 include("model/stability.jl")
 
 include("utils/helpers.jl")
@@ -42,6 +43,7 @@ include("model/stability_stochastic.jl")
 include("CompareSolutions.jl")
 include("plots/weight_plots.jl")
 include("representation/CargoScenarios.jl")
+include("model/second_stage_model.jl")
 
 #include("loadmaster/types.jl")
 #include("loadmaster/api.jl")
@@ -56,10 +58,13 @@ export create_stochastic_problem, create_stochastic_model, Monto_Carlo_sampling
 export compare_solutions_print, plot_ballast_weight_diff, plot_ballast_cargo_weight_diff
 # Struct for stowage problem and solution
 export StowageProblem, Solution
+export get_solution_second_stage, second_stage_model
 # Stochastic structs
 export StochasticStowageProblem, SolutionStochastic
 # plots
 export plot_cargo_weights, plot_cargo_OG
+# EVP
+export expected_value_problem
 
 # Functions to connect to LoadMaster
 #export LoadMaster, getcurrentvessel, resetvessel, upload_solution, getresults, parse_result, uri, headers, struct_to_json

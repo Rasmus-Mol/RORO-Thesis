@@ -68,9 +68,8 @@ function create_model_stochastic(problem::StochasticStowageProblem)
 	@constraint(model, [s = 1:n_slots],
 		sum(cs[c, s] for c ∈ 1:n_cargo) <= 1)
 	# Constraint (25)
-	@constraint(
-		model,
-		[c = 1:n_cargo], sum(cs[c, s] for s ∈ 1:n_slots) <= 1)
+	@constraint(model,[c = 1:n_cargo], 
+	sum(cs[c, s] for s ∈ 1:n_slots) <= 1)
 
 	# Slot weight calculation. Constraint (27)
 	@constraint(model, [s = 1:n_slots, sc = 1:scenarios],
@@ -78,9 +77,7 @@ function create_model_stochastic(problem::StochasticStowageProblem)
 		#weight[s] == sum(cargo[c].weight * cs[c, s] for c ∈ 1:n_cargo))
 
 	# Defining cargo_slack variable. Constraint (23)
-	@constraint(
-		model,
-		[c = 1:n_cargo],
+	@constraint(model,[c = 1:n_cargo],
 		sum(cs[c, s] for s ∈ 1:n_slots) == cargo_slack[c]
 	)
 	# Rasmus: Function creates a list of slot ids which are not equal to the cargo type id input "t"
@@ -102,14 +99,9 @@ function create_model_stochastic(problem::StochasticStowageProblem)
 		# Cargo weights using precalculated proportions
 		sum(weight[s,sc] * slots_to_frame[s, p] for s ∈ 1:n_slots)
 	)
-
-	# # # Deck weight limit. Constraint (29)
-	@constraint(
-		model,
-		[d = 1:n_deck, sc = 1:scenarios],
-		sum(weight[s,sc] for s in [x.id for x in filter(x -> x.deck_id == d, slots)]) <= vessel.decks[d].weight_limit
-	)
-
+	# Deck weight limit. Constraint (29)
+	@constraint(model,[d = 1:n_deck, sc = 1:scenarios],
+		sum(weight[s,sc] for s in [x.id for x in filter(x -> x.deck_id == d, slots)]) <= vessel.decks[d].weight_limit)
 	# Rasmus: lcg, vcg, and tcg for cargo. Constraint (30), (31), (32)
 	@expression(model, lcg_cargo[sc = 1:scenarios], sum(weight[s,sc] * slots[s].lcg for s ∈ 1:n_slots))
 	@expression(model, tcg_cargo[sc = 1:scenarios], sum(weight[s,sc] * slots[s].tcg for s ∈ 1:n_slots))

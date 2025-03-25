@@ -106,8 +106,9 @@ function add_stability!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo, tcg_
 	# # Force relationships
 	@constraint(model, buoyancy .== buoyancy_interpolated)
 
-	# Constraint (17)
+	# Constraint (17) - unsure what is correct
 	@constraint(model, shear .== cumulative_weight .- buoyancy)
+	#@constraint(model, shear .== cumulative_weight .+ buoyancy)
 
 	# @constraint(model, -100 <= sum(shear[i] * frame_length[i] for i in 1:n_positions-1) <= 100)
 
@@ -191,12 +192,12 @@ function add_stability!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo, tcg_
 	# # Metacentric height constraint. Constraint (15)
 	@constraint(model, metacentric_height,
 		sum(gm[b] * displacement[b] * z_min[b] for b in draft_index_min:draft_index_max) <=
-		sum(metacenter[b] * displacement[b] * z_max[b] for b in draft_index_min:draft_index_max) - vcg_total
+		sum(metacenter[b] * displacement[b] * z_min[b] for b in draft_index_min:draft_index_max) - vcg_total
 	)
 
 	# KG constraint
 	@expression(model, kg_min_total,
-		sum(kg[b] * displacement[b] * z_min[b] for b in draft_index_min:draft_index_max)
+		sum(kg[b] * displacement[b] * z_max[b] for b in draft_index_min:draft_index_max)
 	)
 	# Constraint (16)
 	@constraint(model, kg_constraint,

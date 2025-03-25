@@ -39,6 +39,7 @@ end
 
     area_utilization::Float64 # calculation is not correct
     cargo::Vector{CargoPlacement}
+    cs::Matrix{Float64} # Cargo slot assignment
     n_cargo_total::Int = 0
     n_cargo_loaded::Int = 0
 
@@ -87,7 +88,7 @@ end
     # Cargo placement is decided in first scenario, so should be equal for all scenarios
     cargo::Vector{CargoPlacementStochastic}
     area_utilization::Float64 # calculation is not correct
-    cs::Array{Int64,2} # Cargo slot assignment
+    cs::Matrix{Float64} # Cargo slot assignment
     # Weight and forces for each scenario
     forces::Vector{WeightAndForceStochastic}
     # Model statistics
@@ -155,7 +156,7 @@ function extract_stochastic_solution(problem, model)
             n_cargo_loaded = 0, 
             cargo = CargoPlacement[],
             area_utilization = 0.0,
-            cs = Int64[],
+            cs = Matrix{Float64},
             forces = [cargo_placement],
             n_variables = num_variables(model),
             n_binary_variables = count(is_binary, all_variables(model)),
@@ -206,9 +207,10 @@ function extract_stochastic_solution(problem, model)
 
     # Calculate center of gravity
     # Handling division by zero - NB! UNSURE IF THEY CAN BE NEGATIVE IN THE MODEL
-    lcg = replace(value.(model[:lcg_total]) ./ total_weight, Inf => -1)
-    tcg = replace(value.(model[:tcg_total]) ./ total_weight, Inf => -1)
-    vcg = replace(value.(model[:vcg_total]) ./ total_weight, Inf => -1)
+    # tcg can be negative
+    lcg = replace(value.(model[:lcg_total]) ./ total_weight, Inf => -100000)
+    tcg = replace(value.(model[:tcg_total]) ./ total_weight, Inf => -100000)
+    vcg = replace(value.(model[:vcg_total]) ./ total_weight, Inf => -100000)
 
     # Calculate area utilization
     total_cargo_area = sum(p.length * p.width for p in placements)
@@ -292,6 +294,7 @@ function extract_solution(problem, model)
             ballast_weight = 0.0, 
             area_utilization = 0.0,
             cargo = CargoPlacement[],
+            cs = Matrix{Float64},
             n_cargo_total = length(problem.cargo),
             n_cargo_loaded = 0,
             shear_force = Float64[],
@@ -358,6 +361,9 @@ function extract_solution(problem, model)
     ) # Rasmus: Don't the slots have overlapping areas, so this is larger than the actual area?
     area_utilization = total_cargo_area / total_vessel_area
 
+    # Shear and Bending - added by Rasmus
+    sf = value.(model[:shear])
+    bending = value.(model[:bending])
     return Solution(
         gap = relative_gap(model),
         status = status,
@@ -368,10 +374,11 @@ function extract_solution(problem, model)
         ballast_weight = ballast_weight,
         area_utilization = area_utilization,
         cargo = placements,
+        cs = cs_val,
         n_cargo_total = length(problem.cargo),
         n_cargo_loaded = n_cargo_loaded,
-        shear_force = [], # These are not in the base model
-        bending_moment = [], # These are not in the base model
+        shear_force = sf, # Added
+        bending_moment = bending, # Added
         ballast_volume = collect(ballast_val),
         lcg = lcg,
         tcg = tcg,
@@ -384,11 +391,6 @@ function extract_solution(problem, model)
         solver_iterations = 0,
         solver_nodes = 0
     )
-end
-
-# Checks if solution is valid to the two-stage problem, ie. if the model is created correct
-function check_stochastic_solution(problem, model)
-
 end
 
 # Extracts the cargo weight in all scenarios for a specific cargo id
@@ -428,6 +430,7 @@ function get_solution_second_stage(problem, model, stochastic_sol::SolutionStoch
             ballast_weight = 0.0, 
             area_utilization = 0.0,
             cargo = CargoPlacement[],
+            cs = Matrix{Float64},
             n_cargo_total = length(problem.cargo),
             n_cargo_loaded = 0,
             shear_force = Float64[],
@@ -507,6 +510,7 @@ function get_solution_second_stage(problem, model, stochastic_sol::SolutionStoch
         ballast_weight = ballast_weight,
         area_utilization = area_utilization,
         cargo = placements,
+        cs = cs_val,
         n_cargo_total = length(problem.cargo),
         n_cargo_loaded = n_cargo_loaded,
         shear_force = shear,

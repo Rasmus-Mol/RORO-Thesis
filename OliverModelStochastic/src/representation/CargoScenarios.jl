@@ -78,7 +78,7 @@ function mean_var_car(problem::StowageProblem)
         end
         return means,variances
 end
-# Monto Carlo sampling for cargo weights. Weight for each cargo type is assumed normal distributed
+# Weight for each cargo type is assumed normal distributed. NB BAD TO USE THIS
 function Monto_Carlo_sampling(problem::StowageProblem,sc::Int64,ids)
         means,variances = mean_var_car(problem) # get means and variances
         # Normal distributions for each cargo type
@@ -119,5 +119,8 @@ function Monto_Carlo_sampling(problem::StowageProblem,sc::Int64,ids)
 end
 
 # Needs to return CargoCollectionScenarios() and probability
+
+
+
 
 
