@@ -1,0 +1,40 @@
+ERROR: Unable to locate a modulefile for 'gurobi/1.7.0'
+Loaded module: julia/1.11.3
+  Activating project at `~/RORO-Thesis/OliverModelStochastic`
+[ Info: Creating vessel object for 'finlandia'
+[ Info: All required files found, loading vessel data...
+┌ Info: Successfully created vessel object
+│   name = "FINLANDIA"
+└   IMO = 9198721
+[ Info: Simplifying vessel with target points: 50
+ERROR: LoadError: Gurobi Error 10009: No Gurobi license found (user s194364, host n-62-28-31, hostid 580afd78, cores 20)
+Stacktrace:
+  [1] _check_ret
+    @ ~/.julia/packages/Gurobi/Br0Mc/src/MOI_wrapper/MOI_wrapper.jl:442 [inlined]
+  [2] Gurobi.Env(params::Nothing; started::Bool, output_flag::Int64, memory_limit::Nothing)
+    @ Gurobi ~/.julia/packages/Gurobi/Br0Mc/src/MOI_wrapper/MOI_wrapper.jl:176
+  [3] Env (repeats 2 times)
+    @ ~/.julia/packages/Gurobi/Br0Mc/src/MOI_wrapper/MOI_wrapper.jl:143 [inlined]
+  [4] Gurobi.Optimizer(env::Nothing; enable_interrupts::Bool)
+    @ Gurobi ~/.julia/packages/Gurobi/Br0Mc/src/MOI_wrapper/MOI_wrapper.jl:372
+  [5] Optimizer
+    @ ~/.julia/packages/Gurobi/Br0Mc/src/MOI_wrapper/MOI_wrapper.jl:366 [inlined]
+  [6] Gurobi.Optimizer()
+    @ Gurobi ~/.julia/packages/Gurobi/Br0Mc/src/MOI_wrapper/MOI_wrapper.jl:366
+  [7] _instantiate_and_check(optimizer_constructor::Any)
+    @ MathOptInterface ~/.julia/packages/MathOptInterface/MQX8C/src/instantiate.jl:94
+  [8] instantiate(optimizer_constructor::Any; with_bridge_type::Type{Float64}, with_cache_type::Nothing)
+    @ MathOptInterface ~/.julia/packages/MathOptInterface/MQX8C/src/instantiate.jl:175
+  [9] set_optimizer(model::Model, optimizer_constructor::Any; add_bridges::Bool)
+    @ JuMP ~/.julia/packages/JuMP/xlp0s/src/optimizer_interface.jl:493
+ [10] set_optimizer
+    @ ~/.julia/packages/JuMP/xlp0s/src/optimizer_interface.jl:486 [inlined]
+ [11] #_#1
+    @ ~/.julia/packages/JuMP/xlp0s/src/JuMP.jl:195 [inlined]
+ [12] GenericModel
+    @ ~/.julia/packages/JuMP/xlp0s/src/JuMP.jl:187 [inlined]
+ [13] create_model(problem::StowageProblem)
+    @ Main.StowagePlannerStochastic ~/RORO-Thesis/OliverModelStochastic/src/model/base_model.jl:44
+ [14] top-level scope
+    @ ~/RORO-Thesis/OliverModelStochastic/Main_Stochastic.jl:11
+in expression starting at /zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic/Main_Stochastic.jl:11

@@ -10,9 +10,10 @@
 #BSUB -N 
 # end of BSUB options
 
-# load Julia version
+# load Julia and gurobi version
+#module load gurobi/1.7.0
+module load julia/1.11.3
 
-julia -e using Pkg; Pkg.activate(".")
-julia -e using Pkg; pkg.instantiate()
+julia -e 'using Pkg; Pkg.activate("."); Pkg.instantiate()'
 
 julia Main_Stochastic.jl

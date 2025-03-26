@@ -44,7 +44,7 @@ for i in 1:repetitions
             # generic method
             pro = create_stochastic_problem(problem_det, scenarios[j], n_cargo_unknownweight[k], []) 
             # Save problem
-            foldername = "Stochastic_rep$(i)_sc$(scenarios[j])_unknown$(n_cargo_unknownweight[k])"
+            foldername = "Stochastic_rep$(i)_sc$(scenarios[j])_unknown$(n_cargo_unknownweight[k])_time$(time_limit)"
             write_problem_stochastic(pro,foldername,"Stochastic_Problem")
             problems_sto_gen[i,j,k] = pro
             mo = create_model_stochastic(pro)
@@ -69,7 +69,7 @@ for i in 1:repetitions
             fitted_sol_gen[i,j,k] = fitted_sol
 
             # EVP method
-            foldername = "EVP_rep$(i)_sc$(scenarios[j])_unknown$(n_cargo_unknownweight[k])"
+            foldername = "EVP_rep$(i)_sc$(scenarios[j])_unknown$(n_cargo_unknownweight[k])_time$(time_limit)"
             pro = expected_value_problem(pro)
             # Save problem
             write_problem(pro,foldername,"EVP_Problem")
