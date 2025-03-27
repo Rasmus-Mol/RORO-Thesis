@@ -276,8 +276,8 @@ function get_solution_stochastic(foldername::String,filename::String,HPC_folder:
 end
 
 # Save HPC input and create folder for the following results
-function write_HPC_data(repetitions::Int64, scenarios::Vector, n_unknown::Vector,HPC_folder::String)
-    data = [repetitions, scenarios, n_unknown]
+function write_HPC_data(repetitions::Int64, scenarios::Vector, n_unknown::Vector,time_limit,HPC_folder::String)
+    data = [repetitions, scenarios, n_unknown,time_limit]
     # Creates folder for results
     if !isdir("Results/"*HPC_folder)
         mkdir("Results/"*HPC_folder)
@@ -293,6 +293,7 @@ function get_HPC_data(HPC_folder::String)
         repetitions = info[1]
         scenarios = info[2]
         n_unknown = info[3]
-        return repetitions, scenarios, n_unknown
+        time_limit = info[4]
+        return repetitions, scenarios, n_unknown, time_limit
     end
 end

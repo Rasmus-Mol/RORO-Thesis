@@ -44,7 +44,7 @@ include("src/utils/SaveData.jl")
 
 ################################################################
 # Which instance of HPC results to load - has to be changed manually
-HPC_folder = ""
+HPC_folder = "Finlandia_27_03_10_50_34"
 # load data
 repetitions, scenarios, n_cargo_unknownweight = load_HPC_data(HPC_folder)
 # Load problems and solutions
@@ -52,7 +52,7 @@ problemname1, problemname2, problemname3 = "finlandia", "no_cars_medium_100_haz_
 det_problem = load_data(problemname1,problemname2,problemname3)
 det_solution = get_solution_deterministic("Finlandia_deterministic","Deterministic_Solution",HPC_folder)
 # HPC data
-repetitions, scenarios, n_unknown = get_HPC_data(HPC_folder)
+repetitions, scenarios, n_unknown, time_limit = get_HPC_data(HPC_folder)
 sc = length(scenarios)
 n = length(n_unknown)
 # Problems and models
@@ -69,7 +69,7 @@ for i in 1:repetitions
     for j in 1:sc
         for k in 1:n
             # EVP
-            foldername = 
+            foldername = "EVP_rep$(i)_sc$(j)_unknown$(k)"
             filename
 
             # Stochastic
