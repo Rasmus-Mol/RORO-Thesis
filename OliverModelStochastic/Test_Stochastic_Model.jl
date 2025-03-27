@@ -43,14 +43,41 @@ include("src/plots/solution.jl")
 include("src/utils/SaveData.jl")
 
 ################################################################
+# Which instance of HPC results to load - has to be changed manually
+HPC_folder = ""
+# load data
+repetitions, scenarios, n_cargo_unknownweight = load_HPC_data(HPC_folder)
 # Load problems and solutions
 problemname1, problemname2, problemname3 = "finlandia", "no_cars_medium_100_haz_eq_0.1", "hazardous"
 det_problem = load_data(problemname1,problemname2,problemname3)
-det_solution = get_solution_deterministic("Finlandia_deterministic","Deterministic_Solution")
-sto_problem = []
-sto_solution = []
-EVP_problem = []
-EVP_solution = []
+det_solution = get_solution_deterministic("Finlandia_deterministic","Deterministic_Solution",HPC_folder)
+# HPC data
+repetitions, scenarios, n_unknown = get_HPC_data(HPC_folder)
+sc = length(scenarios)
+n = length(n_unknown)
+# Problems and models
+problems_sto = Array{Any}(undef, repetitions, sc,n)
+problems_EVP = Array{Any}(undef, repetitions, sc,n)
+models_sto = Array{Any}(undef, repetitions, sc,n)
+models_EVP = Array{Any}(undef, repetitions, sc,n)
+# Solution
+solutions_sto = Array{Any}(undef, repetitions, sc,n)
+solutions_EVP = Array{Any}(undef, repetitions, sc,n)
+fitted_sol = Array{Any}(undef, repetitions, sc,n)
+fitted_sol_EVP = Array{Any}(undef, repetitions, sc,n)
+for i in 1:repetitions
+    for j in 1:sc
+        for k in 1:n
+            # EVP
+            foldername = 
+            filename
+
+            # Stochastic
+
+        end
+    end
+end
+
 
 get_deterministic_problem("",filename::String,problemname1,problemname2,problemname3)
 get_stochastic_problem(foldername::String,filename::String,problemname1,problemname2,problemname3)

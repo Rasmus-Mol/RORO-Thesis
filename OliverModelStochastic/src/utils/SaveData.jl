@@ -3,6 +3,10 @@
 # Save problem
 # Save 1 cargo collection
 function write_problem(problem::StowageProblem,foldername::String,filename::String, HPC_folder::String)
+    # Creates HPC_folder for results for this HPC instance
+    if !isdir("Results/"*HPC_folder)
+        mkdir("Results/"*HPC_folder)
+    end
     # Creates folder for results
     if !isdir("Results/"*HPC_folder*"/"*foldername)
         mkdir("Results/"*HPC_folder*"/"*foldername)
@@ -36,6 +40,10 @@ end
 # Save solutions
 # Saves deterministic solution
 function write_solution(solution::Solution,foldername::String,filename::String,HPC_folder::String)
+    # Creates HPC_folder for results for this HPC instance
+    if !isdir("Results/"*HPC_folder)
+        mkdir("Results/"*HPC_folder)
+    end
     if !isdir("Results/"*HPC_folder*"/"*foldername)
         mkdir("Results/"*HPC_folder*"/"*foldername)
     end
@@ -56,6 +64,10 @@ function write_solution(solution::Solution,foldername::String,filename::String,H
     end
 end
 function write_solution_stochastic(solution::SolutionStochastic,foldername::String,filename::String,HPC_folder::String)
+    # Creates HPC_folder for results for this HPC instance
+    if !isdir("Results/"*HPC_folder)
+        mkdir("Results/"*HPC_folder)
+    end
     if !isdir("Results/"*HPC_folder*"/"*foldername)
         mkdir("Results/"*HPC_folder*"/"*foldername)
     end
@@ -85,7 +97,6 @@ end
 function get_deterministic_problem(foldername::String,filename::String,HPC_folder::String,problemname1,problemname2,problemname3)
     open(joinpath("Results",HPC_folder,foldername,filename*".json"), "r") do file
         cargo = JSON3.read(read(file, String), Vector{Cargo})
-        open
         # load ship data
         problem = load_data(problemname1, problemname2, problemname3)
         open(joinpath("Results",HPC_folder,foldername,filename*"_info"*".json"), "r") do file
@@ -263,16 +274,25 @@ function get_solution_stochastic(foldername::String,filename::String,HPC_folder:
         return solution
     end
 end
+
 # Save HPC input and create folder for the following results
-function HPC_data(repetitions::Int64, scenarios::Vector, n_unknown::Vector,HPC_folder::String)
+function write_HPC_data(repetitions::Int64, scenarios::Vector, n_unknown::Vector,HPC_folder::String)
     data = [repetitions, scenarios, n_unknown]
     # Creates folder for results
     if !isdir("Results/"*HPC_folder)
         mkdir("Results/"*HPC_folder)
     end
-    d = Dates.format(now(), "dd/mm_HH:MM:SS")
-    filename = "HPC_test"*d
-    open(joinpath("Results",HPC_folder,filename*".json"), "w") do file
+    open(joinpath("Results",HPC_folder,"HPC_data.json"), "w") do file
         JSON.print(file, data, 4)  # Pretty-print with indentation
+    end
+end
+# Load HPC input
+function get_HPC_data(HPC_folder::String)
+    open(joinpath("Results",HPC_folder,"HPC_data.json"), "r") do file
+        info = JSON3.read(read(file, String),Vector{Any})
+        repetitions = info[1]
+        scenarios = info[2]
+        n_unknown = info[3]
+        return repetitions, scenarios, n_unknown
     end
 end

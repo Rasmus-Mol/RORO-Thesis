@@ -133,7 +133,3 @@ df = dropmissing(data, :"Count.Booked Weight")
 dropmissing!(df, :"Corrected Weight")
 dropmissing!(df, :"Variance")
 
-
-dat = now()
-Dat = Dates.format(dat, "dd/mm_HH:MM:SS")
-

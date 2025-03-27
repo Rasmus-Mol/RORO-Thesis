@@ -416,7 +416,7 @@ function get_all_cargos_weights(problem::StochasticStowageProblem)
 end
 
 # Add solution from second stage model to the solution struct
-function get_solution_second_stage(problem, model, stochastic_sol::SolutionStochastic)
+function get_solution_second_stage_stochastic(problem, model, stochastic_sol::SolutionStochastic)
     # First check if solution exists
     status = termination_status(model)
     if status ∈ [MOI.INFEASIBLE, MOI.INFEASIBLE_OR_UNBOUNDED]
@@ -528,9 +528,7 @@ function get_solution_second_stage(problem, model, stochastic_sol::SolutionStoch
         solver_nodes = 0
     )
 end
-
-
-function get_solution_second_stage(problem, model, sol::Solution)
+function get_solution_second_stage_deterministic(problem, model, sol::Solution)
     # First check if solution exists
     status = termination_status(model)
     if status ∈ [MOI.INFEASIBLE, MOI.INFEASIBLE_OR_UNBOUNDED]
@@ -641,6 +639,4 @@ function get_solution_second_stage(problem, model, sol::Solution)
         solver_iterations = 0,
         solver_nodes = 0
     )
-
-
 end

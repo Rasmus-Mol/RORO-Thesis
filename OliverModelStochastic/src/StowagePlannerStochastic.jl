@@ -59,7 +59,7 @@ export create_stochastic_problem, create_stochastic_model, Monto_Carlo_sampling
 export compare_solutions_print, plot_ballast_weight_diff, plot_ballast_cargo_weight_diff
 # Struct for stowage problem and solution
 export StowageProblem, Solution
-export get_solution_second_stage, second_stage_model
+export get_solution_second_stage_stochastic, get_solution_second_stage_deterministic, second_stage_model
 # Stochastic structs
 export StochasticStowageProblem, SolutionStochastic
 # plots
@@ -67,9 +67,10 @@ export plot_cargo_weights, plot_cargo_OG
 # EVP
 export expected_value_problem
 # Save data to JSON files
-export write_problem, write_problem_stochastic, write_solution, write_solution_stochastic
+export write_problem, write_problem_stochastic, write_solution, write_solution_stochastic, write_HPC_data
 # Get data from JSON files
-export get_deterministic_problem, get_stochastic_problem, get_solution_deterministic, get_solution_stochastic
+export get_deterministic_problem, get_stochastic_problem, get_solution_deterministic, get_solution_stochastic, get_HPC_data
+export now, format, Dates
 
 # Functions to connect to LoadMaster
 #export LoadMaster, getcurrentvessel, resetvessel, upload_solution, getresults, parse_result, uri, headers, struct_to_json
