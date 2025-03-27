@@ -119,11 +119,21 @@ function Monto_Carlo_sampling(problem::StowageProblem,sc::Int64,ids)
         end
         return CargoCollectionScenarios(cargo_scenarios), fill(1/sc,sc) # return CargoCollectionScenarios
 end
-############3 
+############
 
-# Needs to return CargoCollectionScenarios() and probability
+# Uses data from variance of weight from Oliver
+
+using DataFrames, XLSX, CSV
+file_path = "/home/rasmusmolsted/Documents/DTU/Onedrive-filer/Speciale/RORO-Thesis/OliverModelStochastic/data/CargoWeights.csv"
+data = CSV.read(file_path, DataFrame; delim=",")
+names(data)
+data[!,"ID"] # <- access column by name
+# Removing rows with missing values in specific column
+df = dropmissing(data, :"Count.Booked Weight")
+dropmissing!(df, :"Corrected Weight")
+dropmissing!(df, :"Variance")
 
 
-
-
+dat = now()
+Dat = Dates.format(dat, "dd/mm_HH:MM:SS")
 
