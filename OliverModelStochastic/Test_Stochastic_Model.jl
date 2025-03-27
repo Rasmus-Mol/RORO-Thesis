@@ -40,78 +40,21 @@ include("src/utils/helpers.jl")
 include("src/solution.jl")
 include("src/CompareSolutions.jl")
 include("src/plots/solution.jl")
-
-# Creates Deterministic problem and model
-problem_det = load_data("finlandia", "no_cars_medium_100_haz_eq_0.1", "hazardous")
-model_det = create_model(problem_det)
-set_silent(model_det) # removes terminal output
-set_time_limit_sec(model_det, 60 * 5)
-optimize!(model_det)
-solution_det = extract_solution(problem_det, model_det)
-println("Deterministic model time: ", solution_det.time)
-println("Deterministic model cargo loaded: ", solution_det.n_cargo_loaded)
-println("Deterministic model status: ", solution_det.status)
+include("src/utils/SaveData.jl")
 
 ################################################################
-# Compares the two scenario generation methods and their accuracy.
-# Creates Stochastic problem and model
-# parameters
-scenarios = [10,20,50]
-n_cargo_unknownweight = [10,50,length(problem_det.cargo)] # all cargo weights are unknown
-sc = scenarios[2]
-n_c_un = n_cargo_unknownweight[2]
+# Load problems and solutions
+problemname1, problemname2, problemname3 = "finlandia", "no_cars_medium_100_haz_eq_0.1", "hazardous"
+det_problem = load_data(problemname1,problemname2,problemname3)
+det_solution = get_solution_deterministic("Finlandia_deterministic","Deterministic_Solution")
+sto_problem = []
+sto_solution = []
+EVP_problem = []
+EVP_solution = []
 
-time_limit = 60 * 5
-problems_gen = []
-problems_monte = []
-models_gen = []
-models_monte = []
-sol_gen = []
-sol_monte = []
-cs_gen = []
-cs_monte = []
-fitted_sol_gen = []
-fitted_sol_monte = []
-
-repetitions = 5
-for i in 1:repetitions
-    println("Iteration: ", i)
-    pro_sto = create_stochastic_problem(problem_det, sc, n_c_un,[])
-    push!(problems_gen, pro_sto)
-    model_sto = create_model_stochastic(pro_sto)
-    push!(models_gen, model_sto)
-    set_silent(model_sto) # removes terminal output
-    set_time_limit_sec(model_sto, time_limit) # 5 minutes to solve model
-    optimize!(model_sto)
-    sol_sto = extract_stochastic_solution(pro_sto, model_sto)
-    push!(sol_gen, sol_sto)
-    cs_sto = sol_sto.cs
-    push!(cs_gen, cs_sto)
-    second_stage_m = second_stage_model(cs_sto, problem_det)
-    set_silent(second_stage_m) # removes terminal output
-    set_time_limit_sec(second_stage_m, time_limit) # 5 minutes to solve model
-    optimize!(second_stage_m)
-    fitted_sol = get_solution_second_stage(problem_det, second_stage_m, sol_sto)
-    push!(fitted_sol_gen, fitted_sol)
-
-    pro_sto = create_stochastic_problem(problem_det, sc, n_c_un,[],Monto_Carlo_sampling)
-    push!(problems_monte, pro_sto)
-    model_sto = create_model_stochastic(pro_sto)
-    push!(models_monte, model_sto)
-    set_silent(model_sto) # removes terminal output
-    set_time_limit_sec(model_sto, time_limit) # 5 minutes to solve model
-    optimize!(model_sto)
-    sol_sto = extract_stochastic_solution(pro_sto, model_sto)
-    push!(sol_monte, sol_sto)
-    cs_sto = sol_sto.cs
-    push!(cs_monte, cs_sto)
-    second_stage_m = second_stage_model(cs_sto, problem_det)
-    set_silent(second_stage_m) # removes terminal output
-    set_time_limit_sec(second_stage_m, time_limit) # 5 minutes to solve model
-    optimize!(second_stage_m)
-    fitted_sol = get_solution_second_stage(problem_det, second_stage_m, sol_sto)
-    push!(fitted_sol_monte, fitted_sol)
-end
+get_deterministic_problem("",filename::String,problemname1,problemname2,problemname3)
+get_stochastic_problem(foldername::String,filename::String,problemname1,problemname2,problemname3)
+get_solution_deterministic(foldername::String,filename::String)
 ################################################################
 
 # plot

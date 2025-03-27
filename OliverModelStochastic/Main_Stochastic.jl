@@ -41,6 +41,7 @@ for i in 1:repetitions
     #println("Iteration: ", i)
     for j in 1:sc
         for k in 1:n
+            println("rep: ", i, ". sc: ", j, ". n: ", k)
             # generic method
             pro = create_stochastic_problem(problem_det, scenarios[j], n_cargo_unknownweight[k], []) 
             # Save problem

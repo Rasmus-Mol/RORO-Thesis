@@ -263,3 +263,16 @@ function get_solution_stochastic(foldername::String,filename::String)
         return solution
     end
 end
+# Save HPC input and create folder for the following results
+function HPC_data(repetitions::Int64, scenarios::Vector, n_unknown::Vector,HPC_folder::String)
+    data = [repetitions, scenarios, n_unknown]
+    # Creates folder for results
+    if !isdir("Results/"*HPC_folder)
+        mkdir("Results/"*HPC_folder)
+    end
+    d = Dat = Dates.format(now(), "dd/mm_HH:MM:SS")
+    filename = "HPC_test"*d
+    open(joinpath("Results",HPC_folder,filename*".json"), "w") do file
+        JSON.print(file, data, 4)  # Pretty-print with indentation
+    end
+end
