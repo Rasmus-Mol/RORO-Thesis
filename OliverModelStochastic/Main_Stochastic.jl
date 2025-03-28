@@ -20,14 +20,12 @@ write_solution(solution_det,"Finlandia_deterministic","Deterministic_Solution",H
 
 # Creates Stochastic problem and model
 # parameters
-#scenarios = [10,20,50]
-scenarios = [10]
+scenarios = [10,20,30,40,50]
 sc = length(scenarios)
-#n_cargo_unknownweight = [10,50,length(problem_det.cargo)] # all cargo weights are unknown
-n_cargo_unknownweight = [10]
+n_cargo_unknownweight = [10,30,50,80,length(problem_det.cargo)] # all cargo weights are unknown
 n = length(n_cargo_unknownweight)
-time_limit = 60 * 5 # 5 minutes
-repetitions = 1 # number of repetitions of same inputs
+time_limit = 60 * 15 # 5 minutes
+repetitions = 5 # number of repetitions of same inputs
 
 # Problems and models - Can be deleted now, no longer necessary
 problems_sto_gen = Array{Any}(undef, repetitions, sc,n)
@@ -43,13 +41,13 @@ fitted_sol_gen = Array{Any}(undef, repetitions, sc,n)
 fitted_sol_EVP = Array{Any}(undef, repetitions, sc,n)
 
 # Save scenario and number of unknown weights
-write_HPC_data(repetitions, scenarios, n_cargo_unknownweight,HPC_folder)
+write_HPC_data(repetitions, scenarios, n_cargo_unknownweight, time_limit, HPC_folder)
 # Run tests
 for i in 1:repetitions
     #println("Iteration: ", i)
     for j in 1:sc
         for k in 1:n
-            #println("rep: ", i, ". sc: ", j, ". n: ", k)
+            println("rep: ", i, ". sc: ", j, ". n: ", k)
             # uniform random sampling method
             pro = create_stochastic_problem(problem_det, scenarios[j], n_cargo_unknownweight[k], []) 
             # Save problem
