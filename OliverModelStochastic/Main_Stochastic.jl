@@ -25,20 +25,18 @@ sc = length(scenarios)
 n_cargo_unknownweight = [10,30,50,80,length(problem_det.cargo)] # all cargo weights are unknown
 n = length(n_cargo_unknownweight)
 time_limit = 60 * 15 # 5 minutes
-repetitions = 5 # number of repetitions of same inputs
+repetitions = 1 # number of repetitions of same inputs
 
 # Problems and models - Can be deleted now, no longer necessary
-problems_sto_gen = Array{Any}(undef, repetitions, sc,n)
-problems_EVP = Array{Any}(undef, repetitions, sc,n)
-models_sto_gen = Array{Any}(undef, repetitions, sc,n)
-models_EVP = Array{Any}(undef, repetitions, sc,n)
+#problems_sto_gen = Array{Any}(undef, repetitions, sc,n)
+#problems_EVP = Array{Any}(undef, repetitions, sc,n)
+#models_sto_gen = Array{Any}(undef, repetitions, sc,n)
+#models_EVP = Array{Any}(undef, repetitions, sc,n)
 # Solution
-solutions_sto_gen = Array{Any}(undef, repetitions, sc,n)
-solutions_EVP = Array{Any}(undef, repetitions, sc,n)
-cs_gen = Array{Any}(undef, repetitions, sc,n)
-cs_EVP = Array{Any}(undef, repetitions, sc,n)
-fitted_sol_gen = Array{Any}(undef, repetitions, sc,n)
-fitted_sol_EVP = Array{Any}(undef, repetitions, sc,n)
+#solutions_sto_gen = Array{Any}(undef, repetitions, sc,n)
+#solutions_EVP = Array{Any}(undef, repetitions, sc,n)
+#fitted_sol_gen = Array{Any}(undef, repetitions, sc,n)
+#fitted_sol_EVP = Array{Any}(undef, repetitions, sc,n)
 
 # Save scenario and number of unknown weights
 write_HPC_data(repetitions, scenarios, n_cargo_unknownweight, time_limit, HPC_folder)
@@ -47,11 +45,11 @@ for i in 1:repetitions
     #println("Iteration: ", i)
     for j in 1:sc
         for k in 1:n
-            println("rep: ", i, ". sc: ", j, ". n: ", k)
+            #println("rep: ", i, ". sc: ", j, ". n: ", k)
             # uniform random sampling method
             pro = create_stochastic_problem(problem_det, scenarios[j], n_cargo_unknownweight[k], []) 
             # Save problem
-            foldername = "Stochastic_rep$(i)_sc$(scenarios[j])_unknown$(n_cargo_unknownweight[k])_time$(time_limit)"
+            foldername = "Stochastic_random_sampling_rep$(i)_sc$(scenarios[j])_unknown$(n_cargo_unknownweight[k])_time$(time_limit)"
             write_problem_stochastic(pro,foldername,"Stochastic_Problem",HPC_folder)
             #problems_sto_gen[i,j,k] = pro
             mo = create_model_stochastic(pro)
@@ -75,8 +73,8 @@ for i in 1:repetitions
             write_solution(fitted_sol,foldername,"Fitted_Solution",HPC_folder)
             #fitted_sol_gen[i,j,k] = fitted_sol
 
-            # EVP method
-            foldername = "EVP_rep$(i)_sc$(scenarios[j])_unknown$(n_cargo_unknownweight[k])_time$(time_limit)"
+            # EVP method for uniform random sampling method 
+            foldername = "EVP_random_sampling_rep$(i)_sc$(scenarios[j])_unknown$(n_cargo_unknownweight[k])_time$(time_limit)"
             pro = expected_value_problem(pro)
             # Save problem
             write_problem(pro,foldername,"EVP_Problem",HPC_folder)
@@ -100,6 +98,28 @@ for i in 1:repetitions
             # Save fitted solution
             write_solution(fitted_sol,foldername,"Fitted_Solution",HPC_folder)
             #fitted_sol_EVP[i,j,k] = fitted_sol
+
+            # Bootstrap method 1
+            pro = create_stochastic_problem(problem_det, scenarios[j], n_cargo_unknownweight[k], [],Bootstrap_bookedweight_bins) 
+            # Save problem
+            foldername = "Stochastic_Bootstrap1_rep$(i)_sc$(scenarios[j])_unknown$(n_cargo_unknownweight[k])_time$(time_limit)"
+            write_problem_stochastic(pro,foldername,"Stochastic_Problem",HPC_folder)
+            mo = create_model_stochastic(pro)
+            set_silent(mo) # removes terminal output
+            set_time_limit_sec(mo, time_limit)
+            optimize!(mo)
+            sol = extract_stochastic_solution(pro,mo)
+            # Save solution
+            write_solution_stochastic(sol,foldername,"Stochastic_Solution",HPC_folder)
+            cs_sol = sol.cs
+            # Solve second stage when we know unknown weights
+            second_stage_m = second_stage_model(cs_sol, problem_det)
+            set_silent(second_stage_m) # removes terminal output
+            set_time_limit_sec(second_stage_m, time_limit) # 5 minutes to solve model
+            optimize!(second_stage_m)
+            fitted_sol = get_solution_second_stage_stochastic(problem_det, second_stage_m, sol)
+            # Save fitted solution
+            write_solution(fitted_sol,foldername,"Fitted_Solution",HPC_folder)
         end
     end
 end
