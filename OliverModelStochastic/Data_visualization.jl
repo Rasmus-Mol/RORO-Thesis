@@ -1,4 +1,4 @@
-# Script to plot data
+# Script to plot data from problem instances and historic data 
 push!(LOAD_PATH, pwd())
 using Base: @kwdef
 import Base: length, getindex, lastindex, keys, eachindex, iterate, eltype, firstindex
@@ -136,3 +136,33 @@ display(p)
 # Other methods for generating scenarios...
 
 
+# Plot Historic data
+# load historic data 
+n_quantiles = 4
+cur_path = @__DIR__
+file_path = joinpath(cur_path,"data","CargoWeights.csv")
+df = load_Weight_Variance_data(file_path)
+df_secu, df_trailer = weight_difference_info(df,false)
+df_secu_quan, = seperate_data_into_quantiles(df_secu,n_quantiles,false)
+df_trailer_quan, = seperate_data_into_quantiles(df_trailer,n_quantiles,false)
+histogram(df_secu_quan.CountBookedWeight, bins=50, xlabel="Weight", 
+ylabel="Frequency", title="SECU booked weight distribution", legend=false)
+histogram(df_trailer_quan.CountBookedWeight, bins=50, xlabel="Weight",
+ylabel="Frequency", title="Trailer booked weight distribution", legend=false)
+
+secu_var = [collect(filter(x -> x.QuantileNumber == i, df_secu_quan).Variance) for i in 1:n_quantiles]
+trailer_var = [collect(filter(x -> x.QuantileNumber == i, df_trailer_quan).Variance) for i in 1:n_quantiles]
+p = []
+for i in 1:n_quantiles
+    push!(p, histogram(secu_var[i], bins=30, xlabel="Weight variance", 
+    ylabel="Frequency", title="SECU weight variance, quantile: $i",titlefont=font(10),tickfontsize=5, legend=false, formatter=:plain))
+end
+plot(p..., layout=(2,2)) # Good plot I think
+savefig("Plots/Data/Weight_variance_secu_quantiles.png")
+p = []
+for i in 1:n_quantiles
+    push!(p, histogram(trailer_var[i], bins=30, xlabel="Weight variance", 
+    ylabel="Frequency", title="Trailer weight variance, quantile: $i",titlefont=font(10),tickfontsize=5, legend=false, formatter=:plain))
+end
+plot(p..., layout=(2,2)) # Good plot I think
+savefig("Plots/Data/Weight_variance_trailer_quantiles.png")

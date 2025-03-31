@@ -1,6 +1,6 @@
 # Script to do something with Olivers variance of weight data
 # Uses data from variance of weight from Oliver
-#using DataFrames, XLSX, CSV, Plots, Distributions, CategoricalArrays
+#using DataFrames, XLSX, CSV, Plots, Distributions, CategoricalArrays, StatsBase
 
 function load_Weight_Variance_data(file_path::String)
     # load data
@@ -81,4 +81,27 @@ function seperate_data_into_bins(df,bins,remove_outlier::Bool=true)
     println(length(df_sort.CountBookedWeight))
     df_sort.BinNumber = bin_number
     return df_sort, bin_arr
+end
+# Seperate data into quantiles based on booked weight
+function seperate_data_into_quantiles(df,quantiles,remove_outlier::Bool=true)
+    df_new = copy(df)
+    if remove_outlier
+        df_new = filter(row -> abs(row.CountBookedWeight - mean(df.CountBookedWeight)) / std(df.CountBookedWeight) ≤ 3, df)
+    end
+    df_sort = sort(df_new, :CountBookedWeight)
+    # Calculate quantile values (e.g., 0.25, 0.5, 0.75 for quartiles)
+    quantile_arr = [quantile(df_sort.CountBookedWeight, i / quantiles) for i in 1:quantiles]
+    
+    # adding quantile numbers to each data point
+    quantile_number = []
+    for i in 1:length(df_sort.CountBookedWeight)
+        for j in 1:quantiles
+            if df_sort.CountBookedWeight[i] <= quantile_arr[j]
+                push!(quantile_number, j)
+                break
+            end
+        end
+    end
+    df_sort.QuantileNumber = quantile_number
+    return df_sort, quantile_arr
 end

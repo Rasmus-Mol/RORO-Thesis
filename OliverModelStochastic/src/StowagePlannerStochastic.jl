@@ -73,7 +73,7 @@ export write_problem, write_problem_stochastic, write_solution, write_solution_s
 export get_deterministic_problem, get_stochastic_problem, get_solution_deterministic, get_solution_stochastic, get_HPC_data
 export now, format, Dates
 # Bootstrap method 
-export Bootstrap_bookedweight_bins
+export Bootstrap_bookedweight_quantile
 
 # Functions to connect to LoadMaster
 #export LoadMaster, getcurrentvessel, resetvessel, upload_solution, getresults, parse_result, uri, headers, struct_to_json
