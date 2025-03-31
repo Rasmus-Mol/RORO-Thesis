@@ -31,6 +31,7 @@ include("src/representation/instance.jl")
 include("src/representation/problem.jl")
 # New: Stochastic 
 include("src/representation/CargoScenarios.jl")
+include("src/representation/VarianceOfWeight.jl")
 
 
 # load data
@@ -38,15 +39,15 @@ problem = load_data("finlandia", "no_cars_medium_100_haz_eq_0.1", "hazardous")
 scenarios = 10
 n_cargo_unknownweight = 30 #length(problem.cargo) # all cargo weights are unknown
 stochastic_problem1 = create_stochastic_problem(problem, scenarios, n_cargo_unknownweight,[])
-EVP_problem = expected_value_problem(stochastic_problem1)
-#stochastic_problem2 = create_stochastic_problem(problem, scenarios, n_cargo_unknownweight,[],Monto_Carlo_sampling)
-
+EVP_problem1 = expected_value_problem(stochastic_problem1)
+stochastic_problem2 = create_stochastic_problem(problem, scenarios, n_cargo_unknownweight,[],Bootstrap_bookedweight_bins)
+EVP_problem1 = expected_value_problem(stochastic_problem2)
 
 # Plot weight distribution
 include("src/plots/weight_plots.jl")
 #plot_weights(stochastic_problem1,1) # plot for scenario 1
 plots_gen = plot_cargo_weights(stochastic_problem1,[1,2,3]) # plot for multiple scenarios
-#plots_monte = plot_cargo_weights(stochastic_problem2,[1,2,3])
+plots_boot = plot_cargo_weights(stochastic_problem2,[1,2,3])
 for i in 1:length(plots_gen)
     display(plots_gen[i])
 end
@@ -56,20 +57,32 @@ display(OG_plot[1])
 display(OG_plot[2])
 display(EVP_plot[1])
 display(EVP_plot[2])
-#for i in 1:length(plots_monte)
-#    display(plots_monte[i])
-#end
+for i in 1:length(plots_boot)
+    display(plots_boot[i])
+end
 # total weight of cargo
 println("Total weight of cargo: ", sum([cargo.weight for cargo in problem.cargo]))
-println("Average total weight of cargo, stochastic problem - Gen: ", sum(sum([cargo.weight for cargo in stochastic_problem1.cargo.items[i]]) for i in 1:scenarios)/scenarios)
-#println("Average total weight of cargo, stochastic problem - Monte: ", sum(sum([cargo.weight for cargo in stochastic_problem2.cargo.items[i]]) for i in 1:scenarios)/scenarios)
+println("Average total weight of total cargo, stochastic problem - Gen: ", sum(sum([cargo.weight for cargo in stochastic_problem1.cargo.items[i]]) for i in 1:scenarios)/scenarios)
+println("Average total weight of total cargo, stochastic problem - Boot: ", sum(sum([cargo.weight for cargo in stochastic_problem2.cargo.items[i]]) for i in 1:scenarios)/scenarios)
 
 for i in 1:scenarios
+    #println("############################")
+    #for j in 1:4
+    #    if length([cargo.weight for cargo in filter(x -> x.cargo_type_id == j,stochastic_problem1.cargo.items[i])]) > 0
+    #        println("Mean of cargo-type ", j, ": ", mean([cargo.weight for cargo in filter(x -> x.cargo_type_id == j,stochastic_problem1.cargo.items[i])]))
+    #    end
+    #end
     println("Total weight of cargo - Gen, scenario ", i, ": ", sum([cargo.weight for cargo in stochastic_problem1.cargo.items[i]]))
 end
-#for i in 1:scenarios
-#    println("Total weight of cargo - Monte, scenario ", i, ": ", sum([cargo.weight for cargo in stochastic_problem2.cargo.items[i]]))
-#end
+for i in 1:scenarios
+    println("############################")
+    for j in 1:4
+        if length([cargo.weight for cargo in filter(x -> x.cargo_type_id == j,stochastic_problem2.cargo.items[i])]) > 0
+            println("Mean of cargo-type ", j, ": ", mean([cargo.weight for cargo in filter(x -> x.cargo_type_id == j,stochastic_problem1.cargo.items[i])]))
+        end
+    end
+    println("Total weight of cargo - Boot, scenario ", i, ": ", sum([cargo.weight for cargo in stochastic_problem2.cargo.items[i]]))
+end
 
 # Model scripts
 include("src/model/base_model.jl")

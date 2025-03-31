@@ -32,7 +32,7 @@ function plot_weights(problem::StochasticStowageProblem,sc::Int64 = 1)
 end
 
 # Plots the distrubtion of the 4 car types for the original problem
-function plot_cargo_OG(problem::StowageProblem)
+function plot_cargo_OG(problem::StowageProblem,OG::Bool = true)
     weight1 = [x.weight for x in filter(x -> x.cargo_type_id == 1, problem.cargo)]
     weight2 = [x.weight for x in filter(x -> x.cargo_type_id == 2, problem.cargo)]
     weight3 = [x.weight for x in filter(x -> x.cargo_type_id == 3, problem.cargo)]
@@ -60,7 +60,7 @@ function plot_cargo_OG(problem::StowageProblem)
             histogram(weight3, bin = edges3, xlabel = "Weight", ylabel = "Frequency", label = "Type 3"),
             histogram(weight4, bin = edges4, xlabel = "Weight", ylabel = "Frequency", label = "Type 4"),
             layout = (2,2),
-            plot_title = "Cargo weight distribution for original problem"
+            plot_title = OG ? "Cargo weight distribution for original problem" : "Cargo weight distribution for EVP"
             )
     else
         p = plot(
@@ -68,7 +68,7 @@ function plot_cargo_OG(problem::StowageProblem)
             histogram(weight3, bin = edges3, xlabel = "Weight", ylabel = "Frequency", label = "Type 3"),
             histogram(weight4, bin = edges4, xlabel = "Weight", ylabel = "Frequency", label = "Type 4"),
             layout = (2,2),
-            plot_title = "Cargo weight distribution for original problem"
+            plot_title = OG ? "Cargo weight distribution for original problem" : "Cargo weight distribution for EVP"
             )
     end
     push!(plots,p)
@@ -86,9 +86,13 @@ function plot_cargo_OG(problem::StowageProblem)
     bin_width = 2 # bin width in tons
     edges = min_weight:bin_width:max_weight
     if length(weight2)>0
-        hist = histogram(weights, bins = edges, stack =true, xlabel = "Weight", ylabel = "Frequency", label = ["Type 1" "Type 2" "Type 3" "Type 4"], title = "Cargo weight distribution for original problem")
+        hist = histogram(weights, bins = edges, stack =true, xlabel = "Weight", ylabel = "Frequency", 
+        label = ["Type 1" "Type 2" "Type 3" "Type 4"], 
+        title = OG ? "Cargo weight distribution for original problem" : "Cargo weight distribution for EVP")
     else
-        hist = histogram([weight1,weight3,weight4], bins = edges, stack =true, xlabel = "Weight", ylabel = "Frequency", label = ["Type 1" "Type 3" "Type 4"], title = "Cargo weight distribution for original problem")
+        hist = histogram([weight1,weight3,weight4], bins = edges, stack =true, xlabel = "Weight", 
+        ylabel = "Frequency", label = ["Type 1" "Type 3" "Type 4"], 
+        title = OG ? "Cargo weight distribution for original problem" : "Cargo weight distribution for EVP")
     end
     push!(plots,hist)
     return plots
@@ -97,6 +101,7 @@ end
 # Test normality assumption
 # TODO: need guesses for means and stds for each cargo type
 # NB! DOES NOT WORK CURRENTLY
+# Not sure this is needed 
 function test_normality(problem::StowageProblem,means, stds)
     p_values = []
     assumption = Bool[]

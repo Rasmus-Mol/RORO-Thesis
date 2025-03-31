@@ -4,9 +4,9 @@
 #BSUB -e HPC_Output/error_%J.err
 #BSUB -q hpc
 #BSUB -n 4
-#BSUB -R "rusage[mem=15GB]"
+#BSUB -R "rusage[mem=8GB]"
 #BSUB -R "span[hosts=1]"
-#BSUB -W 12:00
+#BSUB -W 24:00
 #BSUB -u s194364@student.dtu.dk
 #BSUB -N 
 # end of BSUB options
