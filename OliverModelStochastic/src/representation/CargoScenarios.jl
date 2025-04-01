@@ -13,10 +13,10 @@ function random_weight(type)
         elseif type == 1 # Truck
                 Rweight = rand(5.0:0.5:40.0)
         elseif type == 3 # Machine
-                volume = 4.6 * 4.5 * 3.0
+                volume = 4.6 * 4.5 * 3.0 # Sizes are hardcoded
                 Rweight = volume * rand(0.2:0.01:0.5)
         else # Secu
-                volume = 13.8 * 3.6 * 4.0
+                volume = 13.8 * 3.6 * 4.0 # Sizes are hardcoded
                 Rweight = volume * rand(0.2:0.01:0.5)
         end
         return Rweight
@@ -122,29 +122,33 @@ end
 ############
 
 # Bootstrap sampling from historic data
-function Bootstrap_bookedweight_bins(problem::StowageProblem,s::Int64,ids)
+function Bootstrap_bookedweight_quantile(problem::StowageProblem,s::Int64,ids)
         # File path
         cur_path = @__DIR__
         file_path = joinpath(cur_path,"..","..","data","CargoWeights.csv")
         # load historic data 
         df = load_Weight_Variance_data(file_path)
         df_secu, df_trailer = weight_difference_info(df,false)
-        # Removes outlier and and bins
-        bins = 5
-        df_secu = seperate_data_into_bins(df_secu,bins,true)
-        df_trailer = seperate_data_into_bins(df_trailer,bins,true)
+        # Seperate data into quantiles
+        n_quantiles = 4
+        df_secu, q_arr_secu = seperate_data_into_quantiles(df_secu,n_quantiles,false)
+        df_trailer, q_arr_trailer = seperate_data_into_quantiles(df_trailer,n_quantiles,false)
+        q_arr_secu = q_arr_secu ./1000 # convert to tons
+        q_arr_trailer = q_arr_trailer ./1000 # convert to tons
+        secu_var = [collect(filter(x -> x.QuantileNumber == i, df_secu).Variance) for i in 1:n_quantiles]
+        trailer_var = [collect(filter(x -> x.QuantileNumber == i, df_trailer).Variance) for i in 1:n_quantiles]
         # Generate scenarios
         cargo_scenarios = Vector{CargoCollection}() # array with CargoCollections 
         probability = fill(1/s,s) # equal probability for each scenario
         cargoC = problem.cargo
         # Generate cargocolletion for each scenario
         for i in 1:s
-                push!(cargo_scenarios,random_weight_CarcoCollection(cargoC,ids))
+                push!(cargo_scenarios,Bootstrap_bookedweight_quantile_cargocollection(cargoC,ids,q_arr_secu,q_arr_trailer,secu_var,trailer_var))
         end
         return CargoCollectionScenarios(cargo_scenarios), probability # return CargoCollectionScenarios
 end
 # Bootstrap sampling to generate 1 scenario 
-function Bootstrap_bookedweight_bins_cargocollection(cargo_C,ids,df_secu,df_trailer)
+function Bootstrap_bookedweight_quantile_cargocollection(cargo_C,ids,q_arr_secu,q_arr_trailer,secu_var,trailer_var)
         new_cargoC = Vector{Cargo}() # new CargoCollection
         n_items = length(cargo_C.items) # number of cargo 
         for i in 1:n_items
@@ -152,7 +156,7 @@ function Bootstrap_bookedweight_bins_cargocollection(cargo_C,ids,df_secu,df_trai
                 if current_cargo.id in ids # generate new cargo with random weight
                         push!(new_cargoC,Cargo(id = current_cargo.id,
                         cargo_type_id = current_cargo.cargo_type_id,
-                        weight =  Bootstrap_bookedweight_bins_cargovariance(current_cargo,df_secu,df_trailer),
+                        weight =  Bootstrap_bookedweight_quantile_cargovariance(current_cargo,q_arr_secu,q_arr_trailer,secu_var,trailer_var),
                         loading_port = current_cargo.loading_port,
                         discharge_port = current_cargo.discharge_port,
                         priority = current_cargo.priority,
@@ -163,20 +167,51 @@ function Bootstrap_bookedweight_bins_cargocollection(cargo_C,ids,df_secu,df_trai
                         push!(new_cargoC,current_cargo)
                 end
         end
-
+        return CargoCollection(new_cargoC)
 end
 # Bootstrap sampling to generate 1 cargo-weight
-function Bootstrap_bookedweight_bins_cargovariance(cargo::Cargo,df_secu,df_trailer)
+function Bootstrap_bookedweight_quantile_cargovariance(cargo::Cargo,q_arr_secu,q_arr_trailer,secu_var,trailer_var)
         c_type = cargo.cargo_type_id
         if c_type == 1 # Truck/Trailer
-                return cargo.weight-rand(df_trailer.Variance) # uniform sampling from variance
+                for i in 1:(length(trailer_var)-1)
+                        if cargo.weight <= q_arr_trailer[i]
+                                # uniform sampling from variance from corresponding quantile
+                                new_weight = cargo.weight-rand(trailer_var[i])/1000 # convert to tons
+                                if new_weight < 5.0
+                                        return 5.0
+                                end
+                                return new_weight
+                        end
+                end
+        # Belongs to last quantile
+                new_weight = cargo.weight-rand(trailer_var[end])/1000
+                if new_weight < 5.0
+                        return 5.0
+                end
+                return new_weight
         elseif c_type == 2 # Car - no historical data
                 return rand(1.5:0.1:3.0)
         elseif c_type == 3 # Machine - no historical data
                 volume = 4.6 * 4.5 * 3.0
                 return volume * rand(0.2:0.01:0.5)
         else # Secu
-                return cargo.weight-rand(df_secu.Variance) # uniform sampling from variance
+                # Checking which quantile the cargo weight is in
+                for i in 1:(length(secu_var)-1)
+                        if cargo.weight <= q_arr_secu[i]
+                                # uniform sampling from variance from corresponding quantile
+                                new_weight =  cargo.weight-rand(secu_var[i])/1000 # convert to tons
+                                if new_weight < 13.8 * 3.6 * 4.0 * 0.2
+                                        return 13.8 * 3.6 * 4.0 * 0.2 # min weight
+                                end
+                                return new_weight
+                        end
+                end
+                # Belongs to last quantile
+                new_weight = cargo.weight-rand(secu_var[end])/1000
+                if new_weight < 13.8 * 3.6 * 4.0 * 0.2
+                        return 13.8 * 3.6 * 4.0 * 0.2 # min weight
+                end
+                return new_weight
         end
 end
 
