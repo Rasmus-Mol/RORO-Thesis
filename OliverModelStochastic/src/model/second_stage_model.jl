@@ -16,6 +16,8 @@ function second_stage_model(cs, problem::StowageProblem)
     slots_to_frame = calculate_slot_frame_overlap_matrix(slots, vessel.frame_positions)
     ρ = 1.025
 	model = Model(Gurobi.Optimizer)
+	# number should match number of cores used at HPC
+	set_optimizer_attribute(model, "Threads", 4)
     @variable(model, weight[1:n_slots] >= 0)   # Weight at each slot
     
     CSC = sum(vessel.ballast_tanks[t].max_vol for t in 1:n_ballast_tanks)

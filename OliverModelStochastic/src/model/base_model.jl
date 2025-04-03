@@ -42,7 +42,8 @@ function create_model(problem::StowageProblem)
 	#set_time_limit_sec(model, 60 * 0.5)
 	# model = Model(() -> Gurobi.Optimizer(GRB_ENV[]))
 	model = Model(Gurobi.Optimizer)
-	# set_optimizer_attribute(model, "Threads", 8)
+	# number should match number of cores used at HPC
+	set_optimizer_attribute(model, "Threads", 4)
 	# model = Model(HiGHS.Optimizer)
 
 	# Weight variables
