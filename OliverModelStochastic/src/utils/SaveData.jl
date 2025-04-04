@@ -148,6 +148,7 @@ function get_stochastic_problem(foldername::String,filename::String,HPC_folder::
         return stochastic_problem
     end
 end
+
 # Get deterministic solution
 function get_solution_deterministic(foldername::String,filename::String,HPC_folder::String)
     open(joinpath("Results",HPC_folder,foldername,filename*"_info"*".json"), "r") do file
@@ -162,11 +163,17 @@ function get_solution_deterministic(foldername::String,filename::String,HPC_fold
         area_utilization = info[8]
         cs = info[9]
         # convert to correct type
-        cs_M = Matrix{Float64}(undef, length(cs[1]), length(cs))
-        for i in 1:length(cs)
-            for j in 1:length(cs[1])
-                cs_M[j,i] = cs[i][j]
+        if length(cs)>0
+            cs_M = Matrix{Float64}(undef, length(cs[1]), length(cs))
+            for i in 1:length(cs)
+                for j in 1:length(cs[1])
+                    cs_M[j,i] = cs[i][j]
+                end
             end
+        else # no solution
+            cs_M = Matrix{Float64}(undef, 0, 0) # empty matrix
+            gap = Inf
+            objective = Inf
         end
         n_cargo_total = info[10]
         n_cargo_loaded = info[11]
@@ -216,7 +223,6 @@ function get_solution_deterministic(foldername::String,filename::String,HPC_fold
         return solution
     end
 end
-
 # Get Stochastic solution
 function get_solution_stochastic(foldername::String,filename::String,HPC_folder::String)
     open(joinpath("Results",HPC_folder,foldername,filename*"_info"*".json"), "r") do file

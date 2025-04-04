@@ -36,7 +36,7 @@ include("src/representation/VarianceOfWeight.jl")
 
 # load data
 problem = load_data("finlandia", "no_cars_medium_100_haz_eq_0.1", "hazardous")
-scenarios = 10
+scenarios = 20
 n_cargo_unknownweight = length(problem.cargo) # all cargo weights are unknown
 stochastic_problem1 = create_stochastic_problem(problem, scenarios, n_cargo_unknownweight,[])
 EVP_problem1 = expected_value_problem(stochastic_problem1)
