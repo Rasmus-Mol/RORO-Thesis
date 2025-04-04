@@ -10,10 +10,11 @@ parse_index = parse(Int, ARGS[1]) # Jobindex input
 
 problem_det = load_data("finlandia", "no_cars_medium_100_haz_eq_0.1", "hazardous")
 
+# Folder name for results - date and hour
+HPC_folder = "Finlandia_"*Dates.format(now(), "dd_mm_HH")
+
 # First job index - create problem 
 if parse_index == 1
-    # Folder name for results - date and hour
-    HPC_folder = "Finlandia_"*Dates.format(now(), "dd_mm_HH")
     # Creates Deterministic problem and model
     model_det = create_model(problem_det)
     set_silent(model_det) # removes terminal output
@@ -34,7 +35,9 @@ n_cargo_unknownweight = [length(problem_det.cargo)] # all cargo weights are unkn
 time_limit = 60 * 60 # 1 hour
 repetitions = 1 # number of repetitions of same inputs
 
-if parse_index == 1
+# Check if folder and file has been created, otherwise create
+file_check = "Results/"*HPC_folder*"HPC_data.json"
+if !isfile(file_check)
     # Save scenario and number of unknown weights
     write_HPC_data(repetitions, scenarios, n_cargo_unknownweight, time_limit, HPC_folder)
 end
@@ -43,7 +46,7 @@ for i in 1:repetitions
     # uniform random sampling method
     pro = create_stochastic_problem(problem_det, sc, n_cargo_unknownweight[1], []) 
     # Save problem
-    foldername = "Stochastic_random_sampling_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[k])_time$(time_limit)"
+    foldername = "Stochastic_random_sampling_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)"
     write_problem_stochastic(pro,foldername,"Stochastic_Problem",HPC_folder)
     mo = create_model_stochastic(pro)
     set_silent(mo) # removes terminal output
@@ -83,7 +86,7 @@ for i in 1:repetitions
     write_solution(fitted_sol,foldername,"Fitted_Solution",HPC_folder)
 
     # Bootstrap method 1
-    pro = create_stochastic_problem(problem_det, scenarios[j], n_cargo_unknownweight[k], [],Bootstrap_bookedweight_quantile) 
+    pro = create_stochastic_problem(problem_det, sc, n_cargo_unknownweight[1], [],Bootstrap_bookedweight_quantile) 
     # Save problem
     foldername = "Stochastic_Bootstrap1_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)"
     write_problem_stochastic(pro,foldername,"Stochastic_Problem",HPC_folder)
