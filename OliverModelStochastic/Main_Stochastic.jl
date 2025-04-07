@@ -12,6 +12,8 @@ problem_det = load_data("finlandia", "no_cars_medium_100_haz_eq_0.1", "hazardous
 
 # Folder name for results - date and hour
 HPC_folder = "Finlandia_"*Dates.format(now(), "dd_mm_HH")
+ # Describe tests if necessary
+extra_info = "Test Monday 07/04 - Added slack models to tests."
 
 # First job index - create problem 
 if parse_index == 1
@@ -39,7 +41,7 @@ repetitions = 1 # number of repetitions of same inputs
 file_check = "Results/"*HPC_folder*"HPC_data.json"
 if !isfile(file_check)
     # Save scenario and number of unknown weights
-    write_HPC_data(repetitions, scenarios, n_cargo_unknownweight, time_limit, HPC_folder)
+    write_HPC_data(repetitions, scenarios, n_cargo_unknownweight, time_limit, HPC_folder, extra_info)
 end
 # Run tests
 for i in 1:repetitions
@@ -64,6 +66,17 @@ for i in 1:repetitions
     fitted_sol = get_solution_second_stage_stochastic(problem_det, second_stage_m, sol)
     # Save fitted solution
     write_solution(fitted_sol,foldername,"Fitted_Solution",HPC_folder)
+    # Check if second-stage problem was feasible
+    if fitted_sol.status == "INFEASIBLE"
+        second_stage_m_slacked = second_stage_model_slack(cs_sol, problem_det)
+        set_silent(second_stage_m_slacked) # removes terminal output
+        set_time_limit_sec(second_stage_m_slacked, time_limit) 
+        optimize!(second_stage_m_slacked)
+        fitted_sol_slacked = get_solution_second_stage_stochastic(problem_det, second_stage_m_slacked, sol)
+        write_solution(fitted_sol_slacked,foldername,"Fitted_Solution_slacked",HPC_folder)
+        write_slack(HPC_folder, foldername, filename, second_stage_m_slacked)
+    end
+
     # EVP method for uniform random sampling method 
     foldername = "EVP_random_sampling_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)"
     pro = expected_value_problem(pro)
@@ -84,6 +97,16 @@ for i in 1:repetitions
     fitted_sol = get_solution_second_stage_deterministic(problem_det, second_stage_m, sol)
     # Save fitted solution
     write_solution(fitted_sol,foldername,"Fitted_Solution",HPC_folder)
+    # Check if second-stage problem was feasible
+    if fitted_sol.status == "INFEASIBLE"
+        second_stage_m_slacked = second_stage_model_slack(cs_sol, problem_det)
+        set_silent(second_stage_m_slacked) # removes terminal output
+        set_time_limit_sec(second_stage_m_slacked, time_limit) 
+        optimize!(second_stage_m_slacked)
+        fitted_sol_slacked = get_solution_second_stage_deterministic(problem_det, second_stage_m_slacked, sol)
+        write_solution(fitted_sol_slacked,foldername,"Fitted_Solution_slacked",HPC_folder)
+        write_slack(HPC_folder, foldername, filename, second_stage_m_slacked)
+    end
 
     # Bootstrap method 1
     pro = create_stochastic_problem(problem_det, sc, n_cargo_unknownweight[1], [],Bootstrap_bookedweight_quantile) 
@@ -106,6 +129,17 @@ for i in 1:repetitions
     fitted_sol = get_solution_second_stage_stochastic(problem_det, second_stage_m, sol)
     # Save fitted solution
     write_solution(fitted_sol,foldername,"Fitted_Solution",HPC_folder)
+    # Check if second-stage problem was feasible
+    if fitted_sol.status == "INFEASIBLE"
+        second_stage_m_slacked = second_stage_model_slack(cs_sol, problem_det)
+        set_silent(second_stage_m_slacked) # removes terminal output
+        set_time_limit_sec(second_stage_m_slacked, time_limit) 
+        optimize!(second_stage_m_slacked)
+        fitted_sol_slacked = get_solution_second_stage_stochastic(problem_det, second_stage_m_slacked, sol)
+        write_solution(fitted_sol_slacked,foldername,"Fitted_Solution_slacked",HPC_folder)
+        write_slack(HPC_folder, foldername, filename, second_stage_m_slacked)
+    end
+
     # EVP method for Bootstrap method 1
     foldername = "EVP_Bootstrap1_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)"
     pro = expected_value_problem(pro)
@@ -126,6 +160,16 @@ for i in 1:repetitions
     fitted_sol = get_solution_second_stage_deterministic(problem_det, second_stage_m, sol)
     # Save fitted solution
     write_solution(fitted_sol,foldername,"Fitted_Solution",HPC_folder)
+    # Check if second-stage problem was feasible
+    if fitted_sol.status == "INFEASIBLE"
+        second_stage_m_slacked = second_stage_model_slack(cs_sol, problem_det)
+        set_silent(second_stage_m_slacked) # removes terminal output
+        set_time_limit_sec(second_stage_m_slacked, time_limit) 
+        optimize!(second_stage_m_slacked)
+        fitted_sol_slacked = get_solution_second_stage_deterministic(problem_det, second_stage_m_slacked, sol)
+        write_solution(fitted_sol_slacked,foldername,"Fitted_Solution_slacked",HPC_folder)
+        write_slack(HPC_folder, foldername, filename, second_stage_m_slacked)
+    end
 end
 
 
