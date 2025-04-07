@@ -183,9 +183,10 @@ function add_stability_stochastic!(vessel::Vessel, model, pos_weight_cargo, lcg_
     	sum(vessel.deadweight_tanks[t].vcg * vessel.deadweight_tanks[t].weight 
         for t in 1:length(vessel.deadweight_tanks))
 	)
+	# Changed 07/04
 	@expression(model, vcg_total[sc = 1:scenarios],
 		vcg_cargo[sc] + vcg_ballast[sc] + vcg_deadweight + 
-		vessel.lightship_vcg * vessel.lightship_vcg
+		vessel.lightship_vcg * vessel.lighship_weight #vessel.lightship_vcg
 	)
 
 	# # Metacentric height constraint. Constraint (15) - NB DIFFERENT THAN IN ARTICLE

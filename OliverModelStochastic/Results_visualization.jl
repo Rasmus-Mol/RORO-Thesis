@@ -330,3 +330,41 @@ for i in 1:length(Stochastic_boot_fitted_inf)
     end
 end
 
+# Check model with slack variables
+include("src/representation/CargoScenarios.jl")
+include("src/plots/weight_plots.jl")
+include("src/model/base_model.jl")
+include("src/model/stability.jl")
+include("src/model/base_stochastic_model.jl")
+include("src/model/stability_stochastic.jl")
+include("src/model/second_stage_model.jl")
+include("src/utils/helpers.jl")
+test_sol_fit = Stochastic_boot_fitted_inf[1]
+test_sol = Stochastic_boot_fitted_inf[1]
+test_sol_sc = 0
+for i in 1:sc
+    foldername = "Stochastic_Bootstrap1_rep$(1)_sc$(scenarios[i])_unknown$(n_unknown[1])_time$(time_limit)"
+    temp = get_solution_deterministic(foldername,
+    "Fitted_Solution",HPC_folder)
+    if (temp.status != "OPTIMAL") && (temp.status != "TIME_LIMIT")
+        test_sol_fit = temp
+        test_sol_sc = scenarios[i]
+        println(i)
+        break
+    end
+end
+# Load problem Stochastic solution before fitted
+foldername = "Stochastic_Bootstrap1_rep1_sc$(test_sol_sc)_unknown$(n_unknown[1])_time$(time_limit)"
+filename = "Stochastic_Problem"
+test_pro = get_stochastic_problem(foldername,filename,HPC_folder,problemname1,problemname2,problemname3)
+filename = "Stochastic_Solution"
+test_sol = get_solution_stochastic(foldername,filename,HPC_folder)
+# Placement
+cs = test_sol.cs
+# Run slack version of second-stage model - should probably be on HPC
+model = second_stage_model_slack(cs, Deterministic_problem)
+set_silent(model) # removes terminal output
+set_time_limit_sec(model, 60 * 5) # 5 minutes to start with
+optimize!(model)
+status = termination_status(model)
+
