@@ -42,7 +42,13 @@ include("src/utils/SaveData.jl")
 
 # load data from solutions
 # HPC_folder
-HPC_folder = "Finlandia_01_04_09_41_38" 
+#HPC_folder = "Finlandia_01_04_09_41_38" 
+HPC_folder = "Finlandia_03_04_13"
+plot_folder = "Plots/Results/day_03_04_version_bootstrap_1/"
+# Create folder for plots
+if !isdir(plot_folder)
+    mkpath(plot_folder)
+end
 # Load data from HPC
 repetitions, scenarios, n_unknown, time_limit = get_HPC_data(HPC_folder)
 #repetitions = 1 # didn't finish running
@@ -104,6 +110,7 @@ for i in 1:repetitions
     for j in 1:sc
         for k in 1:n
             println("############################")
+            println("Number of scnearios: ", scenarios[j])
             println("EVP model gen, Cargo loaded: ", EVP_gen[i,j,k].n_cargo_loaded)
             println("EVP model gen after realization, Cargo loaded: ", EVP_gen_fitted[i,j,k].n_cargo_loaded)
             println("Stochastic model gen, Cargo loaded: ", Stochastic_gen[i,j,k].n_cargo_loaded)
@@ -157,7 +164,7 @@ plot!(scenarios,cargo_loaded_Stochastic_gen[:,end],label = "Sto-Gen", linewidth 
 plot!(scenarios,cargo_loaded_Stochastic_boot[:,end],label = "Sto-Boot", linewidth =linew)
 plot!(scenarios,ones(length(scenarios))*Deterministic_Solution.n_cargo_loaded,label = "Deterministic", linewidth =linew, linestyle=:dash)
 display(p)
-savefig("Plots/Results/CargoLoaded_BeforeRealization.png")
+savefig(plot_folder*"CargoLoaded_BeforeRealization.png")
 p = plot(scenarios,cargo_loaded_EVP_gen_fitted[:,end],xlabel="Scenarios",ylabel="Cargo loaded",
 title="Cargo loaded for different models,\n after realization of cargo weight", label = "EVP-Gen", linewidth =linew)
 plot!(scenarios,cargo_loaded_EVP_boot_fitted[:,end],label = "EVP-Boot", linewidth =linew)
@@ -165,17 +172,17 @@ plot!(scenarios,cargo_loaded_Stochastic_gen_fitted[:,end],label = "Sto-Gen", lin
 plot!(scenarios,cargo_loaded_Stochastic_boot_fitted[:,end],label = "Sto-Boot", linewidth =linew)
 plot!(scenarios,ones(length(scenarios))*Deterministic_Solution.n_cargo_loaded,label = "Deterministic", linewidth =linew, linestyle=:dash)
 display(p)
-savefig("Plots/Results/CargoLoaded_AfterRealization.png")
+savefig(plot_folder*"CargoLoaded_AfterRealization.png")
 
 # Display Gaps
-p = plot(scenarios,gap_EVP_gen[:,end],xlabel="Scenarios",ylabel="Cargo loaded",
+p = plot(scenarios,gap_EVP_gen[:,end] .*100,xlabel="Scenarios",ylabel="Gap (%)",
 title="Gap for different models,\n before realization of cargo weight", label = "EVP-Gen", linewidth =linew)
-plot!(scenarios,gap_EVP_boot[:,end],label = "EVP-Boot", linewidth =linew)
-plot!(scenarios,gap_Stochastic_gen[:,end],label = "Sto-Gen", linewidth =linew)
-plot!(scenarios,gap_Stochastic_boot[:,end],label = "Sto-Boot", linewidth =linew)
-plot!(scenarios,ones(length(scenarios))*Deterministic_Solution.gap,label = "Deterministic", linewidth =linew, linestyle=:dash)
+plot!(scenarios,gap_EVP_boot[:,end] .*100,label = "EVP-Boot", linewidth =linew)
+plot!(scenarios,gap_Stochastic_gen[:,end] .* 100,label = "Sto-Gen", linewidth =linew)
+plot!(scenarios,gap_Stochastic_boot[:,end] .* 100,label = "Sto-Boot", linewidth =linew)
+plot!(scenarios,ones(length(scenarios))*Deterministic_Solution.gap .*100,label = "Deterministic", linewidth =linew, linestyle=:dash)
 display(p)
-savefig("Plots/Results/Gap_BeforeRealization.png")
+savefig(plot_folder*"Gap_BeforeRealization.png")
 # Zoomed in
 p = plot(scenarios,gap_EVP_gen[:,end],xlabel="Scenarios",ylabel="Cargo loaded",
 title="Gap for different models,\n before realization of cargo weight", label = "EVP-Gen", linewidth =linew)
@@ -184,143 +191,142 @@ plot!(scenarios,gap_EVP_boot[:,end],label = "EVP-Boot", linewidth =linew)
 plot!(scenarios,gap_Stochastic_boot[:,end],label = "Sto-Boot", linewidth =linew)
 plot!(scenarios,ones(length(scenarios))*Deterministic_Solution.gap,label = "Deterministic", linewidth =linew, linestyle=:dash)
 display(p)
-savefig("Plots/Results/Gap_BeforeRealization_zoomed.png")
+savefig(plot_folder*"Gap_BeforeRealization_zoomed.png")
 
 # Number of times problem was unfeasible
-count_infeasible = 0
-count_infeasible_fitted = 0
-count_timelimit_fitted = 0
-count_timelimit = 0
-problems_infeasible = []
-problems_timelimit = []
+EVP_gen_inf = []
+EVP_gen_fitted_inf = []
+Stochastic_gen_inf = []
+Stochastic_gen_fitted_inf = []
+EVP_boot_inf = []
+EVP_boot_fitted_inf = []
+Stochastic_boot_inf = []
+Stochastic_boot_fitted_inf = []
+
 for i in 1:sc
     for j in 1:n
         # print if not optimal
         if EVP_gen[r,i,j].status != "OPTIMAL"
-            if EVP_gen[r,i,j].status == "TIME_LIMIT"
-                count_timelimit += 1
-                push!(problems_timelimit,EVP_gen[r,i,j])
-            else
-                count_infeasible += 1
-                push!(problems_infeasible,EVP_gen[r,i,j])
-            end
+            push!(EVP_gen_inf,EVP_gen[r,i,j])
             println("##########################")
-            println("EVP gen model unfeasible for repetition $(r), scenario $(i), unknown cargo $(j)")
+            println("EVP gen model infeasible for repetition $(r), scenario $(i), unknown cargo $(j)")
             println("Status: ", EVP_gen[r,i,j].status)
         end
         if EVP_gen_fitted[r,i,j].status != "OPTIMAL"
-            if EVP_gen_fitted[r,i,j].status == "TIME_LIMIT"
-                count_timelimit_fitted += 1
-                push!(problems_timelimit,EVP_gen_fitted[r,i,j])
-            else
-                count_infeasible_fitted += 1
-                push!(problems_infeasible,EVP_gen_fitted[r,i,j])
-            end
+            push!(EVP_gen_fitted_inf,EVP_gen_fitted[r,i,j])
             println("##########################")
-            println("EVP gen fitted model unfeasible for repetition $(r), scenario $(i), unknown cargo $(j)")
+            println("EVP gen fitted model jnfeasible for repetition $(r), scenario $(i), unknown cargo $(j)")
             println("Status: ", EVP_gen_fitted[r,i,j].status)
         end
         if Stochastic_gen[r,i,j].status != "OPTIMAL"
-            if Stochastic_gen[r,i,j].status == "TIME_LIMIT"
-                count_timelimit += 1
-                push!(problems_timelimit,Stochastic_gen[r,i,j])
-            else
-                count_infeasible += 1
-                push!(problems_infeasible,Stochastic_gen[r,i,j])
-            end
+            push!(Stochastic_gen_inf,Stochastic_gen[r,i,j])
             println("##########################")
-            println("Stochastic gen model unfeasible for repetition $(r), scenario $(i), unknown cargo $(j)")
+            println("Stochastic gen model infeasible for repetition $(r), scenario $(i), unknown cargo $(j)")
             println("Status: ", Stochastic_gen[r,i,j].status)
         end
         if Stochastic_gen_fitted[r,i,j].status != "OPTIMAL"
-            if Stochastic_gen_fitted[r,i,j].status == "TIME_LIMIT"
-                count_timelimit_fitted += 1
-                push!(problems_timelimit,Stochastic_gen_fitted[r,i,j])
-            else
-                count_infeasible_fitted += 1
-                push!(problems_infeasible,Stochastic_gen_fitted[r,i,j])
-            end
+            push!(Stochastic_gen_fitted_inf,Stochastic_gen_fitted[r,i,j])
             println("##########################")
-            println("Stochastic gen fitted model unfeasible for repetition $(r), scenario $(i), unknown cargo $(j)")
+            println("Stochastic gen fitted model infeasible for repetition $(r), scenario $(i), unknown cargo $(j)")
             println("Status: ", Stochastic_gen_fitted[r,i,j].status)
         end
         if EVP_boot[r,i,j].status != "OPTIMAL"
-            if EVP_boot[r,i,j].status == "TIME_LIMIT"
-                count_timelimit += 1
-                push!(problems_timelimit,EVP_boot[r,i,j])
-            else
-                count_infeasible += 1
-                push!(problems_infeasible,EVP_boot[r,i,j])
-            end
+            push!(EVP_boot_inf,EVP_boot[r,i,j])
             println("##########################")
-            println("EVP boot model unfeasible for repetition $(r), scenario $(i), unknown cargo $(j)")
+            println("EVP boot model infeasible for repetition $(r), scenario $(i), unknown cargo $(j)")
             println("Status: ", EVP_boot[r,i,j].status)
         end
         if EVP_boot_fitted[r,i,j].status != "OPTIMAL"
-            if EVP_boot_fitted[r,i,j].status == "TIME_LIMIT"
-                count_timelimit_fitted += 1
-                push!(problems_timelimit,EVP_boot_fitted[r,i,j])
-            else
-                count_infeasible_fitted += 1
-                push!(problems_infeasible,EVP_boot_fitted[r,i,j])
-            end
+            push!(EVP_boot_fitted_inf,EVP_boot_fitted[r,i,j])
             println("##########################")
-            println("EVP boot fitted model unfeasible for repetition $(r), scenario $(i), unknown cargo $(j)")
+            println("EVP boot fitted model infeasible for repetition $(r), scenario $(i), unknown cargo $(j)")
             println("Status: ", EVP_boot_fitted[r,i,j].status)
         end
         if Stochastic_boot[r,i,j].status != "OPTIMAL"
-            if Stochastic_boot[r,i,j].status == "TIME_LIMIT"
-                count_timelimit += 1
-                push!(problems_timelimit,Stochastic_boot[r,i,j])
-            else
-                count_infeasible += 1
-                push!(problems_infeasible,Stochastic_boot[r,i,j])
-            end
+            push!(Stochastic_boot_inf,Stochastic_boot[r,i,j])
             println("##########################")
-            println("Stochastic boot model unfeasible for repetition $(r), scenario $(i), unknown cargo $(j)")
+            println("Stochastic boot model infeasible for repetition $(r), scenario $(i), unknown cargo $(j)")
             println("Status: ", Stochastic_boot[r,i,j].status)
         end
         if Stochastic_boot_fitted[r,i,j].status != "OPTIMAL"
-            if Stochastic_boot_fitted[r,i,j].status == "TIME_LIMIT"
-                count_timelimit_fitted += 1
-                push!(problems_timelimit,Stochastic_boot_fitted[r,i,j])
-            else
-                count_infeasible_fitted += 1
-                push!(problems_infeasible,Stochastic_boot_fitted[r,i,j])
-            end
+            push!(Stochastic_boot_fitted_inf,Stochastic_boot_fitted[r,i,j])
             println("##########################")
-            println("Stochastic boot fitted model unfeasible for repetition $(r), scenario $(i), unknown cargo $(j)")
+            println("Stochastic boot fitted model infeasible for repetition $(r), scenario $(i), unknown cargo $(j)")
             println("Status: ", Stochastic_boot_fitted[r,i,j].status)
         end
     end
 end
 println("##########################")
-println("Number of times problem was infeasible: ", count_infeasible)
-println("Number of times problem was infeasible due to time limit: ", count_timelimit)
-println("Number of times problem after realization was infeasible: ", count_infeasible_fitted)
-println("Number of times problem after realization was infeasible due to time limit: ", count_timelimit_fitted)
-
-# print problems that have issues
-sto_timelimit = []
-sto_names = []
-EVP_timelimit = []
-EVP_names = []
+println("Number of different parameters: ", sc*n)
+println("Stochastic models + EVP models: ", length(EVP_gen)+length(EVP_boot)+length(Stochastic_gen)+length(Stochastic_boot))
 println("##########################")
-println("Deterministic total cargo weight: ", Deterministic_Solution.cargo_weight)
-for i in 1:length(problems_timelimit)
-    println("##########################")
-    if typeof(problems_timelimit[i]) == SolutionStochastic
-        push!(sto_timelimit, problems_timelimit[i])
-        println("Stochastic model")
-        println("Average total weight of cargo: ", sum(c.cargo_weight for c in problems_timelimit[i].forces)/length(problems_timelimit[i].forces))
-        println("Number of scenarios: ", length(problems_timelimit[i].forces))
-    else
-        push!(EVP_timelimit, problems_timelimit[i])
-        println("EVP model")
-        println("Total weight of cargo: ", problems_timelimit[i].cargo_weight)
+# EVP models - normally none of them should be infeasible
+for i in 1:length(EVP_gen_inf)
+    println("Status: ", EVP_gen_inf[i].status)
+end
+println("##########################")
+for i in 1:length(EVP_boot_inf)
+    println("Status: ", EVP_boot_inf[i].status)
+end
+# Stochastic models 
+println("##########################")
+println("Stochastic gen model:")
+for i in 1:length(Stochastic_gen_inf)
+    println("Stochastic gen model infeasible for number of scenarios: $(length(Stochastic_gen_inf[i].forces))")
+    println("Status: ", Stochastic_gen_inf[i].status)
+    if Stochastic_gen_inf[i].status == "TIME_LIMIT"
+        println("Cargo loaded: ", Stochastic_gen_inf[i].n_cargo_loaded)
+    else # if infeasible
+        for j in 1:lengt(h(Stochastic_gen_inf[i].forces))
+            println("Weight in scenarios", Stochastic_gen_inf[i].forces[j].cargo_weight)
+        end
     end
 end
 println("##########################")
-println("Number of times a EVP-problem reached time: ",length(EVP_timelimit))
-println("Number of times a Stochastic-problem reached time: ",length(sto_timelimit))
+println("Stochastic Boot model:")
+for i in 1:length(Stochastic_boot_inf)
+    println("Stochastic boot model infeasible for number of scenarios: $(length(Stochastic_boot_inf[i].forces))")
+    println("Status: ", Stochastic_boot_inf[i].status)
+    if Stochastic_boot_inf[i].status == "TIME_LIMIT"
+        println("Cargo loaded: ", Stochastic_boot_inf[i].n_cargo_loaded)
+    else # if infeasible
+        for j in 1:lengt(h(Stochastic_boot_inf[i].forces))
+            println("Weight in scenarios", Stochastic_boot_inf[i].forces[j].cargo_weight)
+        end
+    end
+end
+# After the realization: The recourse Model
+println("##########################")
+# EVP models - normally none of them should be infeasible
+println("EVP-fitted gen model:")
+for i in 1:length(EVP_gen_fitted_inf)
+    println("Status: ", EVP_gen_fitted_inf[i].status)
+end
+println("##########################")
+println("EVP-fitted boot model:")
+for i in 1:length(EVP_boot_fitted_inf)
+    println("Status: ", EVP_boot_fitted_inf[i].status)
+    if EVP_boot_fitted_inf[i].status != "TIME_LIMIT"
+        # TODO Do something to check why this is the case
+    end
+end
+# Stochastic models 
+println("##########################")
+println("Stochastic-fitted gen model:")
+for i in 1:length(Stochastic_gen_fitted_inf)
+    println("Stochastic gen model infeasible.")
+    println("Status: ", Stochastic_gen_fitted_inf[i].status)
+    if Stochastic_gen_fitted_inf[i].status != "TIME_LIMIT" # infeasible
+        # TODO Do something to check why this is the case
+    end
+end
+println("##########################")
+println("Stochastic-fitted boot model:")
+for i in 1:length(Stochastic_boot_fitted_inf)
+    println("Stochastic boot model infeasible.")
+    println("Status: ", Stochastic_boot_fitted_inf[i].status)
+    if Stochastic_boot_fitted_inf[i].status != "TIME_LIMIT"
+        # TODO Do something to check why this is the case
+    end
+end
 

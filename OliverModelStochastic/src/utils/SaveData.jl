@@ -282,8 +282,8 @@ function get_solution_stochastic(foldername::String,filename::String,HPC_folder:
 end
 
 # Save HPC input and create folder for the following results
-function write_HPC_data(repetitions::Int64, scenarios::Vector, n_unknown::Vector,time_limit,HPC_folder::String)
-    data = [repetitions, scenarios, n_unknown,time_limit]
+function write_HPC_data(repetitions::Int64, scenarios::Vector, n_unknown::Vector,time_limit,HPC_folder::String, info::String = nothing)
+    data = [repetitions, scenarios, n_unknown, time_limit, info]
     # Creates folder for results
     if !isdir("Results/"*HPC_folder)
         mkdir("Results/"*HPC_folder)
@@ -300,6 +300,11 @@ function get_HPC_data(HPC_folder::String)
         scenarios = info[2]
         n_unknown = info[3]
         time_limit = info[4]
-        return repetitions, scenarios, n_unknown, time_limit
+        if length(info) > 4
+            info_string = info[5]
+        else
+            info_string = "No extra info"
+        end
+        return repetitions, scenarios, n_unknown, time_limit, info_string
     end
 end
