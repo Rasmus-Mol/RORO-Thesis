@@ -349,8 +349,7 @@ for i in 1:sc
     if (temp.status != "OPTIMAL") && (temp.status != "TIME_LIMIT")
         test_sol_fit = temp
         test_sol_sc = scenarios[i]
-        println(i)
-        break
+        #break
     end
 end
 # Load problem Stochastic solution before fitted
@@ -368,3 +367,6 @@ set_time_limit_sec(model, 60 * 5) # 5 minutes to start with
 optimize!(model)
 status = termination_status(model)
 
+slack_decks = value.(model[:slack_deck])
+
+test_sol_fit.status

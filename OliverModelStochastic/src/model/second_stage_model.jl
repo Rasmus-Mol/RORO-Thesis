@@ -103,8 +103,9 @@ function second_stage_model_slack(cs, problem::StowageProblem)
     sum(weight[s] * slots_to_frame[s, p] for s ∈ 1:n_slots)
 )
     # # # Deck weight limit. Constraint (29)
+	@variable(model, slack_deck[1:n_deck] >= 0)
 	@constraint(model,[d = 1:n_deck],
-		sum(weight[s] for s in [x.id for x in filter(x -> x.deck_id == d, slots)]) <= vessel.decks[d].weight_limit
+		sum(weight[s] for s in [x.id for x in filter(x -> x.deck_id == d, slots)]) <= vessel.decks[d].weight_limit + slack_deck[d]
 	)
     
     # Rasmus: lcg, vcg, and tcg for cargo. Constraint (30), (31), (32)
@@ -114,15 +115,24 @@ function second_stage_model_slack(cs, problem::StowageProblem)
 	@expression(model, vcg_cargo, sum(cs[c, s] * cargo[c].weight * (slots[s].vcg + get_height(cargo[c]) / 2) for s ∈ 1:n_slots, c ∈ 1:n_cargo))
 
 	# Slack variables:
+	# Center of gravity
 	@variable(model, slack_Vmax >=0)
 	@variable(model, slack_Vmin >=0)
 	@variable(model, slack_Tmin>=0)
 	@variable(model, slack_Tmax>=0)
 	@variable(model, slack_Lmin>=0)
 	@variable(model, slack_Lmax>=0)
-	
+	# Stress and Bending
+	@variable(model, slack_shear1[1:n_positions]>=0)
+	@variable(model, slack_shear2[1:n_positions]>=0)
+	stress_limits = vessel.stress_limits
+	@variable(model, slack_shearMin[1:length(stress_limits)]>=0)
+	@variable(model, slack_shearMax[1:length(stress_limits)]>=0)
+	@variable(model, slack_bendingMax[1:length(stress_limits)]>=0)
+
     add_stability_slack!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo, tcg_cargo, vcg_cargo,
-	slack_Vmax,slack_Vmin,slack_Tmin,slack_Tmax,slack_Lmin,slack_Lmax)
+	slack_Vmax,slack_Vmin,slack_Tmin,slack_Tmax,slack_Lmin,slack_Lmax,
+	slack_shear1,slack_shear2,slack_shearMin,slack_shearMax,slack_bendingMax)
 
 	ballast_volume = model[:ballast_volume]
 
@@ -130,7 +140,9 @@ function second_stage_model_slack(cs, problem::StowageProblem)
 		sum(ballast_volume[t] for t ∈ 1:n_ballast_tanks)
 		-
 		sum(cost[c] * cargo_slack[c] for c ∈ 1:n_cargo)
-		+ M * (slack_Lmax+slack_Lmin+slack_Tmax+slack_Tmin+slack_Vmax+slack_Vmin)
-	)
+		+ M * (slack_Lmax+slack_Lmin+slack_Tmax+slack_Tmin+slack_Vmax+slack_Vmin
+		+ sum(slack_shear1) + sum(slack_shear2)+sum(slack_shearMax) + sum(slack_shearMin) + sum(slack_bendingMax)
+		+ sum(slack_deck))
+		)
 	return model
 end

@@ -213,7 +213,8 @@ end
 # Add stability constraints with slack variables to the model
 # Slack added at: Centers of gravity
 function add_stability_slack!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo, tcg_cargo, vcg_cargo, 
-		slack_Vmax,slack_Vmin,slack_Tmin,slack_Tmax,slack_Lmin,slack_Lmax)
+		slack_Vmax,slack_Vmin,slack_Tmin,slack_Tmax,slack_Lmin,slack_Lmax, # slack for center of gravity
+		slack_shear1,slack_shear2,slack_shearMin,slack_shearMax,slack_bendingMax) # slack for stress and bending
 
 	vcg_slope = calculate_vcg_slopes(vessel)
 
@@ -309,7 +310,7 @@ function add_stability_slack!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo
 	@constraint(model, buoyancy .== buoyancy_interpolated)
 
 	# Constraint (17) - First is correct
-	@constraint(model, shear .== cumulative_weight .- buoyancy)
+	@constraint(model, shear .+ slack_shear2 .== cumulative_weight .- buoyancy .+ slack_shear1)
 	#@constraint(model, shear .== cumulative_weight .+ buoyancy)
 
 	# @constraint(model, -100 <= sum(shear[i] * frame_length[i] for i in 1:n_positions-1) <= 100)
@@ -328,11 +329,11 @@ function add_stability_slack!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo
 
 	# Stress limits. Constraint (18), (20)
 	@constraint(model, [i in 1:length(stress_limits)],
-		shear[stress_frame_indices[i]] >= shear_min[i])
+		shear[stress_frame_indices[i]] + slack_shearMin[i] >= shear_min[i])
 	@constraint(model, [i in 1:length(stress_limits)],
-		shear[stress_frame_indices[i]] <= shear_max[i])
+		shear[stress_frame_indices[i]] <= shear_max[i] + slack_shearMax[i])
 	@constraint(model, [i in 1:length(stress_limits)],
-		bending[stress_frame_indices[i]] <= bending_max[i])
+		bending[stress_frame_indices[i]] <= bending_max[i] + slack_bendingMax[i])
 
 	# # Center of gravity constraints.
 	@expression(model, lcg_ballast,
