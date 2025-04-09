@@ -13,7 +13,7 @@ problem_det = load_data("finlandia", "no_cars_medium_100_haz_eq_0.1", "hazardous
 # Folder name for results - date and hour
 HPC_folder = "Finlandia_"*Dates.format(now(), "dd_mm_HH")
  # Describe tests if necessary
-extra_info = "Small test - delete after running"
+extra_info = "Change this"
 
 # First job index - create problem 
 if parse_index == 1
