@@ -1,6 +1,5 @@
 # Script to do something with Olivers variance of weight data
 # Uses data from variance of weight from Oliver
-#using DataFrames, XLSX, CSV, Plots, Distributions, CategoricalArrays, StatsBase
 
 function load_Weight_Variance_data(file_path::String)
     # load data
@@ -104,4 +103,149 @@ function seperate_data_into_quantiles(df,quantiles,remove_outlier::Bool=true)
     end
     df_sort.QuantileNumber = quantile_number
     return df_sort, quantile_arr
+end
+
+using DataFrames, XLSX, CSV, Plots, Distributions, CategoricalArrays, StatsBase
+
+# Function to plot distribution and compare with normal distribution - Weight
+# df_secu and df_trailer should have the same number of quantiles as input
+function scenario_distribution_with_normal(cargoC::CargoCollection, df_secu, df_trailer, n_quantiles::Int)
+    if maximum(df_secu.QuantileNumber) != n_quantiles || maximum(df_trailer.QuantileNumber) != n_quantiles
+        error("Number of quantiles in df does not match n_quantiles")
+        return
+    end
+    # Get the weights of the cargo
+    # Seperate scenario weight according to type
+    scenario_secu_weight = collect(filter(items -> items.cargo_type_id == 4, cargoC.items).weight)
+    scenario_trailer_weight = collect(filter(items -> items.cargo_type_id == 1, cargoC.items).weight)
+    # Sort scenario weight into quantiles
+    quantile_secu = [quantile(df_secu.CorrectedWeight, i / n_quantiles) for i in 1:n_quantiles]./1000
+    quantile_trailer = [quantile(df_trailer.CorrectedWeight, i / n_quantiles) for i in 1:n_quantiles]./1000
+
+    if n_quantiles >= 3
+        secu_weight = [sort(filter(w -> w <= quantile_secu[i] && w > quantile_secu[i-1] , scenario_secu_weight)) for i in 2:(n_quantiles-1)]
+        push!(secu_weight, sort(filter(w -> w > quantile_secu[n_quantiles-1], scenario_secu_weight)))
+        pushfirst!(secu_weight, sort(filter(w -> w <= quantile_secu[1], scenario_secu_weight)))
+        trailer_weight = [sort(filter(w -> w <= quantile_trailer[i] && w>quantile_trailer[i-1], scenario_trailer_weight)) for i in 2:(n_quantiles-1)]
+        push!(trailer_weight, sort(filter(w -> w > quantile_trailer[n_quantiles-1], scenario_trailer_weight)))
+        pushfirst!(trailer_weight, sort(filter(w -> w <= quantile_trailer[1], scenario_trailer_weight)))
+        # Sort scenario weight into quantiles
+        historic_secu_weight = [collect(filter(x -> x.QuantileNumber == i, df_secu).CorrectedWeight) for i in 1:n_quantiles]./1000
+        historic_trailer_weight = [collect(filter(x -> x.QuantileNumber == i, df_trailer).CorrectedWeight) for i in 1:n_quantiles]./1000
+    elseif n_quantiles == 2 # 2 quantiles
+        secu_weight = [sort(filter(w -> w <= quantile_secu[1], scenario_secu_weight)),
+                       sort(filter(w -> w > quantile_secu[1], scenario_secu_weight))]
+        trailer_weight = [sort(filter(w -> w <= quantile_trailer[1], scenario_trailer_weight)),
+                          sort(filter(w -> w > quantile_trailer[1], scenario_trailer_weight))]
+        # Sort scenario weight into quantiles
+        historic_secu_weight = [collect(filter(x -> x.QuantileNumber == i, df_secu).CorrectedWeight) for i in 1:n_quantiles]./1000
+        historic_trailer_weight = [collect(filter(x -> x.QuantileNumber == i, df_trailer).CorrectedWeight) for i in 1:n_quantiles]./1000
+    else # 1 quantile, ie. all data together
+        secu_weight = [sort(scenario_secu_weight)]
+        trailer_weight = [sort(scenario_trailer_weight)]
+        # Sort scenario weight into quantiles
+        historic_secu_weight = [collect(filter(x -> x.QuantileNumber == i, df_secu).CorrectedWeight) for i in 1:n_quantiles]./1000
+        historic_trailer_weight = [collect(filter(x -> x.QuantileNumber == i, df_trailer).CorrectedWeight) for i in 1:n_quantiles]./1000
+    end
+    p = []
+    for i in 1:n_quantiles
+        if length(secu_weight[i])>0
+            pl = histogram(secu_weight[i], normalize=true, label="Secu weight",
+            ylabel = "Frequency", xlabel = "Weight", title = "Secu weight quantile $(i)")
+            fit_secu = fit(Normal, historic_secu_weight[i])
+            x = range(minimum(historic_secu_weight[i]), stop=maximum(historic_secu_weight[i]), length=100)
+            plot!(x, pdf.(fit_secu, x), label="Fitted Normal", lw=2)
+            push!(p,pl)
+        end
+    end
+    xplots = Int(ceil(n_quantiles/2))
+    yplots = Int(ceil(n_quantiles/xplots))
+    plo = [plot(p..., layout=(xplots,yplots))]
+    p = []
+    for i in 1:n_quantiles
+        if length(trailer_weight[i])>0
+            pl = histogram(trailer_weight[i], normalize=true, label="Secu weight",
+            ylabel = "Frequency", xlabel = "Weight", title = "Trailer weight quantile $(i)")
+            fit_trailer = fit(Normal, historic_trailer_weight[i])
+            x = range(minimum(trailer_weight[i]), stop=maximum(trailer_weight[i]), length=100)
+            plot!(x, pdf.(fit_trailer, x), label="Fitted Normal", lw=2)
+            push!(p,pl)
+        end
+    end
+    xplots = Int(ceil(n_quantiles/2))
+    yplots = Int(ceil(n_quantiles/xplots))
+    push!(plo,plot(p..., layout=(xplots,yplots)))
+    return plo
+end
+
+
+# Function to plot distribution and compare with normal distribution - Variance
+# df_secu and df_trailer should have the same number of quantiles as input
+function scenario_distribution_with_normal(cargoC::CargoCollection, df_secu, df_trailer, n_quantiles::Int)
+    if maximum(df_secu.QuantileNumber) != n_quantiles || maximum(df_trailer.QuantileNumber) != n_quantiles
+        error("Number of quantiles in df does not match n_quantiles")
+        return
+    end
+    # Get the weights of the cargo
+    # Seperate scenario weight according to type
+    scenario_secu_weight = collect(filter(items -> items.cargo_type_id == 4, cargoC.items).weight)
+    scenario_trailer_weight = collect(filter(items -> items.cargo_type_id == 1, cargoC.items).weight)
+    # Sort scenario weight into quantiles
+    quantile_secu = [quantile(df_secu.CorrectedWeight, i / n_quantiles) for i in 1:n_quantiles]./1000
+    quantile_trailer = [quantile(df_trailer.CorrectedWeight, i / n_quantiles) for i in 1:n_quantiles]./1000
+
+    if n_quantiles >= 3
+        secu_weight = [sort(filter(w -> w <= quantile_secu[i] && w > quantile_secu[i-1] , scenario_secu_weight)) for i in 2:(n_quantiles-1)]
+        push!(secu_weight, sort(filter(w -> w > quantile_secu[n_quantiles-1], scenario_secu_weight)))
+        pushfirst!(secu_weight, sort(filter(w -> w <= quantile_secu[1], scenario_secu_weight)))
+        trailer_weight = [sort(filter(w -> w <= quantile_trailer[i] && w>quantile_trailer[i-1], scenario_trailer_weight)) for i in 2:(n_quantiles-1)]
+        push!(trailer_weight, sort(filter(w -> w > quantile_trailer[n_quantiles-1], scenario_trailer_weight)))
+        pushfirst!(trailer_weight, sort(filter(w -> w <= quantile_trailer[1], scenario_trailer_weight)))
+        # Sort scenario weight into quantiles
+        historic_secu_weight = [collect(filter(x -> x.QuantileNumber == i, df_secu).CorrectedWeight) for i in 1:n_quantiles]./1000
+        historic_trailer_weight = [collect(filter(x -> x.QuantileNumber == i, df_trailer).CorrectedWeight) for i in 1:n_quantiles]./1000
+    elseif n_quantiles == 2 # 2 quantiles
+        secu_weight = [sort(filter(w -> w <= quantile_secu[1], scenario_secu_weight)),
+                       sort(filter(w -> w > quantile_secu[1], scenario_secu_weight))]
+        trailer_weight = [sort(filter(w -> w <= quantile_trailer[1], scenario_trailer_weight)),
+                          sort(filter(w -> w > quantile_trailer[1], scenario_trailer_weight))]
+        # Sort scenario weight into quantiles
+        historic_secu_weight = [collect(filter(x -> x.QuantileNumber == i, df_secu).CorrectedWeight) for i in 1:n_quantiles]./1000
+        historic_trailer_weight = [collect(filter(x -> x.QuantileNumber == i, df_trailer).CorrectedWeight) for i in 1:n_quantiles]./1000
+    else # 1 quantile, ie. all data together
+        secu_weight = [sort(scenario_secu_weight)]
+        trailer_weight = [sort(scenario_trailer_weight)]
+        # Sort scenario weight into quantiles
+        historic_secu_weight = [collect(filter(x -> x.QuantileNumber == i, df_secu).CorrectedWeight) for i in 1:n_quantiles]./1000
+        historic_trailer_weight = [collect(filter(x -> x.QuantileNumber == i, df_trailer).CorrectedWeight) for i in 1:n_quantiles]./1000
+    end
+    p = []
+    for i in 1:n_quantiles
+        if length(secu_weight[i])>0
+            pl = histogram(secu_weight[i], normalize=true, label="Secu weight",
+            ylabel = "Frequency", xlabel = "Weight", title = "Secu weight quantile $(i)")
+            fit_secu = fit(Normal, historic_secu_weight[i])
+            x = range(minimum(historic_secu_weight[i]), stop=maximum(historic_secu_weight[i]), length=100)
+            plot!(x, pdf.(fit_secu, x), label="Fitted Normal", lw=2)
+            push!(p,pl)
+        end
+    end
+    xplots = Int(ceil(n_quantiles/2))
+    yplots = Int(ceil(n_quantiles/xplots))
+    plo = [plot(p..., layout=(xplots,yplots))]
+    p = []
+    for i in 1:n_quantiles
+        if length(trailer_weight[i])>0
+            pl = histogram(trailer_weight[i], normalize=true, label="Secu weight",
+            ylabel = "Frequency", xlabel = "Weight", title = "Trailer weight quantile $(i)")
+            fit_trailer = fit(Normal, historic_trailer_weight[i])
+            x = range(minimum(trailer_weight[i]), stop=maximum(trailer_weight[i]), length=100)
+            plot!(x, pdf.(fit_trailer, x), label="Fitted Normal", lw=2)
+            push!(p,pl)
+        end
+    end
+    xplots = Int(ceil(n_quantiles/2))
+    yplots = Int(ceil(n_quantiles/xplots))
+    push!(plo,plot(p..., layout=(xplots,yplots)))
+    return plo
 end

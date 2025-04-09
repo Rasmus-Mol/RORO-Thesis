@@ -40,11 +40,26 @@ include("src/plots/solution.jl")
 # Load data Script
 include("src/utils/SaveData.jl")
 
+# model
+include("src/representation/CargoScenarios.jl")
+include("src/plots/weight_plots.jl")
+include("src/model/base_model.jl")
+include("src/model/stability.jl")
+include("src/model/base_stochastic_model.jl")
+include("src/model/stability_stochastic.jl")
+include("src/model/second_stage_model.jl")
+include("src/utils/helpers.jl")
+
 # load data from solutions
 # HPC_folder
-#HPC_folder = "Finlandia_01_04_09_41_38" 
-HPC_folder = "Finlandia_03_04_13"
-plot_folder = "Plots/Results/day_03_04_version_bootstrap_1/"
+#HPC_folder = "Finlandia_03_04_13"
+#plot_folder = "Plots/Results/day_03_04_version_bootstrap_1/"
+#HPC_folder = "Finlandia_07_04_14"
+#plot_folder = "Plots/Results/day_07_04_version_bootstrap_1_first_results/"
+HPC_folder = "Finlandia_07_04_15"
+plot_folder = "Plots/Results/day_07_04_version_bootstrap_1_second_results/"
+
+
 # Create folder for plots
 if !isdir(plot_folder)
     mkpath(plot_folder)
@@ -103,6 +118,9 @@ for i in 1:repetitions
         end
     end
 end
+
+test = Stochastic_boot_fitted[1,3,1]
+test.status == "INFEASIBLE"
 
 println("##########################")
 println("Total number of models :", repetitions*sc*n)
@@ -262,11 +280,13 @@ println("Stochastic models + EVP models: ", length(EVP_gen)+length(EVP_boot)+len
 println("##########################")
 # EVP models - normally none of them should be infeasible
 for i in 1:length(EVP_gen_inf)
-    println("Status: ", EVP_gen_inf[i].status)
+    println("EVP-gen Status: ", EVP_gen_inf[i].status)
+    println("Index: ", i)
 end
 println("##########################")
 for i in 1:length(EVP_boot_inf)
-    println("Status: ", EVP_boot_inf[i].status)
+    println("EVP-boot Status: ", EVP_boot_inf[i].status)
+    println("Index: ", i)
 end
 # Stochastic models 
 println("##########################")
@@ -330,43 +350,186 @@ for i in 1:length(Stochastic_boot_fitted_inf)
     end
 end
 
+##################################3
 # Check model with slack variables
-include("src/representation/CargoScenarios.jl")
-include("src/plots/weight_plots.jl")
-include("src/model/base_model.jl")
-include("src/model/stability.jl")
-include("src/model/base_stochastic_model.jl")
-include("src/model/stability_stochastic.jl")
-include("src/model/second_stage_model.jl")
-include("src/utils/helpers.jl")
-test_sol_fit = Stochastic_boot_fitted_inf[1]
-test_sol = Stochastic_boot_fitted_inf[1]
-test_sol_sc = 0
+
+# Stochastic Boot
+slack_variables_boot = []
 for i in 1:sc
     foldername = "Stochastic_Bootstrap1_rep$(1)_sc$(scenarios[i])_unknown$(n_unknown[1])_time$(time_limit)"
     temp = get_solution_deterministic(foldername,
     "Fitted_Solution",HPC_folder)
-    if (temp.status != "OPTIMAL") && (temp.status != "TIME_LIMIT")
-        test_sol_fit = temp
-        test_sol_sc = scenarios[i]
-        #break
+    #println(temp.status)
+    if (temp.status == "INFEASIBLE") # solve slack model
+        # Get placement from stochastic problem
+        temp = get_solution_stochastic(foldername,"Stochastic_Solution",HPC_folder)
+        cs = temp.cs
+        model = second_stage_model_slack(cs, Deterministic_problem)
+        set_silent(model) # removes terminal output
+        set_time_limit_sec(model, 60 * 5) # 5 minutes to start with
+        optimize!(model)
+        status = termination_status(model)
+        if status != MOI.OPTIMAL
+            println("slack model status: ", status)
+        else
+            push!(slack_variables_boot,[value.(model[:slack_deck]), value.(model[:slack_Vmax]),value.(model[:slack_Vmin]),
+            value.(model[:slack_Tmin]), value.(model[:slack_Tmax]), 
+            value.(model[:slack_Lmin]), value.(model[:slack_Lmax]),
+            value.(model[:slack_shear1]), value.(model[:slack_shear2]), 
+            value.(model[:slack_shearMin]),
+            value.(model[:slack_shearMax]), value.(model[:slack_bendingMax])
+            ])
+        end
     end
 end
-# Load problem Stochastic solution before fitted
-foldername = "Stochastic_Bootstrap1_rep1_sc$(test_sol_sc)_unknown$(n_unknown[1])_time$(time_limit)"
-filename = "Stochastic_Problem"
-test_pro = get_stochastic_problem(foldername,filename,HPC_folder,problemname1,problemname2,problemname3)
-filename = "Stochastic_Solution"
-test_sol = get_solution_stochastic(foldername,filename,HPC_folder)
-# Placement
-cs = test_sol.cs
-# Run slack version of second-stage model - should probably be on HPC
-model = second_stage_model_slack(cs, Deterministic_problem)
-set_silent(model) # removes terminal output
-set_time_limit_sec(model, 60 * 5) # 5 minutes to start with
-optimize!(model)
-status = termination_status(model)
+# Slack variables
+println("##########################")
+println("Slack variables for Stochastic Boot")
+for i in 1:length(slack_variables_boot)
+    for j in 1:length(slack_variables_boot[i])
+        if any(slack_variables_boot[i][j] .!= 0.0)
+            if j == 1
+                println("In model $(i), the deck slack variable is not zero. Deck limit is violated")
+                println(slack_variables_boot[i][j])
+            else
+                println("Model $(i) and slack variable index $(j) are not zero")
+                println(slack_variables_boot[i][j])
+            end
+        end
+    end
+end
 
-slack_decks = value.(model[:slack_deck])
-
-test_sol_fit.status
+# EVP Boot
+slack_variables_EVP_boot = []
+for i in 1:sc
+    foldername = "EVP_Bootstrap1_rep$(1)_sc$(scenarios[i])_unknown$(n_unknown[1])_time$(time_limit)"
+    temp = get_solution_deterministic(foldername,
+    "Fitted_Solution",HPC_folder)
+    #println(temp.status)
+    if (temp.status == "INFEASIBLE") # solve slack model
+        # Get placement from stochastic problem
+        temp = get_solution_deterministic(foldername,"EVP_Solution",HPC_folder)
+        cs = temp.cs
+        model = second_stage_model_slack(cs, Deterministic_problem)
+        set_silent(model) # removes terminal output
+        set_time_limit_sec(model, 60 * 5) # 5 minutes to start with
+        optimize!(model)
+        status = termination_status(model)
+        if status != MOI.OPTIMAL
+            println("slack model status: ", status)
+        else
+            push!(slack_variables_EVP_boot,[value.(model[:slack_deck]), value.(model[:slack_Vmax]),value.(model[:slack_Vmin]),
+            value.(model[:slack_Tmin]), value.(model[:slack_Tmax]), 
+            value.(model[:slack_Lmin]), value.(model[:slack_Lmax]),
+            value.(model[:slack_shear1]), value.(model[:slack_shear2]), 
+            value.(model[:slack_shearMin]),
+            value.(model[:slack_shearMax]), value.(model[:slack_bendingMax])
+            ])
+        end
+    end
+end
+# Slack variables
+println("##########################")
+println("Slack variables for EVP Boot")
+for i in 1:length(slack_variables_EVP_boot)
+    for j in 1:length(slack_variables_EVP_boot[i])
+        if any(slack_variables_EVP_boot[i][j] .!= 0.0)
+            if j == 1
+                println("In model $(i), the deck slack variable is not zero. Deck limit is violated")
+                println(slack_variables_EVP_boot[i][j])
+            else
+                println("Model $(i) and slack variable index $(j) are not zero")
+                println(slack_variables_EVP_boot[i][j])
+            end
+        end
+    end
+end
+# Stochastic Gen 
+slack_variables_gen = []
+for i in 1:sc
+    foldername = "Stochastic_random_sampling_rep$(1)_sc$(scenarios[i])_unknown$(n_unknown[1])_time$(time_limit)"
+    temp = get_solution_deterministic(foldername,
+    "Fitted_Solution",HPC_folder)
+    if (temp.status == "INFEASIBLE") # solve slack model
+        # Get placement from stochastic problem
+        temp = get_solution_stochastic(foldername,"Stochastic_Solution",HPC_folder)
+        cs = temp.cs
+        model = second_stage_model_slack(cs, Deterministic_problem)
+        set_silent(model) # removes terminal output
+        set_time_limit_sec(model, 60 * 5) # 5 minutes to start with
+        optimize!(model)
+        status = termination_status(model)
+        println(typeof(status))
+        if status != MOI.OPTIMAL
+            println("slack model status: ", status)
+        else
+            push!(slack_variables_gen,[value.(model[:slack_deck]), value.(model[:slack_Vmax]),value.(model[:slack_Vmin]),
+            value.(model[:slack_Tmin]), value.(model[:slack_Tmax]), 
+            value.(model[:slack_Lmin]), value.(model[:slack_Lmax]),
+            value.(model[:slack_shear1]), value.(model[:slack_shear2]), 
+            value.(model[:slack_shearMin]),
+            value.(model[:slack_shearMax]), value.(model[:slack_bendingMax])
+            ])
+        end
+    end
+end
+# Slack variables
+println("##########################")
+for i in 1:length(slack_variables_gen)
+    for j in 1:length(slack_variables_gen[i])
+        if any(slack_variables_gen[i][j] .!= 0.0)
+            if j == 1
+                println("In model $(i), the deck slack variable is not zero. Deck limit is violated")
+                println(slack_variables_gen[i][j])
+            else
+                println("Model $(i) and slack variable index $(j) are not zero")
+                println(slack_variables_gen[i][j])
+            end
+        end
+    end
+end
+# EVP Gen 
+slack_variables_EVP_gen = []
+for i in 1:sc
+    foldername = "EVP_random_sampling_rep$(1)_sc$(scenarios[i])_unknown$(n_unknown[1])_time$(time_limit)"
+    temp = get_solution_deterministic(foldername,
+    "Fitted_Solution",HPC_folder)
+    #println(temp.status)
+    if (temp.status == "INFEASIBLE") # solve slack model
+        # Get placement from stochastic problem
+        temp = get_solution_deterministic(foldername,"EVP_Solution",HPC_folder)
+        cs = temp.cs
+        model = second_stage_model_slack(cs, Deterministic_problem)
+        set_silent(model) # removes terminal output
+        set_time_limit_sec(model, 60 * 5) # 5 minutes to start with
+        optimize!(model)
+        status = termination_status(model)
+        println(typeof(status))
+        if status != MOI.OPTIMAL
+            println("slack model status: ", status)
+        else
+            push!(slack_variables_EVP_gen,[value.(model[:slack_deck]), value.(model[:slack_Vmax]),value.(model[:slack_Vmin]),
+            value.(model[:slack_Tmin]), value.(model[:slack_Tmax]), 
+            value.(model[:slack_Lmin]), value.(model[:slack_Lmax]),
+            value.(model[:slack_shear1]), value.(model[:slack_shear2]), 
+            value.(model[:slack_shearMin]),
+            value.(model[:slack_shearMax]), value.(model[:slack_bendingMax])
+            ])
+        end
+    end
+end
+# Slack variables
+println("##########################")
+for i in 1:length(slack_variables_EVP_gen)
+    for j in 1:length(slack_variables_EVP_gen[i])
+        if any(slack_variables_EVP_gen[i][j] .!= 0.0)
+            if j == 1
+                println("In model $(i), the deck slack variable is not zero. Deck limit is violated")
+                println(slack_variables_EVP_gen[i][j])
+            else
+                println("Model $(i) and slack variable index $(j) are not zero")
+                println(slack_variables_EVP_gen[i][j])
+            end
+        end
+    end
+end

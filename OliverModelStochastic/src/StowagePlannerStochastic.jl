@@ -71,7 +71,7 @@ export expected_value_problem
 export write_problem, write_problem_stochastic, write_solution, write_solution_stochastic, write_HPC_data
 # Get data from JSON files
 export get_deterministic_problem, get_stochastic_problem, get_solution_deterministic, get_solution_stochastic, get_HPC_data
-export now, format, Dates
+export now, format, Dates, write_slack, get_slack
 # Bootstrap method 
 export Bootstrap_bookedweight_quantile
 

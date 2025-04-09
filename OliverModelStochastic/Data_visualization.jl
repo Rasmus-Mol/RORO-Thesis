@@ -42,8 +42,15 @@ include("src/representation/VarianceOfWeight.jl")
 
 
 # load data from problems
-# Chance to get different problems
-HPC_folder = "Finlandia_01_04_09_41_38"
+# Change to get different problems
+#HPC_folder = "Finlandia_01_04_09_41_38"
+HPC_folder = "Finlandia_07_04_15"
+plot_folder = "Plots/Data/07_04_15/"
+
+# Create folder for plots
+if !isdir(plot_folder)
+    mkpath(plot_folder)
+end
 
 repetitions, scenarios, n_unknown, time_limit = get_HPC_data(HPC_folder)
 sc = length(scenarios)
@@ -82,16 +89,34 @@ for i in 1:repetitions
 end
 #################################
 # Plot Cargo weights for some scenarios for a problem 
-plots_gen = plot_cargo_weights(Stochastic_problem_boot[1,1,end],[1,2,3]) # plot for multiple scenarios
-for i in 1:length(plots_gen)
-    display(plots_gen[i])
+plots_boot = plot_cargo_weights(Stochastic_problem_boot[1,1,1],[1,2,3]) # plot for multiple scenarios
+plots_gen = plot_cargo_weights(Stochastic_problem_gen[1,1,1],[1,2,3])
+for i in 1:length(plots_boot)
+    display(plots_boot[i])
+    #savefig(plots_boot[i],plot_folder*"Cargo_distribution_boot_scenario_$(i).png")
 end
-OG_plot = plot_cargo_OG(Deterministic_problem) # plot for original problem
-EVP_plot = plot_cargo_OG(EVP_problem_boot[1,1,end],false) # plot for EVP
+ # plot for original problem
+OG_plot = plot_cargo_OG(Deterministic_problem)
+EVP_plot_boot = plot_cargo_OG(EVP_problem_boot[1,1,end],false) # plot for EVP
+#plot!(EVP_plot_boot[1], title = "Cargo weight distribution for EVP - Boot")
+#plot!(EVP_plot_boot[2], title = "Cargo weight distribution for EVP - Boot")
+EVP_plot_gen = plot_cargo_OG(EVP_problem_gen[1,1,end],false)
+#plot!(EVP_plot_gen[1], title = "Cargo weight distribution for EVP - Gen")
+#plot!(EVP_plot_gen[2], title = "Cargo weight distribution for EVP - Gen")
+
 display(OG_plot[1])
 display(OG_plot[2])
-display(EVP_plot[1])
-display(EVP_plot[2])
+display(EVP_plot_boot[1])
+display(EVP_plot_boot[2])
+display(EVP_plot_gen[1])
+display(EVP_plot_gen[2])
+# Save plots
+savefig(OG_plot[1],plot_folder*"Cargo_distribution_Determinstic_1.png")
+savefig(OG_plot[2],plot_folder*"Cargo_distribution_Determinstic_2.png")
+savefig(EVP_plot_boot[1],plot_folder*"Cargo_distribution_EVP_boot_1.png")
+savefig(EVP_plot_boot[2],plot_folder*"Cargo_distribution_EVP_boot_2.png")
+savefig(EVP_plot_gen[1],plot_folder*"Cargo_distribution_EVP_gen_1.png")
+savefig(EVP_plot_gen[2],plot_folder*"Cargo_distribution_EVP_gen_2.png")
 # total weight of cargo
 println("Total weight of cargo: ", sum([cargo.weight for cargo in Deterministic_problem.cargo]))
 println("Average total weight of cargo, stochastic problem - Gen: ", sum(sum([cargo.weight for cargo in Stochastic_problem_boot[1,1,end].cargo.items[i]]) for i in 1:scenarios[1])/scenarios[1])
@@ -111,73 +136,79 @@ end
 ################################
 # Plot for total weight in each scenario - Gen 
 # Change this if want problems with a different number of scenarios
-n_sc = 1
-total_weights_sto = Array{Any}(undef, scenarios[n_sc],n)
-for i in 1:n
-    sto_pro = Stochastic_problem_gen[1,n_sc,i]
-    for j in 1:scenarios[n_sc]
-        total_weights_sto[j,i] = sum([cargo.weight for cargo in sto_pro.cargo.items[j]])
+for l in 1:sc
+    n_sc = l
+    total_weights_sto = Array{Any}(undef, scenarios[n_sc],n)
+    for i in 1:n
+        sto_pro = Stochastic_problem_gen[1,n_sc,i]
+        for j in 1:scenarios[n_sc]
+            total_weights_sto[j,i] = sum([cargo.weight for cargo in sto_pro.cargo.items[j]])
+        end
     end
+    local total_weight_det = ones(Stochastic_problem_gen[1,n_sc,end].scenarios)*sum([cargo.weight for cargo in Deterministic_problem.cargo])
+    local p = plot(total_weights_sto[:,1],xlabel = "Scenarios", ylabel = "Total cargo weight (t)", 
+    label = "Sto_pro, n: $(n_unknown[1])",
+    title = "Total weight for the stochastic problem - Gen,\nscenarios: $(scenarios[n_sc])")
+    for i in 2:n
+        plot!(total_weights_sto[:,i], label = "Sto_pro, n: $(n_unknown[i])")
+    end
+    plot!(total_weight_det, label = "Det_pro")
+    display(p)
+    savefig(p, plot_folder*"Total_weight_stochastic_problem_gen_scenario_$(scenarios[n_sc]).png")
 end
-total_weight_det = ones(Stochastic_problem_gen[1,n_sc,end].scenarios)*sum([cargo.weight for cargo in Deterministic_problem.cargo])
-p = plot(total_weights_sto[:,1],xlabel = "Scenario", ylabel = "Total cargo weight (t)", 
-label = "Sto_pro, n: $(n_unknown[1])",
-title = "Total weight for the stochastic problem - Gen,\nscenarios: $(scenarios[n_sc])")
-for i in 2:n
-    plot!(total_weights_sto[:,i], label = "Sto_pro, n: $(n_unknown[i])")
-end
-plot!(total_weight_det, label = "Det_pro")
 # NB! 
 # Clearly shows that our generation of weight is generally 
 # higher than the deterministic problem
-display(p)
 
 # Display EVP data
-n_sc = 1
-total_weights_EVP = []
-for i in 1:n
-    push!(total_weights_EVP, sum([cargo.weight for cargo in EVP_problem_gen[1,n_sc,i].cargo]))
-end
-total_weight_det = ones(n)*sum([cargo.weight for cargo in Deterministic_problem.cargo])
-p = plot(n_unknown,total_weights_EVP,xlabel = "n_unknown", ylabel = "Total cargo weight (t)", label = "EVP", 
-title = "Total weight for the EVP - Boot,\n scenarios: $(scenarios[n_sc]), ")
-plot!(n_unknown,total_weight_det, label = "Det_pro")
+    #n_sc = l
+    total_weights_EVP = []
+    for i in 1:sc
+        push!(total_weights_EVP, sum([cargo.weight for cargo in EVP_problem_gen[1,i,end].cargo]))
+    end
+    total_weight_det = ones(sc)*sum([cargo.weight for cargo in Deterministic_problem.cargo])
+    p = plot(scenarios,total_weights_EVP,xlabel = "Scenarios", ylabel = "Total cargo weight (t)", label = "EVP", 
+    title = "Total weight for the EVP - Gen.")
+    plot!(scenarios,total_weight_det, label = "Det_pro")
+    display(p)
+    savefig(p, plot_folder*"Total_weight_EVP_gen.png")
 # Clearly shows that our generation of weight is generally 
 # higher than the deterministic problem
-display(p)
 
 # Plot for total weight in each scenario - Boot
-# Change this if want problems with a different number of scenarios
-n_sc = 1
-total_weights_sto = Array{Any}(undef, scenarios[n_sc],n)
-for i in 1:n
-    sto_pro = Stochastic_problem_boot[1,n_sc,i]
-    for j in 1:scenarios[n_sc]
-        total_weights_sto[j,i] = sum([cargo.weight for cargo in sto_pro.cargo.items[j]])
+for l in 1:sc
+    n_sc = l
+    total_weights_sto = Array{Any}(undef, scenarios[n_sc],n)
+    for i in 1:n
+        sto_pro = Stochastic_problem_boot[1,n_sc,i]
+        for j in 1:scenarios[n_sc]
+            total_weights_sto[j,i] = sum([cargo.weight for cargo in sto_pro.cargo.items[j]])
+        end
     end
+    local total_weight_det = ones(Stochastic_problem_boot[1,n_sc,end].scenarios)*sum([cargo.weight for cargo in Deterministic_problem.cargo])
+    local p = plot(total_weights_sto[:,1],xlabel = "Scenarios", ylabel = "Total cargo weight (t)", 
+    label = "Sto_pro, n: $(n_unknown[1])",
+    title = "Total weight for the stochastic problem - Boot.")
+    for i in 2:n
+        plot!(total_weights_sto[:,i], label = "Sto_pro, n: $(n_unknown[i])")
+    end
+    plot!(total_weight_det, label = "Det_pro")
+    display(p)
+    savefig(p, plot_folder*"Total_weight_stochastic_problem_boot_scenario_$(scenarios[n_sc]).png")
 end
-total_weight_det = ones(Stochastic_problem_boot[1,n_sc,end].scenarios)*sum([cargo.weight for cargo in Deterministic_problem.cargo])
-p = plot(total_weights_sto[:,1],xlabel = "Scenario", ylabel = "Total cargo weight (t)", 
-label = "Sto_pro, n: $(n_unknown[1])",
-title = "Total weight for the stochastic problem - Boot,\nscenarios: $(scenarios[n_sc])")
-for i in 2:n
-    plot!(total_weights_sto[:,i], label = "Sto_pro, n: $(n_unknown[i])")
-end
-plot!(total_weight_det, label = "Det_pro")
 # NB! 
 # Shows Boot-scenario generation generally is lower than the actual weight
-display(p)
 
 # Display EVP data
-n_sc = 1
 total_weights_EVP = []
-for i in 1:n
-    push!(total_weights_EVP, sum([cargo.weight for cargo in EVP_problem_boot[1,n_sc,i].cargo]))
+for i in 1:sc
+    push!(total_weights_EVP, sum([cargo.weight for cargo in EVP_problem_boot[1,i,end].cargo]))
 end
-total_weight_det = ones(n)*sum([cargo.weight for cargo in Deterministic_problem.cargo])
-p = plot(n_unknown,total_weights_EVP,xlabel = "n_unknown", ylabel = "Total cargo weight (t)", label = "EVP", 
-title = "Total weight for the EVP - Boot,\n scenarios: $(scenarios[n_sc]), ")
-plot!(n_unknown,total_weight_det, label = "Det_pro")
+total_weight_det = ones(sc)*sum([cargo.weight for cargo in Deterministic_problem.cargo])
+p = plot(scenarios,total_weights_EVP,xlabel = "scenarios", ylabel = "Total cargo weight (t)", label = "EVP", 
+title = "Total weight for the EVP - Boot.")
+plot!(scenarios,total_weight_det, label = "Det_pro")
+savefig(p, plot_folder*"Total_weight_EVP_boot.png")
 # Clearly shows that our generation of weight is generally 
 # higher than the deterministic problem
 display(p)
@@ -187,6 +218,11 @@ display(p)
 
 ########################################
 # Plot Historic data
+plot_folder_historic = "Plots/Data/Historic/"
+# Create folder for plots
+if !isdir(plot_folder_historic)
+    mkpath(plot_folder_historic)
+end
 # load historic data 
 n_quantiles = 4
 cur_path = @__DIR__
@@ -204,7 +240,11 @@ histogram(df_secu_quan.CountBookedWeight,bins = nbins, xlabel="Weight",
 ylabel="Frequency", title="SECU booked weight distribution", legend=false)
 xticks!(binedges)
 plot!(xtickfontsize=6,formatter=:plain)
-savefig("Plots/Data/Weight_booked_Secu.png")
+savefig(plot_folder_historic*"Weight_booked_Secu.png")
+# Er den her bedre?
+histogram(df_secu_quan.CountBookedWeight,bins = nbins, xlabel="Weight", 
+ylabel="Frequency", title="SECU booked weight distribution", legend=false)
+
 nbins = 30
 test = fit(Histogram, df_trailer_quan.CountBookedWeight, nbins=nbins)
 binedges = test.edges[1]
@@ -212,24 +252,37 @@ histogram(df_trailer_quan.CountBookedWeight, bins=nbins, xlabel="Weight",
 ylabel="Frequency", title="Trailer booked weight distribution", legend=false)
 xticks!(binedges)
 plot!(xtickfontsize=4,formatter=:plain)
-savefig("Plots/Data/Weight_booked_trailer.png")
+savefig(plot_folder_historic*"Weight_booked_trailer.png")
+# Er den her bedre?
+histogram(df_trailer_quan.CountBookedWeight, xlabel="Weight",
+ylabel="Frequency", title="Trailer booked weight distribution", legend=false)
+
 # Weight variance
 nbins = 20
-test = fit(Histogram, df_secu_quan.CountBookedWeight, nbins=nbins)
+test = fit(Histogram, df_secu_quan.Variance, nbins=nbins)
 binedges = test.edges[1]
 histogram(df_secu_quan.Variance,bins = nbins, xlabel="Weight", 
 ylabel="Frequency", title="SECU variance distribution", legend=false)
 xticks!(binedges)
 plot!(xtickfontsize=6,formatter=:plain)
-savefig("Plots/Data/Weight_variance_Secu.png")
+savefig(plot_folder_historic*"Weight_variance_Secu.png")
+# Er det bedre ikke at bestemme bin-width?
+histogram(df_secu_quan.Variance,bins = nbins, xlabel="Weight", 
+ylabel="Frequency", title="SECU variance distribution", legend=false)
+plot!(xtickfontsize=6,formatter=:plain)
+
 nbins = 30
-test = fit(Histogram, df_trailer_quan.CountBookedWeight, nbins=nbins)
+test = fit(Histogram, df_trailer_quan.Variance, nbins=nbins)
 binedges = test.edges[1]
 histogram(df_trailer_quan.Variance, bins=nbins, xlabel="Weight",
 ylabel="Frequency", title="Trailer variance distribution", legend=false)
 xticks!(binedges)
 plot!(xtickfontsize=4,formatter=:plain)
-savefig("Plots/Data/Weight_variance_trailer.png")
+savefig(plot_folder_historic*"Weight_variance_trailer.png")
+# Bedre?
+histogram(df_trailer_quan.Variance, bins=nbins, xlabel="Weight",
+ylabel="Frequency", title="Trailer variance distribution", legend=false)
+plot!(xtickfontsize=6,formatter=:plain)
 
 secu_var = [collect(filter(x -> x.QuantileNumber == i, df_secu_quan).Variance) for i in 1:n_quantiles]
 trailer_var = [collect(filter(x -> x.QuantileNumber == i, df_trailer_quan).Variance) for i in 1:n_quantiles]
@@ -241,11 +294,42 @@ end
 xplots = Int(ceil(n_quantiles/2))
 yplots = Int(ceil(n_quantiles/xplots))
 plot(p..., layout=(xplots,yplots)) # Good plot I think
-savefig("Plots/Data/Weight_variance_secu_quantiles.png")
+savefig(plot_folder_historic*"Weight_variance_secu_quantiles.png")
 p = []
 for i in 1:n_quantiles
     push!(p, histogram(trailer_var[i], bins=30, xlabel="Weight variance", 
     ylabel="Frequency", title="Trailer weight variance, quantile: $i",titlefont=font(10),tickfontsize=5, legend=false, formatter=:plain))
 end
 plot(p..., layout=(xplots,yplots)) # Good plot I think
-savefig("Plots/Data/Weight_variance_trailer_quantiles.png")
+savefig(plot_folder_historic*"Weight_variance_trailer_quantiles.png")
+
+
+
+q = [1,2,3,4]#,5,6,7,8]
+p = []
+cargoC_boot = Stochastic_problem_boot[1,1,1].cargo.items[1]
+cargoC_gen = Stochastic_problem_gen[1,1,1].cargo.items[1]
+for i in 1:length(q)
+    df_secu_quan_temp, = seperate_data_into_quantiles(df_secu,q[i],true)
+    df_trailer_quan_temp, = seperate_data_into_quantiles(df_trailer,q[i],true)
+    test_plot,secu_weight, trailer_weight = scenario_distribution_with_normal(cargoC_boot,df_secu_quan_temp,df_trailer_quan_temp,q[i])
+    push!(p,test_plot)
+    display(test_plot[1])
+    display(test_plot[2])
+    println("i: $(i), secu: ", secu_weight)
+    println("i: $(i), trailer: ", trailer_weight)
+end
+
+
+quantile_secu = [quantile(df_secu_quan.CorrectedWeight, i / 1) for i in 1:1]./1000
+quantile_trailer = [quantile(df_trailer_quan.CorrectedWeight, i / 1) for i in 1:1]./1000
+historic_secu_weight = [collect(filter(x -> x.QuantileNumber == i, df_secu_quan).CorrectedWeight) for i in 1:1]./1000
+historic_trailer_weight = [collect(filter(x -> x.QuantileNumber == i, df_trailer_quan).CorrectedWeight) for i in 1:1]./1000
+    
+
+
+df_secu_quan_temp, = seperate_data_into_quantiles(df_secu,q[1],true)
+df_trailer_quan_temp, = seperate_data_into_quantiles(df_trailer,q[1],true)
+test_plot,secu_weight, trailer_weight = scenario_distribution_with_normal(cargoC_boot,df_secu_quan_temp,df_trailer_quan_temp,q[1])
+display(test_plot[1])
+display(test_plot[2])

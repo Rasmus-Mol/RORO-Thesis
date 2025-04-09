@@ -13,7 +13,7 @@ problem_det = load_data("finlandia", "no_cars_medium_100_haz_eq_0.1", "hazardous
 # Folder name for results - date and hour
 HPC_folder = "Finlandia_"*Dates.format(now(), "dd_mm_HH")
  # Describe tests if necessary
-extra_info = "Test Monday 07/04 - Added slack models to tests."
+extra_info = "Small test - delete after running"
 
 # First job index - create problem 
 if parse_index == 1
@@ -67,6 +67,7 @@ for i in 1:repetitions
     # Save fitted solution
     write_solution(fitted_sol,foldername,"Fitted_Solution",HPC_folder)
     # Check if second-stage problem was feasible
+    #println(fitted_sol.status)
     if fitted_sol.status == "INFEASIBLE"
         second_stage_m_slacked = second_stage_model_slack(cs_sol, problem_det)
         set_silent(second_stage_m_slacked) # removes terminal output
@@ -74,7 +75,7 @@ for i in 1:repetitions
         optimize!(second_stage_m_slacked)
         fitted_sol_slacked = get_solution_second_stage_stochastic(problem_det, second_stage_m_slacked, sol)
         write_solution(fitted_sol_slacked,foldername,"Fitted_Solution_slacked",HPC_folder)
-        write_slack(HPC_folder, foldername, filename, second_stage_m_slacked)
+        write_slack(HPC_folder, foldername, "Fitted_Solution", second_stage_m_slacked)
     end
 
     # EVP method for uniform random sampling method 
@@ -105,7 +106,7 @@ for i in 1:repetitions
         optimize!(second_stage_m_slacked)
         fitted_sol_slacked = get_solution_second_stage_deterministic(problem_det, second_stage_m_slacked, sol)
         write_solution(fitted_sol_slacked,foldername,"Fitted_Solution_slacked",HPC_folder)
-        write_slack(HPC_folder, foldername, filename, second_stage_m_slacked)
+        write_slack(HPC_folder, foldername, "Fitted_Solution", second_stage_m_slacked)
     end
 
     # Bootstrap method 1
@@ -137,7 +138,7 @@ for i in 1:repetitions
         optimize!(second_stage_m_slacked)
         fitted_sol_slacked = get_solution_second_stage_stochastic(problem_det, second_stage_m_slacked, sol)
         write_solution(fitted_sol_slacked,foldername,"Fitted_Solution_slacked",HPC_folder)
-        write_slack(HPC_folder, foldername, filename, second_stage_m_slacked)
+        write_slack(HPC_folder, foldername, "Fitted_Solution", second_stage_m_slacked)
     end
 
     # EVP method for Bootstrap method 1
@@ -168,7 +169,7 @@ for i in 1:repetitions
         optimize!(second_stage_m_slacked)
         fitted_sol_slacked = get_solution_second_stage_deterministic(problem_det, second_stage_m_slacked, sol)
         write_solution(fitted_sol_slacked,foldername,"Fitted_Solution_slacked",HPC_folder)
-        write_slack(HPC_folder, foldername, filename, second_stage_m_slacked)
+        write_slack(HPC_folder, foldername, "Fitted_Solution", second_stage_m_slacked)
     end
 end
 
