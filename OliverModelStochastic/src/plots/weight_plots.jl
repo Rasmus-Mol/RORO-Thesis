@@ -27,7 +27,7 @@ function plot_weights(problem::StochasticStowageProblem,sc::Int64 = 1)
     max_weight = maximum(max_weight)
     bin_width = 2 # bin width in tons
     edges = min_weight:bin_width:max_weight
-    hist = histogram(weights, bins = edges, stack =true, xlabel = "Weight", ylabel = "Frequency", label = ["Type 1" "Type 2" "Type 3" "Type 4"], title = "Cargo weight distribution for scenario $sc")
+    hist = histogram(weights, bins = edges, stack =true, xlabel = "Weight", ylabel = "Frequency", label = ["Type 1" "Type 2" "Type 3" "Type 4"], title = "Scenario $sc")
     return hist
 end
 

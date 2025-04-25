@@ -58,14 +58,16 @@ include("src/utils/helpers.jl")
 #plot_folder = "Plots/Results/day_07_04_version_bootstrap_1_first_results/"
 HPC_folder = "Finlandia_07_04_15"
 plot_folder = "Plots/Results/day_07_04_version_bootstrap_1_second_results/"
-
+#HPC_folder = "Finlandia_09_04_09"
+#plot_folder = "Plots/Results/Finlandia_09_04_09/"
 
 # Create folder for plots
 if !isdir(plot_folder)
     mkpath(plot_folder)
 end
 # Load data from HPC
-repetitions, scenarios, n_unknown, time_limit = get_HPC_data(HPC_folder)
+repetitions, scenarios, n_unknown, time_limit, note = get_HPC_data(HPC_folder)
+println("Extra info about test: ", note)
 #repetitions = 1 # didn't finish running
 sc = length(scenarios)
 n = length(n_unknown)
@@ -202,14 +204,62 @@ plot!(scenarios,ones(length(scenarios))*Deterministic_Solution.gap .*100,label =
 display(p)
 savefig(plot_folder*"Gap_BeforeRealization.png")
 # Zoomed in
-p = plot(scenarios,gap_EVP_gen[:,end],xlabel="Scenarios",ylabel="Cargo loaded",
+p = plot(scenarios,gap_EVP_gen[:,end].*100,xlabel="Scenarios",ylabel="Gap (%)",
 title="Gap for different models,\n before realization of cargo weight", label = "EVP-Gen", linewidth =linew)
-plot!(scenarios,gap_EVP_boot[:,end],label = "EVP-Boot", linewidth =linew)
+plot!(scenarios,gap_EVP_boot[:,end].*100,label = "EVP-Boot", linewidth =linew)
 #plot!(scenarios,gap_Stochastic_gen[:,end],label = "Sto-Gen", linewidth =linew)
-plot!(scenarios,gap_Stochastic_boot[:,end],label = "Sto-Boot", linewidth =linew)
-plot!(scenarios,ones(length(scenarios))*Deterministic_Solution.gap,label = "Deterministic", linewidth =linew, linestyle=:dash)
+plot!(scenarios,gap_Stochastic_boot[:,end].*100,label = "Sto-Boot", linewidth =linew)
+plot!(scenarios,ones(length(scenarios))*Deterministic_Solution.gap .*100,label = "Deterministic", linewidth =linew, linestyle=:dash)
 display(p)
 savefig(plot_folder*"Gap_BeforeRealization_zoomed.png")
+
+##########################
+# Display ballast water from different models
+p = plot(scenarios, ones(sc)*Deterministic_Solution.ballast_weight, marker = :utriangle, xlabel = "scenarios", 
+ylabel = "Ballast weight (t)", label = "Deterministic", title = "Ballast weight for different models")
+annotate!(scenarios[1], Deterministic_Solution.ballast_weight + 15, text(Deterministic_Solution.n_cargo_loaded, 6))
+annotate!(scenarios[2], Deterministic_Solution.ballast_weight + 15, text(Deterministic_Solution.n_cargo_loaded, 6))
+annotate!(scenarios[3], Deterministic_Solution.ballast_weight + 15, text(Deterministic_Solution.n_cargo_loaded, 6))
+annotate!(scenarios[4], Deterministic_Solution.ballast_weight + 15, text(Deterministic_Solution.n_cargo_loaded, 6))
+annotate!(scenarios[5], Deterministic_Solution.ballast_weight + 15, text(Deterministic_Solution.n_cargo_loaded, 6))
+
+xtemp = [[],[],[],[]]
+ytemp = [[],[],[],[]]
+cargo_n = [[],[],[],[]]
+for i in 1:sc
+    if Stochastic_gen_fitted[1,i,end].status != "INFEASIBLE" # have a solution 
+        push!(xtemp[1],scenarios[i])
+        push!(ytemp[1],Stochastic_gen_fitted[1,i,end].ballast_weight)
+        push!(cargo_n[1],Stochastic_gen_fitted[1,i,end].n_cargo_loaded)
+    end
+    if Stochastic_boot_fitted[1,i,end].status != "INFEASIBLE" # have a solution 
+        push!(xtemp[2],scenarios[i])
+        push!(ytemp[2],Stochastic_boot_fitted[1,i,end].ballast_weight)
+        push!(cargo_n[2],Stochastic_boot_fitted[1,i,end].n_cargo_loaded)
+    end
+    if EVP_gen_fitted[1,i,end].status != "INFEASIBLE" # have a solution 
+        push!(xtemp[3],scenarios[i])
+        push!(ytemp[3],EVP_gen_fitted[1,i,end].ballast_weight)
+        push!(cargo_n[3],EVP_gen_fitted[1,i,end].n_cargo_loaded)
+    end
+    if EVP_boot_fitted[1,i,end].status != "INFEASIBLE" # have a solution 
+        push!(xtemp[4],scenarios[i])
+        push!(ytemp[4],EVP_boot_fitted[1,i,end].ballast_weight)
+        push!(cargo_n[4],EVP_boot_fitted[1,i,end].n_cargo_loaded)
+    end
+end
+plot!(xtemp[1],ytemp[1], label = "Stochastic Gen", marker = :circle, markersize = 4)
+plot!(xtemp[2],ytemp[2], label = "Stochastic Boot", marker = :circle, markersize = 4)
+plot!(xtemp[3],ytemp[3], label = "EVP Gen", marker = :circle, markersize = 4)
+plot!(xtemp[4],ytemp[4], label = "EVP Boot", marker = :circle, markersize = 4)
+for j in 1:length(xtemp)
+    for i = 1:length(xtemp[j])
+        annotate!(xtemp[j][i], ytemp[j][i] + 20, text(cargo_n[j][i],6))
+    end
+end
+display(p)
+savefig(plot_folder*"BallastWeight.png")
+
 
 # Number of times problem was unfeasible
 EVP_gen_inf = []
@@ -354,13 +404,16 @@ end
 # Check model with slack variables
 
 # Stochastic Boot
+println("########################")
 slack_variables_boot = []
+slack_variables_boot_index = []
 for i in 1:sc
     foldername = "Stochastic_Bootstrap1_rep$(1)_sc$(scenarios[i])_unknown$(n_unknown[1])_time$(time_limit)"
     temp = get_solution_deterministic(foldername,
     "Fitted_Solution",HPC_folder)
     #println(temp.status)
     if (temp.status == "INFEASIBLE") # solve slack model
+        push!(slack_variables_boot_index,i)
         # Get placement from stochastic problem
         temp = get_solution_stochastic(foldername,"Stochastic_Solution",HPC_folder)
         cs = temp.cs
@@ -384,15 +437,16 @@ for i in 1:sc
 end
 # Slack variables
 println("##########################")
+println("Model indecies infeasible for Stochastic Boot: ", slack_variables_boot_index)
 println("Slack variables for Stochastic Boot")
 for i in 1:length(slack_variables_boot)
     for j in 1:length(slack_variables_boot[i])
         if any(slack_variables_boot[i][j] .!= 0.0)
             if j == 1
-                println("In model $(i), the deck slack variable is not zero. Deck limit is violated")
+                println("In model $(slack_variables_boot_index[i]), the deck slack variable is not zero. Deck limit is violated")
                 println(slack_variables_boot[i][j])
             else
-                println("Model $(i) and slack variable index $(j) are not zero")
+                println("Model $(slack_variables_boot_index[i]) and slack variable index $(j) are not zero")
                 println(slack_variables_boot[i][j])
             end
         end
@@ -401,12 +455,14 @@ end
 
 # EVP Boot
 slack_variables_EVP_boot = []
+slack_variables_EVP_boot_index = []
 for i in 1:sc
     foldername = "EVP_Bootstrap1_rep$(1)_sc$(scenarios[i])_unknown$(n_unknown[1])_time$(time_limit)"
     temp = get_solution_deterministic(foldername,
     "Fitted_Solution",HPC_folder)
     #println(temp.status)
     if (temp.status == "INFEASIBLE") # solve slack model
+        push!(slack_variables_EVP_boot_index,i)
         # Get placement from stochastic problem
         temp = get_solution_deterministic(foldername,"EVP_Solution",HPC_folder)
         cs = temp.cs
@@ -430,15 +486,16 @@ for i in 1:sc
 end
 # Slack variables
 println("##########################")
+println("Model indecies infeasible for EVP Boot: ", slack_variables_EVP_boot_index)
 println("Slack variables for EVP Boot")
 for i in 1:length(slack_variables_EVP_boot)
     for j in 1:length(slack_variables_EVP_boot[i])
         if any(slack_variables_EVP_boot[i][j] .!= 0.0)
             if j == 1
-                println("In model $(i), the deck slack variable is not zero. Deck limit is violated")
+                println("In model $(slack_variables_EVP_boot_index[i]), the deck slack variable is not zero. Deck limit is violated")
                 println(slack_variables_EVP_boot[i][j])
             else
-                println("Model $(i) and slack variable index $(j) are not zero")
+                println("Model $(slack_variables_EVP_boot_index[i]) and slack variable index $(j) are not zero")
                 println(slack_variables_EVP_boot[i][j])
             end
         end
@@ -446,11 +503,13 @@ for i in 1:length(slack_variables_EVP_boot)
 end
 # Stochastic Gen 
 slack_variables_gen = []
+slack_variables_gen_index = []
 for i in 1:sc
     foldername = "Stochastic_random_sampling_rep$(1)_sc$(scenarios[i])_unknown$(n_unknown[1])_time$(time_limit)"
     temp = get_solution_deterministic(foldername,
     "Fitted_Solution",HPC_folder)
     if (temp.status == "INFEASIBLE") # solve slack model
+        push!(slack_variables_gen_index,i)
         # Get placement from stochastic problem
         temp = get_solution_stochastic(foldername,"Stochastic_Solution",HPC_folder)
         cs = temp.cs
@@ -475,14 +534,16 @@ for i in 1:sc
 end
 # Slack variables
 println("##########################")
+println("Model indecies infeasible for Stochastic Gen: ", slack_variables_gen_index)
+println("Slack variables for Stochastic Gen")
 for i in 1:length(slack_variables_gen)
     for j in 1:length(slack_variables_gen[i])
         if any(slack_variables_gen[i][j] .!= 0.0)
             if j == 1
-                println("In model $(i), the deck slack variable is not zero. Deck limit is violated")
+                println("In model $(slack_variables_gen_index[i]), the deck slack variable is not zero. Deck limit is violated")
                 println(slack_variables_gen[i][j])
             else
-                println("Model $(i) and slack variable index $(j) are not zero")
+                println("Model $(slack_variables_gen_index[i]) and slack variable index $(j) are not zero")
                 println(slack_variables_gen[i][j])
             end
         end
@@ -490,12 +551,14 @@ for i in 1:length(slack_variables_gen)
 end
 # EVP Gen 
 slack_variables_EVP_gen = []
+slack_variables_EVP_gen_index = []
 for i in 1:sc
     foldername = "EVP_random_sampling_rep$(1)_sc$(scenarios[i])_unknown$(n_unknown[1])_time$(time_limit)"
     temp = get_solution_deterministic(foldername,
     "Fitted_Solution",HPC_folder)
     #println(temp.status)
     if (temp.status == "INFEASIBLE") # solve slack model
+        push!(slack_variables_EVP_gen_index,i)
         # Get placement from stochastic problem
         temp = get_solution_deterministic(foldername,"EVP_Solution",HPC_folder)
         cs = temp.cs
@@ -507,6 +570,7 @@ for i in 1:sc
         println(typeof(status))
         if status != MOI.OPTIMAL
             println("slack model status: ", status)
+            error("Model infeasible - do something to slack model")
         else
             push!(slack_variables_EVP_gen,[value.(model[:slack_deck]), value.(model[:slack_Vmax]),value.(model[:slack_Vmin]),
             value.(model[:slack_Tmin]), value.(model[:slack_Tmax]), 
@@ -520,16 +584,124 @@ for i in 1:sc
 end
 # Slack variables
 println("##########################")
+println("Model indecies infeasible for EVP Gen: ", slack_variables_EVP_gen_index)
+println("Slack variables for EVP Gen")
 for i in 1:length(slack_variables_EVP_gen)
     for j in 1:length(slack_variables_EVP_gen[i])
-        if any(slack_variables_EVP_gen[i][j] .!= 0.0)
+        if any(abs(slack_variables_EVP_gen[i][j]) .!= 0.0)
             if j == 1
-                println("In model $(i), the deck slack variable is not zero. Deck limit is violated")
+                println("In model $(slack_variables_EVP_gen_index[i]), the deck slack variable is not zero. Deck limit is violated")
                 println(slack_variables_EVP_gen[i][j])
             else
-                println("Model $(i) and slack variable index $(j) are not zero")
+                println("Model $(slack_variables_EVP_gen_index[i]) and slack variable index $(j) are not zero")
                 println(slack_variables_EVP_gen[i][j])
             end
         end
     end
+end
+
+
+
+# Looking into limiting factor - Deck 1
+println("##########################")
+n_decks = length(Deterministic_problem.vessel.decks)
+deck_limits = [Deterministic_problem.vessel.decks[i].weight_limit for i in 1:n_decks]
+println("Deterministic Solution weight on decks:")
+#secu_var = [collect(filter(x -> x.QuantileNumber == i, df_secu_quan).Variance) for i in 1:n_quantiles]
+Det_sol_PlacementDecks = [filter(x -> x.deck == i, Deterministic_Solution.cargo) for i in 1:n_decks]
+for i in 1:n_decks
+    println("Weight Limit on deck $(i): ", deck_limits[i])
+    println("Weight on deck $(i): ", sum(Det_sol_PlacementDecks[i][j].weight for j in 1:length(Det_sol_PlacementDecks[i])))
+end
+
+xtemp = [[],[],[],[]]
+deck_diff = [[[],[],[],[]],[[],[],[],[]],[[],[],[],[]]]
+for i in 1:repetitions
+    for j in 1:sc
+        for l in 1:n
+            if EVP_gen_fitted[i,j,l].status == "TIME_LIMIT" || EVP_gen_fitted[i,j,l].status == "OPTIMAL"
+                EVP_gen_fitted_PlacementDecks = [filter(x -> x.deck == k, EVP_gen_fitted[i,j,l].cargo) for k in 1:n_decks]
+                println("#################")
+                push!(xtemp[1],scenarios[j])
+                for k in 1:n_decks
+                    push!(deck_diff[k][1], deck_limits[k]-sum(EVP_gen_fitted_PlacementDecks[k][m].weight for m in 1:length(EVP_gen_fitted_PlacementDecks[k])))
+                    println("EVP gen fitted model $(i), scenarios $(scenarios[j]), unknown cargo $(n_unknown[l]) weight-difference on deck $(k): ", deck_limits[k]-sum(EVP_gen_fitted_PlacementDecks[k][m].weight for m in 1:length(EVP_gen_fitted_PlacementDecks[k])))
+                end
+            else # not feasible, probably due to deck 1
+                push!(xtemp[1],scenarios[j])
+                EVP_gen_PlacementDecks = [filter(x -> x.deck == k,EVP_gen[i,j,l].cargo) for k in 1:n_decks]
+                # calculate how much over limit - same as slack variables?
+                for k in 1:n_decks
+                    actual_weight = [filter(x -> x.id == EVP_gen_PlacementDecks[k][i].id, Deterministic_problem.cargo.items)[1].weight for i in 1:length(EVP_gen_PlacementDecks[k])]
+                    push!(deck_diff[k][1], deck_limits[k]-sum(actual_weight))
+                end
+            end
+            if EVP_boot_fitted[i,j,l].status == "TIME_LIMIT" || EVP_boot_fitted[i,j,l].status == "OPTIMAL"
+                EVP_boot_fitted_PlacementDecks = [filter(x -> x.deck == k, EVP_boot_fitted[i,j,l].cargo) for k in 1:n_decks]
+                println("#################")
+                push!(xtemp[2],scenarios[j])
+                for k in 1:n_decks
+                    push!(deck_diff[k][2], deck_limits[k]-sum(EVP_boot_fitted_PlacementDecks[k][m].weight for m in 1:length(EVP_boot_fitted_PlacementDecks[k])))
+                    println("EVP boot fitted model $(i), scenarios $(jscenarios[j]), unknown cargo $(n_unknown[l]) weight on deck $(k): ", deck_limits[k]-sum(EVP_boot_fitted_PlacementDecks[k][m].weight for m in 1:length(EVP_boot_fitted_PlacementDecks[k])))
+                end
+            else # not feasible, probably due to deck 1
+                push!(xtemp[2],scenarios[j])
+                EVP_boot_PlacementDecks = [filter(x -> x.deck == k,EVP_boot[i,j,l].cargo) for k in 1:n_decks]
+                # calculate how much over limit - same as slack variables?
+                for k in 1:n_decks
+                    actual_weight = [filter(x -> x.id == EVP_boot_PlacementDecks[k][i].id, Deterministic_problem.cargo.items)[1].weight for i in 1:length(EVP_boot_PlacementDecks[k])]
+                    push!(deck_diff[k][2], deck_limits[k]-sum(actual_weight))
+                end
+            end
+            if Stochastic_gen_fitted[i,j,l].status == "TIME_LIMIT" || Stochastic_gen_fitted[i,j,l].status == "OPTIMAL"
+                Stochastic_gen_fitted_PlacementDecks = [filter(x -> x.deck == k, Stochastic_gen_fitted[i,j,l].cargo) for k in 1:n_decks]
+                println("#################")
+                push!(xtemp[3],scenarios[j])
+                for k in 1:n_decks
+                    push!(deck_diff[k][3], deck_limits[k]-sum(Stochastic_gen_fitted_PlacementDecks[k][m].weight for m in 1:length(Stochastic_gen_fitted_PlacementDecks[k])))
+                    println("Stochastic gen fitted model $(i), scenarios $(scenarios[j]), unknown cargo $(n_unknown[l]) weight on deck $(k): ", deck_limits[k]-sum(Stochastic_gen_fitted_PlacementDecks[k][m].weight for m in 1:length(Stochastic_gen_fitted_PlacementDecks[k])))
+                end
+            else # not feasible, probably due to deck 1
+                push!(xtemp[3],scenarios[j])
+                Stochastic_gen_PlacementDecks = [filter(x -> x.deck == k,Stochastic_gen[i,j,l].cargo) for k in 1:n_decks]
+                # calculate how much over limit - same as slack variables?
+                for k in 1:n_decks
+                    actual_weight = [filter(x -> x.id == Stochastic_gen_PlacementDecks[k][i].id, Deterministic_problem.cargo.items)[1].weight for i in 1:length(Stochastic_gen_PlacementDecks[k])]
+                    push!(deck_diff[k][3], deck_limits[k]-sum(actual_weight))
+                end
+            end
+            if Stochastic_boot_fitted[i,j,l].status == "TIME_LIMIT" || Stochastic_boot_fitted[i,j,l].status == "OPTIMAL"
+                Stochastic_boot_fitted_PlacementDecks = [filter(x -> x.deck == k, Stochastic_boot_fitted[i,j,l].cargo) for k in 1:n_decks]
+                println("#################")
+                push!(xtemp[4],scenarios[j])
+                for k in 1:n_decks
+                    push!(deck_diff[k][4], deck_limits[k]-sum(Stochastic_boot_fitted_PlacementDecks[k][m].weight for m in 1:length(Stochastic_boot_fitted_PlacementDecks[k])))
+                    println("Stochastic boot fitted model $(i), scenarios $(scenarios[j]), unknown cargo $(n_unknown[l]) weight on deck $(k): ", deck_limits[k]-sum(Stochastic_boot_fitted_PlacementDecks[k][m].weight for m in 1:length(Stochastic_boot_fitted_PlacementDecks[k])))
+                end
+            else # not feasible, probably due to deck 1
+                push!(xtemp[4],scenarios[j])
+                Stochastic_boot_PlacementDecks = [filter(x -> x.deck == k,Stochastic_boot[i,j,l].cargo) for k in 1:n_decks]
+                # calculate how much over limit - same as slack variables?
+                for k in 1:n_decks
+                    actual_weight = [filter(x -> x.id == Stochastic_boot_PlacementDecks[k][i].id, Deterministic_problem.cargo.items)[1].weight for i in 1:length(Stochastic_boot_PlacementDecks[k])]
+                    push!(deck_diff[k][4], deck_limits[k]-sum(actual_weight))
+                end
+            end
+        end
+    end
+end
+# plot for decks
+p = []
+for i in 1:n_decks
+    pl = plot(xtemp[1],deck_diff[i][1], label = "EVP-gen", marker = :circle, markersize = 4,
+    xlabel="Scenarios", ylabel="Weight diff. (t)",
+    title = "Unused Weight Capacity on Deck $(i)\n for different models")
+    plot!(xtemp[2],deck_diff[i][2], label = "EVP-boot", marker = :circle, markersize = 4)
+    plot!(xtemp[3],deck_diff[i][3], label = "Sto-gen", marker = :circle, markersize = 4)
+    plot!(xtemp[4],deck_diff[i][4], label = "Sto-boot", marker = :circle, markersize = 4)
+    savefig(plot_folder*"Deck$(i)_WeightDiff.png")
+    push!(p,pl)
+end
+for i in p
+    display(i)
 end

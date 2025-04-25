@@ -86,6 +86,7 @@ function second_stage_model_slack(cs, problem::StowageProblem)
 	cost = [CSC for c in cargo]
 	cost = cost .+ haz_cargo * CSC # Rasmus: Pretty sure this is the pseudo-revenue for the objective function
 	area = [get_length(cargo[c]) * get_width(cargo[c]) for c in 1:n_cargo]
+	
 	# Penalty for violating constraints
 	M = 100000 # Should be determined more precisely at some point
 

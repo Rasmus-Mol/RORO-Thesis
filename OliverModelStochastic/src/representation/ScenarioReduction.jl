@@ -31,7 +31,7 @@ function Find_one_reduction_naive(CargoC::CargoCollectionScenarios, sc_old)
 end
 
 # Find two scenarios to contract. Compare scenarios and cargotype with eachother
-# Assume cargo of same type are interchangeable - not the case if considering hazardous cargo also
+# Assume cargo of same type are interchangeable - not the case if considering hazardous cargo
 function Find_one_reduction(CargoC::CargoCollectionScenarios, sc_old)
     n_cargo = length(CargoC.items[1])
     model = Model(Gurobi.Optimizer)

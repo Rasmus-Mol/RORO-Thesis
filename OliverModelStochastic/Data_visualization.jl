@@ -44,15 +44,18 @@ include("src/representation/VarianceOfWeight.jl")
 # load data from problems
 # Change to get different problems
 #HPC_folder = "Finlandia_01_04_09_41_38"
-HPC_folder = "Finlandia_07_04_15"
-plot_folder = "Plots/Data/07_04_15/"
+#HPC_folder = "Finlandia_07_04_15"
+#plot_folder = "Plots/Data/07_04_15/"
+HPC_folder = "Finlandia_09_04_09"
+plot_folder = "Plots/Data/Finlandia_09_04_09/"
 
 # Create folder for plots
 if !isdir(plot_folder)
     mkpath(plot_folder)
 end
 
-repetitions, scenarios, n_unknown, time_limit = get_HPC_data(HPC_folder)
+repetitions, scenarios, n_unknown, time_limit, note = get_HPC_data(HPC_folder)
+println("Extra info about test: ", note)
 sc = length(scenarios)
 n = length(n_unknown)
 # Change if not Finlandia problem
@@ -89,12 +92,22 @@ for i in 1:repetitions
 end
 #################################
 # Plot Cargo weights for some scenarios for a problem 
-plots_boot = plot_cargo_weights(Stochastic_problem_boot[1,1,1],[1,2,3]) # plot for multiple scenarios
-plots_gen = plot_cargo_weights(Stochastic_problem_gen[1,1,1],[1,2,3])
-for i in 1:length(plots_boot)
-    display(plots_boot[i])
-    #savefig(plots_boot[i],plot_folder*"Cargo_distribution_boot_scenario_$(i).png")
-end
+plots_boot = plot_cargo_weights(Stochastic_problem_boot[1,1,1],[i for i =1:scenarios[1]]) # plot for multiple scenarios
+plots_gen = plot_cargo_weights(Stochastic_problem_gen[1,1,1],[i for i =1:scenarios[1]])
+xplots = 2
+yplots = 2
+plot(plots_boot[1],plots_boot[2],plots_boot[3],plots_boot[4], layout=(xplots,yplots)) 
+savefig(plot_folder*"Cargo_distribution_boot_scenario_1_4.png")
+plot(plots_boot[5],plots_boot[6],plots_boot[7],plots_boot[8], layout=(xplots,yplots)) 
+savefig(plot_folder*"Cargo_distribution_boot_scenario_5_8.png")
+plot(plots_boot[9],plots_boot[10], layout=(1,2)) 
+savefig(plot_folder*"Cargo_distribution_boot_scenario_9_10.png")
+plot(plots_gen[1],plots_gen[2],plots_gen[3],plots_gen[4], layout=(xplots,yplots))
+savefig(plot_folder*"Cargo_distribution_gen_scenario_1_4.png")
+plot(plots_gen[5],plots_gen[6],plots_gen[7],plots_gen[8], layout=(xplots,yplots)) 
+savefig(plot_folder*"Cargo_distribution_gen_scenario_5_8.png")
+plot(plots_gen[9],plots_gen[10], layout=(1,2))
+savefig(plot_folder*"Cargo_distribution_gen_scenario_9_10.png")
  # plot for original problem
 OG_plot = plot_cargo_OG(Deterministic_problem)
 EVP_plot_boot = plot_cargo_OG(EVP_problem_boot[1,1,end],false) # plot for EVP
@@ -124,7 +137,7 @@ for i in 1:repetitions
     for j in 1:sc
         for k in 1:n
             println("####################")
-            for l in 1:scenarios[i]
+            for l in 1:scenarios[j]
                 println("Total weight of cargo - boot, repetition: ", i, ", number of scenarios: ", scenarios[j],
                 ", number of unknown weights: ", n_unknown[k], ": ",
                 sum([cargo.weight for cargo in Stochastic_problem_boot[i,j,k].cargo.items[l]]))
@@ -154,7 +167,7 @@ for l in 1:sc
     end
     plot!(total_weight_det, label = "Det_pro")
     display(p)
-    savefig(p, plot_folder*"Total_weight_stochastic_problem_gen_scenario_$(scenarios[n_sc]).png")
+    #savefig(p, plot_folder*"Total_weight_stochastic_problem_gen_scenario_$(scenarios[n_sc]).png")
 end
 # NB! 
 # Clearly shows that our generation of weight is generally 
@@ -194,7 +207,7 @@ for l in 1:sc
     end
     plot!(total_weight_det, label = "Det_pro")
     display(p)
-    savefig(p, plot_folder*"Total_weight_stochastic_problem_boot_scenario_$(scenarios[n_sc]).png")
+    #savefig(p, plot_folder*"Total_weight_stochastic_problem_boot_scenario_$(scenarios[n_sc]).png")
 end
 # NB! 
 # Shows Boot-scenario generation generally is lower than the actual weight
@@ -209,9 +222,10 @@ p = plot(scenarios,total_weights_EVP,xlabel = "scenarios", ylabel = "Total cargo
 title = "Total weight for the EVP - Boot.")
 plot!(scenarios,total_weight_det, label = "Det_pro")
 savefig(p, plot_folder*"Total_weight_EVP_boot.png")
+display(p)
 # Clearly shows that our generation of weight is generally 
 # higher than the deterministic problem
-display(p)
+
 
 # Other methods for generating scenaros...
 
@@ -242,8 +256,9 @@ xticks!(binedges)
 plot!(xtickfontsize=6,formatter=:plain)
 savefig(plot_folder_historic*"Weight_booked_Secu.png")
 # Er den her bedre?
-histogram(df_secu_quan.CountBookedWeight,bins = nbins, xlabel="Weight", 
+histogram(df_secu_quan.CountBookedWeight, xlabel="Weight", 
 ylabel="Frequency", title="SECU booked weight distribution", legend=false)
+plot!(formatter=:plain)
 
 nbins = 30
 test = fit(Histogram, df_trailer_quan.CountBookedWeight, nbins=nbins)
@@ -256,6 +271,7 @@ savefig(plot_folder_historic*"Weight_booked_trailer.png")
 # Er den her bedre?
 histogram(df_trailer_quan.CountBookedWeight, xlabel="Weight",
 ylabel="Frequency", title="Trailer booked weight distribution", legend=false)
+plot!(formatter=:plain)
 
 # Weight variance
 nbins = 20
@@ -267,7 +283,7 @@ xticks!(binedges)
 plot!(xtickfontsize=6,formatter=:plain)
 savefig(plot_folder_historic*"Weight_variance_Secu.png")
 # Er det bedre ikke at bestemme bin-width?
-histogram(df_secu_quan.Variance,bins = nbins, xlabel="Weight", 
+histogram(df_secu_quan.Variance, xlabel="Weight", 
 ylabel="Frequency", title="SECU variance distribution", legend=false)
 plot!(xtickfontsize=6,formatter=:plain)
 
@@ -312,24 +328,11 @@ cargoC_gen = Stochastic_problem_gen[1,1,1].cargo.items[1]
 for i in 1:length(q)
     df_secu_quan_temp, = seperate_data_into_quantiles(df_secu,q[i],true)
     df_trailer_quan_temp, = seperate_data_into_quantiles(df_trailer,q[i],true)
-    test_plot,secu_weight, trailer_weight = scenario_distribution_with_normal(cargoC_boot,df_secu_quan_temp,df_trailer_quan_temp,q[i])
+    test_plot = scenario_distribution_with_normal(cargoC_boot,df_secu_quan_temp,df_trailer_quan_temp,q[i])
     push!(p,test_plot)
     display(test_plot[1])
     display(test_plot[2])
-    println("i: $(i), secu: ", secu_weight)
-    println("i: $(i), trailer: ", trailer_weight)
+    #println("i: $(i), secu: ", secu_weight)
+    #println("i: $(i), trailer: ", trailer_weight)
 end
 
-
-quantile_secu = [quantile(df_secu_quan.CorrectedWeight, i / 1) for i in 1:1]./1000
-quantile_trailer = [quantile(df_trailer_quan.CorrectedWeight, i / 1) for i in 1:1]./1000
-historic_secu_weight = [collect(filter(x -> x.QuantileNumber == i, df_secu_quan).CorrectedWeight) for i in 1:1]./1000
-historic_trailer_weight = [collect(filter(x -> x.QuantileNumber == i, df_trailer_quan).CorrectedWeight) for i in 1:1]./1000
-    
-
-
-df_secu_quan_temp, = seperate_data_into_quantiles(df_secu,q[1],true)
-df_trailer_quan_temp, = seperate_data_into_quantiles(df_trailer,q[1],true)
-test_plot,secu_weight, trailer_weight = scenario_distribution_with_normal(cargoC_boot,df_secu_quan_temp,df_trailer_quan_temp,q[1])
-display(test_plot[1])
-display(test_plot[2])

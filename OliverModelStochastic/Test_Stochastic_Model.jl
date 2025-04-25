@@ -44,9 +44,9 @@ include("src/utils/SaveData.jl")
 
 ################################################################
 # Which instance of HPC results to load - has to be changed manually
-HPC_folder = "Finlandia_27_03_10_50_34"
+HPC_folder = "Finlandia_09_04_09"
 # load data
-repetitions, scenarios, n_cargo_unknownweight = load_HPC_data(HPC_folder)
+repetitions, scenarios, n_cargo_unknownweight = get_HPC_data(HPC_folder)
 # Load problems and solutions
 problemname1, problemname2, problemname3 = "finlandia", "no_cars_medium_100_haz_eq_0.1", "hazardous"
 det_problem = load_data(problemname1,problemname2,problemname3)
@@ -142,5 +142,47 @@ savefig("Results_Plots/totalweightdiffAll_monte_sc_$(sc)_n_c_un_$(n_c_un).png")
 
 ################################################################
 
-temp = problems_gen[1]
-EVP = expected_value_problem(temp)
+include("src/model/random_stowage_plan.jl")
+
+@unpack vessel, slots, cargo = det_problem
+
+# choose n first elements and shuffle them
+n = 117
+cargoc = CargoCollection(shuffle!([cargo.items[i] for i in 1:n]))
+splan, not_s = random_stowage_plan(cargoc, slots)
+println("Number of cargoes loaded: ", n-length(not_s),"/",n)
+#splan2, not_s2 = random_stowage_plan(sort_cargocollection(cargoc), slots)
+# New random cargocollection
+ntypes = [length(filter(x -> x.cargo_type_id == i, cargoc.items)) for i in 1:4]
+rcargoc = random_cargocollection(ntypes)
+splan_r, not_s_r = random_stowage_plan(rcargoc, slots)
+println("Number of cargoes loaded: ", n-length(not_s_r),"/",n)
+#splan_r2, not_s_r2 = random_stowage_plan(sort_cargocollection(rcargoc), slots)
+
+# Original solution
+plot_solution(det_solution) 
+# Random stowage plan
+plot_solution_random_plan(splan, cargoc,slots)
+#plot_solution_random_plan(splan2, sort_cargocollection(cargoc),slots)
+# Another random stowage plan
+plot_solution_random_plan(splan_r, rcargoc,slots)
+#plot_solution_random_plan(splan_r2, sort_cargocollection(rcargoc),slots)  
+
+# Test how many cargoes need to be moved to make feasible plan
+mo = create_random_stowageplan_model(splan, not_s, cargoc, vessel, slots, false)
+set_silent(mo) # removes terminal output
+set_time_limit_sec(mo, 60)
+optimize!(mo)
+pro = StowageProblem(vessel = vessel,slots = slots,cargo = cargoc,name = det_problem.name)
+sol = extract_solution(pro,mo)
+sol_plan = sol.cs
+y = value.(mo[:y])
+println("Moves: ", sum(y))
+not_loaded = [i[1] for i in findall(x -> x<0.5, sum(sol_plan, dims = 2))]
+not_loaded_random_plan = [i[1] for i in findall(x -> x<0.5, sum(splan, dims = 2))]
+println("Not loaded after optimization: ", length(not_loaded))
+println("Not loaded before optimization: ", length(not_s))
+println("Difference: ", setdiff(not_loaded, not_loaded_random_plan))
+
+# plot_solution(sol) Can't use this function to show solution
+plot_solution_random_plan(sol_plan, cargoc,slots) 

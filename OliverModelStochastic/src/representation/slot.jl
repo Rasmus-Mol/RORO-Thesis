@@ -9,7 +9,7 @@
     refrigerated::Bool
     length::Float64
     width::Float64
-    on_deck::Bool     # Rasmus: What is this
+    on_deck::Bool     
 end
 
 # Helper functions to get slot properties
