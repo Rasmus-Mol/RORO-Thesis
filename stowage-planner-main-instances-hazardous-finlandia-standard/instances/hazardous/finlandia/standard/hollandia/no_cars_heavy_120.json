@@ -1,0 +1,6921 @@
+{
+    "cargo": [
+        {
+            "weight": 26.99,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 1,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.8,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 2,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.79,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 3,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.38,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 4,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.11,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 5,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.47,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 6,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.9,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 7,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.96,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 8,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.67,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 9,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.66,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 10,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.3,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 11,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.8,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 12,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.88,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 13,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.21,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 14,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.26,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 15,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.35,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 16,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.89,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 17,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.32,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 18,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.85,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 19,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.12,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 20,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.35,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 21,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 15.92,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 22,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.05,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 23,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.23,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 24,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.04,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 25,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.07,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 26,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.11,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 27,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.29,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 28,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.25,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 29,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.79,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 30,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.55,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 31,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.45,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 32,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.92,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 33,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.03,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 34,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.64,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 35,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.58,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 36,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.68,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 37,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.35,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 38,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.6,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 39,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.62,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 40,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.43,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 41,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.47,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 42,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.68,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 43,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.3,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 44,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.33,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 45,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.21,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 46,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.05,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 47,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.88,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 48,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.69,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 49,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.97,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 50,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.54,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 51,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.58,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 52,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.8,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 53,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.95,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 54,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.67,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 55,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.54,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 56,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.75,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 57,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.81,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 58,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.72,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 59,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.09,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 60,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.1,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 61,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.34,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 62,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.2,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 63,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.04,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 64,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.61,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 65,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.44,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 66,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.32,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 67,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.34,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 68,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.07,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 69,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.36,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 70,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.82,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 71,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.28,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 72,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.09,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 73,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.43,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 74,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.3,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 75,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.63,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 76,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.25,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 77,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.89,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 78,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.98,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 79,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.86,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 80,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.19,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 81,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.57,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 82,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.62,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 83,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.45,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 84,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.47,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 85,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.61,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 86,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.35,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 87,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.05,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 88,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.36,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 89,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.81,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 90,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.77,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 91,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.8,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 92,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.24,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 93,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.88,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 94,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.48,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 95,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.06,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 96,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.76,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 97,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.79,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 98,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.27,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 99,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.23,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 100,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.68,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 101,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.67,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 102,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.35,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 103,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.21,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 104,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.03,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 105,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.07,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 106,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.57,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 107,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.39,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 108,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.64,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 109,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.61,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 110,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 17.45,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 111,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.18,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 112,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.67,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 113,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.55,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 114,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.3,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 115,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.97,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 116,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.77,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 117,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.14,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 118,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 119,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.18,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 120,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.16,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 121,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.54,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 122,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.13,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 123,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.16,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 124,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.5,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 125,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.89,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 126,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.74,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 127,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.77,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 128,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.57,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 129,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.48,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 130,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.67,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 131,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.41,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 132,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.93,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 133,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.55,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 134,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.35,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 135,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.47,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 136,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.51,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 137,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.61,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 138,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.93,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 139,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.76,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 140,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.83,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 141,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.71,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 142,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.38,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 143,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.63,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 144,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.61,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 145,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.9,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 146,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.06,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 147,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.3,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 148,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.77,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 149,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.88,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 150,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.07,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 151,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.99,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 152,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.46,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 153,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.65,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 154,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.79,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 155,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.75,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 156,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.16,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 157,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.61,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 158,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.94,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 159,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.18,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 160,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.08,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 161,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.96,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 162,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.68,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 163,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.96,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 164,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.25,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 165,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.63,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 166,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.7,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 167,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.58,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 168,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.15,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 169,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.02,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 170,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.12,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 171,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.16,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 172,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.03,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 173,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.96,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 174,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.22,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 175,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.91,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 176,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.51,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 177,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.37,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 178,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.14,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 179,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.46,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 180,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.7,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 181,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.94,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 182,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.08,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 183,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.62,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 184,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.74,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 185,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.49,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 186,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.19,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 187,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.6,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 188,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.45,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 189,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.67,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 190,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.27,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 191,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.17,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 192,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.63,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 193,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.54,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 194,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.2,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 195,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.64,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 196,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.7,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 197,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.06,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 198,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.59,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 199,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.23,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 200,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.05,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 201,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.92,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 202,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.77,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 203,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.26,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 204,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 17.99,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 205,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.98,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 206,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.4,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 207,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.95,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 208,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.77,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 209,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.29,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 210,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.34,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 211,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.95,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 212,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.41,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 213,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.93,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 214,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.32,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 215,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 17.94,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 216,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.92,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 217,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.74,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 218,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.44,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 219,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 16.83,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 220,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.95,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 221,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.76,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 222,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.86,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 223,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.93,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 224,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.02,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 225,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.62,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 226,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.71,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 227,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.63,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 228,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.66,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 229,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.3,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 230,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.43,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 231,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.43,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 232,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.26,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 233,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.78,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 234,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.66,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 235,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.06,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 236,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.79,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 237,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.29,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 238,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.2,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 239,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.65,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 240,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.13,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 241,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.48,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 242,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.71,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 243,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.87,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 244,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.8,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 245,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.57,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 246,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 17.04,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 247,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.02,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 248,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.86,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 249,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.74,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 250,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.28,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 251,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.3,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 252,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.69,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 253,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.76,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 254,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.77,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 255,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.91,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 256,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.91,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 257,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.19,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 258,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.75,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 259,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.56,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 260,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.38,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 261,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.89,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 262,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.56,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 263,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.48,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 264,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.74,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 265,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.99,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 266,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.62,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 267,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.68,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 268,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.09,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 269,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.08,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 270,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.86,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 271,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.55,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 272,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.25,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 273,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.86,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 274,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.38,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 275,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.6,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 276,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.35,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 277,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.25,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 278,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.81,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 279,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.52,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 280,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.22,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 281,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.47,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 282,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.69,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 283,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.91,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 284,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.02,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 285,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.79,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 286,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.2,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 287,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.22,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 288,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.15,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 289,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.93,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 290,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.22,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 291,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.41,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 292,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.76,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 293,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.02,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 294,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.55,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 295,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 11.16,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 296,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.08,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 297,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.87,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 298,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.7,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 299,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.43,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 300,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.98,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 301,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.68,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 302,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.62,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 303,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.09,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 304,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.99,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 305,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.89,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 306,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.5,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 307,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.6,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 308,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.98,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 309,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.1,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 310,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.29,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 311,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.93,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 312,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.53,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 313,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.55,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 314,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.28,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 315,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.53,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 316,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.12,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 317,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.11,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 318,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.77,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 319,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.66,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 320,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.75,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 321,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.91,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 322,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.31,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 323,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.78,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 324,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.73,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 325,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.1,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 326,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.89,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 327,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 328,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.37,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 329,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.26,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 330,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.61,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 331,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.64,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 332,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.79,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 333,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.72,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 334,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.51,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 335,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.56,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 336,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.61,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 337,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.5,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 338,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.06,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 339,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.45,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 340,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.71,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 341,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.37,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 342,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 26.55,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 343,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.48,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 344,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 28.02,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 345,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 17.6,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 346,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.57,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 347,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.18,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 348,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.59,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 349,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 27.36,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 350,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.13,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 351,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 29.96,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 352,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.82,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 353,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.72,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 354,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.02,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 355,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 25.89,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.6,
+                "height": 2.5,
+                "width": 2.5
+            },
+            "hazardous": false,
+            "id": 356,
+            "type": "Trailer",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.26,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 357,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.8,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 358,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.71,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 359,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.86,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 360,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 17.84,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 361,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 17.18,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 362,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.57,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 363,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.79,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 364,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.33,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 365,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.39,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 366,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.82,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 367,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.41,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 368,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 16.09,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 369,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.08,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 370,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 16.38,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 371,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 15.5,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 372,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.33,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 373,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 15.58,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 374,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.92,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 375,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 15.48,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 376,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.54,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 377,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.75,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 378,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 17.69,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 379,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.57,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 380,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.47,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 381,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.8,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 382,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 16.03,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 383,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.97,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 384,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.34,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 385,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.33,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 386,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.8,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 387,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.23,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 388,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 13.99,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 389,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.25,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 390,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 15.72,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 391,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 16.48,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 392,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.24,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 393,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.4,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 394,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.61,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 395,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 15.95,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 396,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.5,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 397,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 16.25,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 398,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.14,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 399,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.38,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 400,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.82,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 401,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.96,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 402,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.37,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 403,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 15.22,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 404,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.61,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 405,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 13.53,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 406,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.15,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 407,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.86,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 408,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.56,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 409,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 16.45,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 410,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 15.52,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 411,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 15.27,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 412,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.15,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 413,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.29,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 414,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.12,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 415,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.39,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 416,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.73,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 417,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.27,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 418,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.52,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 419,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.86,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 420,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.23,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 421,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.38,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 422,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 17.32,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 423,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.05,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 424,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 15.75,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 425,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.34,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 426,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.28,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 427,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.45,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 428,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 16.04,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 429,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.97,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 430,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.09,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 431,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.94,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 432,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.25,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 433,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.93,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 434,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.47,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 435,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.77,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 436,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.91,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 437,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 17.49,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 438,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.75,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 439,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.22,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 440,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 12.93,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 441,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.67,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 442,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 16.76,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 443,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 17.43,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 444,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.26,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 445,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 16.64,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 446,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 17.58,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 447,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.9,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 448,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.78,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 449,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.44,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 450,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.32,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 451,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.47,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 452,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.74,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 453,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.14,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 454,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.65,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 455,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.73,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 456,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 16.31,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 457,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.31,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 458,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 19.76,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 459,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.31,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 460,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.25,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 461,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.56,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 462,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.66,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 463,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.61,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 464,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 24.89,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 465,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 21.88,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 466,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.23,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 467,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.26,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 468,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 22.37,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 469,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 16.87,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 470,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.31,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 471,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.39,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 472,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 20.15,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 473,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 23.83,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 474,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 15.05,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 475,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 16.55,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 476,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.97,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 477,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 18.4,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 4.6,
+                "height": 3,
+                "width": 4.5
+            },
+            "hazardous": false,
+            "id": 478,
+            "type": "Machine",
+            "hazard_class": 18
+        },
+        {
+            "weight": 77.29,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 479,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 70.41,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 480,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 71.38,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 481,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 55.27,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 482,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 77.69,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 483,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 68.98,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 484,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 75.67,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 485,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 62.35,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 486,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 75.82,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 487,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 66.75,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 488,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 76.62,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 489,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 66.2,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 490,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 73.4,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 491,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 69.53,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 492,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 65.31,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 493,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 72.56,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 494,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 74.92,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 495,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 66.66,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 496,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 77.53,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 497,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 78.54,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 498,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 61.53,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 499,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 70.32,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 500,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 64.14,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 501,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 74.69,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 502,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 75.66,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 503,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 70.64,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 504,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 76.41,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 505,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 65.69,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 506,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 64.51,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 507,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 54.25,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 508,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 61,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 509,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 69.76,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 510,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 75.06,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 511,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 63.99,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 512,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 77.44,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 513,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 77.95,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 514,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 69.28,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 515,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 64.82,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 516,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 77.22,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 517,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 68.61,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 518,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 67.31,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 519,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 71.14,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 520,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 78.32,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 521,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 76.84,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 522,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 63.16,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 523,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 70.56,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 524,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 68.21,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 525,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 77.95,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 526,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 67.37,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 527,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 77.06,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 528,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 71.31,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 529,
+            "type": "Secu Box",
+            "hazard_class": 18
+        },
+        {
+            "weight": 72.34,
+            "refrigerated": false,
+            "dimensions": {
+                "length": 13.8,
+                "height": 4.375,
+                "width": 3.6
+            },
+            "hazardous": false,
+            "id": 530,
+            "type": "Secu Box",
+            "hazard_class": 18
+        }
+    ],
+    "config": {
+        "name": "No Cars",
+        "capacity_ratio": 1.2,
+        "refrigerated": false,
+        "hazardous": false,
+        "weight_profile": "heavy"
+    },
+    "metadata": {
+        "name": "Hollandia_No Cars_heavy_120",
+        "capacity_ratio": 1.2,
+        "hazardous_enabled": false,
+        "total_cargo": 530,
+        "weight_profile": "heavy",
+        "total_weight": 14908.23,
+        "refrigerated_enabled": false,
+        "generation_timestamp": "2025-01-20T11:07:15.858",
+        "description": "No Cars configuration for Hollandia with heavy weights at 120% capacity",
+        "cargo_counts": {
+            "Trailer": 356,
+            "Secu Box": 52,
+            "Machine": 122
+        }
+    },
+    "vessel": {
+        "name": "Hollandia",
+        "imo": "9832585"
+    }
+}

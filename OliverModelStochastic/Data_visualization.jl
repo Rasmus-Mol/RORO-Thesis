@@ -21,6 +21,7 @@ using Statistics
 using HypothesisTests
 using Distributions
 using StructTypes
+using StatsPlots
 
 include("src/representation/cargo.jl")
 include("src/representation/deck.jl")
@@ -227,7 +228,7 @@ display(p)
 # higher than the deterministic problem
 
 
-# Other methods for generating scenaros...
+# Other methods for generating scenarios...
 
 
 ########################################
@@ -243,15 +244,26 @@ cur_path = @__DIR__
 file_path = joinpath(cur_path,"data","CargoWeights.csv")
 df = load_Weight_Variance_data(file_path)
 df_secu, df_trailer = weight_difference_info(df,false)
-df_secu_quan, = seperate_data_into_quantiles(df_secu,n_quantiles,false)
-df_trailer_quan, = seperate_data_into_quantiles(df_trailer,n_quantiles,false)
+remove_outliers = false
+df_secu_quan, = seperate_data_into_quantiles(df_secu,n_quantiles,remove_outliers)
+df_trailer_quan, = seperate_data_into_quantiles(df_trailer,n_quantiles,remove_outliers)
+normal_var_secu = (df_secu_quan.Variance.-mean(df_secu_quan.Variance))./std(df_secu_quan.Variance)
+qqplot(normal_var_secu, Normal(0, 1), title="Trucks Q-Q Plot", xlabel="Theoretical Quantiles", ylabel="Truck Quantiles")
+savefig(plot_folder_historic*"QQPlot_secu.png")
+normal_var_truck = (df_trailer_quan.Variance.-mean(df_trailer_quan.Variance))./std(df_trailer_quan.Variance)
+qqplot(normal_var_truck, Normal(0, 1), title="Trucks Q-Q Plot", xlabel="Theoretical Quantiles", ylabel="Truck Quantiles")
+savefig(plot_folder_historic*"QQPlot_truck.png")
+# Removing outliers
+remove_outliers = true
+df_secu_quan, = seperate_data_into_quantiles(df_secu,n_quantiles,remove_outliers)
+df_trailer_quan, = seperate_data_into_quantiles(df_trailer,n_quantiles,remove_outliers)
 
 # Booked weight
 nbins = 20
 test = fit(Histogram, df_secu_quan.CountBookedWeight, nbins=nbins)
 binedges = test.edges[1]
 histogram(df_secu_quan.CountBookedWeight,bins = nbins, xlabel="Weight", 
-ylabel="Frequency", title="SECU booked weight distribution", legend=false)
+ylabel="Frequency", title="Secu-boxes booked weight distribution", legend=false)
 xticks!(binedges)
 plot!(xtickfontsize=6,formatter=:plain)
 savefig(plot_folder_historic*"Weight_booked_Secu.png")
@@ -277,28 +289,30 @@ plot!(formatter=:plain)
 nbins = 20
 test = fit(Histogram, df_secu_quan.Variance, nbins=nbins)
 binedges = test.edges[1]
-histogram(df_secu_quan.Variance,bins = nbins, xlabel="Weight", 
-ylabel="Frequency", title="SECU variance distribution", legend=false)
+histogram(df_secu_quan.Variance,bins = nbins, xlabel="Weight (kg)", 
+ylabel="Frequency", title="Secu-boxes weight difference distribution", legend=false)
 xticks!(binedges)
+plot!(xtickfontsize=5,formatter=:plain)
+#savefig(plot_folder_historic*"Weight_variance_Secu.png")
+# Er det bedre ikke at bestemme bin-width?
+histogram(df_secu_quan.Variance./1000, xlabel="Weight (t.)", 
+ylabel="Frequency", title="Secu-boxes weight difference distribution", legend=false)
 plot!(xtickfontsize=6,formatter=:plain)
 savefig(plot_folder_historic*"Weight_variance_Secu.png")
-# Er det bedre ikke at bestemme bin-width?
-histogram(df_secu_quan.Variance, xlabel="Weight", 
-ylabel="Frequency", title="SECU variance distribution", legend=false)
-plot!(xtickfontsize=6,formatter=:plain)
 
-nbins = 30
+nbins = 20
 test = fit(Histogram, df_trailer_quan.Variance, nbins=nbins)
 binedges = test.edges[1]
 histogram(df_trailer_quan.Variance, bins=nbins, xlabel="Weight",
-ylabel="Frequency", title="Trailer variance distribution", legend=false)
+ylabel="Frequency", title="Trucks weight difference distribution", legend=false)
 xticks!(binedges)
 plot!(xtickfontsize=4,formatter=:plain)
-savefig(plot_folder_historic*"Weight_variance_trailer.png")
+#savefig(plot_folder_historic*"Weight_variance_trailer.png")
 # Bedre?
-histogram(df_trailer_quan.Variance, bins=nbins, xlabel="Weight",
-ylabel="Frequency", title="Trailer variance distribution", legend=false)
+histogram(df_trailer_quan.Variance./1000, bins=nbins, xlabel="Weight (t.)",
+ylabel="Frequency", title="Trucks weight difference distribution", legend=false)
 plot!(xtickfontsize=6,formatter=:plain)
+savefig(plot_folder_historic*"Weight_variance_trailer.png")
 
 secu_var = [collect(filter(x -> x.QuantileNumber == i, df_secu_quan).Variance) for i in 1:n_quantiles]
 trailer_var = [collect(filter(x -> x.QuantileNumber == i, df_trailer_quan).Variance) for i in 1:n_quantiles]

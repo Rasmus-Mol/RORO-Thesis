@@ -32,7 +32,16 @@ include("src/representation/problem.jl")
 # New: Stochastic 
 include("src/representation/CargoScenarios.jl")
 include("src/representation/VarianceOfWeight.jl")
-
+# Instances
+include("src/utils/test_instances.jl")
+finlandia = 0
+if finlandia
+    vessel_name = "finlandia"
+    instance_name = Finlandia_test[]
+else
+    vessel_name = "hollandia"
+    instance_name = Hollandia_test[]
+end
 
 # load data
 problem = load_data("finlandia", "no_cars_medium_100_haz_eq_0.1", "hazardous")

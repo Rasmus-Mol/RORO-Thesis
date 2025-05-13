@@ -170,18 +170,29 @@ function get_cargo_type_id(filename::String)
     return get(cargo_types, cargo_name, 1)  # Default to 1 if not found
 end
 
-function get_deck_id(deck_name::String)
-    deck_types = Dict(
+function get_deck_id(deck_name::String,ship::String="finlandia")
+    deck_types_fin = Dict(
         "UDECK" => 1,
         "MDECK" => 2,
         "TTOP" => 3
     )
-    return get(deck_types, deck_name, 1)  # Default to 1 if not found
+    deck_types_hol = Dict(
+        "DECK1" => 1,
+        "DECK3" => 2,
+        "DECK5" => 3,
+        "DECK7" => 4,
+        "DECK8" => 5,
+    )
+    if ship == "hollandia"
+        return get(deck_types_hol, deck_name, 1)  # Default to 1 if not found
+    else
+        return get(deck_types_fin, deck_name, 1)  # Default to 1 if not found
+    end
 end
 
 # Rasmus: Loads slots from one excel file.
 # There is one excel file for each type of cargo.
-function load_slots_from_excel(filepath::String, start_id::Int)
+function load_slots_from_excel(filepath::String, start_id::Int, ship::String="finlandia")
     xf = XLSX.readxlsx(filepath)
     sheet = xf[2]  # Use first sheet
     cargo_type_id = get_cargo_type_id(filepath)
@@ -195,7 +206,7 @@ function load_slots_from_excel(filepath::String, start_id::Int)
         slot = Slot(
             id = current_id,
             loadmaster_id = row[1],
-            deck_id = get_deck_id(row[15]),
+            deck_id = get_deck_id(row[15], ship),
             cargo_type_id = cargo_type_id,  # Use cargo type from filename
             lcg = row[6],
             tcg = row[7],
@@ -213,7 +224,7 @@ function load_slots_from_excel(filepath::String, start_id::Int)
 end
 
 # Rasmus: Loads all slots from a directory
-function load_all_slots(directory::String="data/slots/finlandia")
+function load_all_slots(directory::String="data/slots/finlandia", ship::String="finlandia")
     all_slots = Slot[]
     current_id = 1
     
@@ -227,7 +238,7 @@ function load_all_slots(directory::String="data/slots/finlandia")
         if endswith(lowercase(file), ".xls") || endswith(lowercase(file), ".xlsx")
             filepath = joinpath(directory, file)
             try
-                slots = load_slots_from_excel(filepath, current_id)
+                slots = load_slots_from_excel(filepath, current_id, ship)
                 append!(all_slots, slots)
                 current_id += length(slots)
             catch e

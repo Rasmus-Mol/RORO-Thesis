@@ -75,6 +75,10 @@ export now, format, Dates, write_slack, get_slack
 # Bootstrap method 
 export Bootstrap_bookedweight_quantile
 
+# Other models
+export random_stowage_plan, random_cargocollection, sort_cargocollection
+export create_random_stowageplan_model, create_model_stochastic_cargo_fraction
+
 # Functions to connect to LoadMaster
 #export LoadMaster, getcurrentvessel, resetvessel, upload_solution, getresults, parse_result, uri, headers, struct_to_json
 

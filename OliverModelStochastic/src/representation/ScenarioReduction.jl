@@ -30,6 +30,7 @@ function Find_one_reduction_naive(CargoC::CargoCollectionScenarios, sc_old)
     return value.(x), objective_value(model)
 end
 
+# NB! Not done
 # Find two scenarios to contract. Compare scenarios and cargotype with eachother
 # Assume cargo of same type are interchangeable - not the case if considering hazardous cargo
 function Find_one_reduction(CargoC::CargoCollectionScenarios, sc_old)
@@ -45,13 +46,19 @@ function Find_one_reduction(CargoC::CargoCollectionScenarios, sc_old)
     @variable(model, x2[1:sc_old,1:sc_old,1:n_types[2],1:n_types[1]], Bin) # Binary variable for type 2
     @variable(model, x3[1:sc_old,1:sc_old,1:n_types[3],1:n_types[1]], Bin) # Binary variable for type 3
     @variable(model, x4[1:sc_old,1:sc_old,1:n_types[4],1:n_types[1]], Bin) # Binary variable for type 4
+    @variable(model, y[1:sc_old], Bin) # 1 if scenario is contracted
+
 
     # cargo have to be matched to a cargo in different scenario
     @constraint(model, [c1=1:n_types[1]], sum(x1[i,j,c1,c2] for c2=1:n_types[1], i = 1:(sc_old-1), j=(i+1):sc_old) == 1)
     @constraint(model, [c1=1:n_types[2]], sum(x2[i,j,c1,c2] for c2=1:n_types[1], i = 1:(sc_old-1), j=(i+1):sc_old) == 1)
-    @constraint(model, [c1=1:n_types[3]], sum(x3[i,j,c1,c2] for c2=1:n_types[1], i=1:(sc_old-1), j=(i+1):sc_old) == 1)
-    @constraint(model, [c1=1:n_types[4]], sum(x4[i,j,c1,c2] for c2=1:n_types[1], i=1:(sc_old-1), j=(i+1):sc_old) == 1)
+    @constraint(model, [c1=1:n_types[3]], sum(x3[i,j,c1,c2] for c2=1:n_types[1], i = 1:(sc_old-1), j=(i+1):sc_old) == 1)
+    @constraint(model, [c1=1:n_types[4]], sum(x4[i,j,c1,c2] for c2=1:n_types[1], i = 1:(sc_old-1), j=(i+1):sc_old) == 1)
     
+    # Only contract two scenarios
+    @constraint(model, sum(y) == 2)
+    @constraint(model, x1[i,j,c1,c2] == )
+
     # only match two scenarios - probably not needed
     #=@constraint(model, [i = 1:sc_old], sum(x1[i,j,n] for j ∈ 1:sc_old, n ∈ 1:n_types[1]) <= 1)
     @constraint(model, [j = 1:sc_old], sum(x1[i,j,n] for i ∈ 1:sc_old, n ∈ 1:n_types[1]) <= 1)

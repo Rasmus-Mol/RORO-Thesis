@@ -30,7 +30,7 @@ function load_data(vessel_name::String, instance_name::String, instance_type::St
 
     
     # Load slots from data directory
-    slots = load_all_slots(joinpath(@__DIR__, "../../data/slots", vessel_name))
+    slots = load_all_slots(joinpath(@__DIR__, "../../data/slots", vessel_name), vessel_name)
     
     # Load cargo and metadata from default instance
     instance_path = joinpath(@__DIR__, "../../instances/", instance_type, vessel_name, "$instance_name.json")

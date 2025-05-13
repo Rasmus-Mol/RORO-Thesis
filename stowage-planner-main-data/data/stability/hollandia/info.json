@@ -1,0 +1,12 @@
+{
+    "name": "HOLLANDIA",
+    "IMO": 9832585,
+    "lighship_weight": 18126.23,
+    "lightship_lcg": 100.06,
+    "lightship_tcg": -0.31,
+    "lightship_vcg": 14.4,
+    "beam": 33.000,
+    "height_of_shaft_above_BL": 2.6,
+    "propeller_diameter": 5.75,
+    "draft_min": 6.0
+}

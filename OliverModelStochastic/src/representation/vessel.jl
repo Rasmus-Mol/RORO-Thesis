@@ -543,8 +543,12 @@ function merge_buoyancy_points_and_frames(vessel::Vessel, target_points::Int)
         disp_points = filter(b -> b.displacement == displacement, vessel.buoyancy_points)
         positions = [vessel.frame_positions[i].position for i in 1:length(vessel.frame_positions)]
         buoyancy_values = [p.cumulative_buoyancy for p in disp_points]
-        
+        if vessel.name == "HOLLANDIA" # Need to remove one point
+            buoyancy_values = buoyancy_values[2:end]
+        end
+
         # Create interpolation for buoyancy values
+        #println(length(positions), " and ", length(buoyancy_values))
         buoyancy_interp = LinearInterpolation(positions, buoyancy_values)
         
         # Interpolate at new positions
