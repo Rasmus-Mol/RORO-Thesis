@@ -8,7 +8,8 @@ function calculate_vcg_slopes(vessel::Vessel)
 		max_vcg = tank.max_vcg
 		min_vcg = tank.min_vcg
 		max_vol = tank.max_vol
-		slopes[tank_idx] = (max_vcg - min_vcg) / max_vol
+		slopes[tank_idx] = round((max_vcg - min_vcg) / max_vol,digits = 2)
+		#slopes[tank_idx] = max_vcg
 	end
 	return slopes
 end
@@ -101,11 +102,21 @@ function add_stability_stochastic!(vessel::Vessel, model, pos_weight_cargo, lcg_
 	)
 	# Buoyancy calculations using vessel's buoyancy matrix
 	# Rasmus: I think this should be constraint (8) but it doesn't look right
+	# Fixed
+	#=
+	@expression(model, buoyancy_interpolated[sc = 1:scenarios],
+		sum(vessel.buoyancy_displacement_weight_cumulative[b, :] .* z_min[b,sc] 
+			for b in draft_index_min:draft_index_max)
+	)
+	=#
 	@expression(model, buoyancy_interpolated[sc = 1:scenarios],
 		sum(vessel.buoyancy_displacement_weight_cumulative[b, :] .* z_min[b,sc] +
 			vessel.buoyancy_displacement_weight_cumulative[b, :] .* z_max[b,sc] 
-			for b in draft_index_min:draft_index_max)
+			for b in draft_index_min:draft_index_max)./2
 	)
+	
+
+
 	# # Force relationships
 	@constraint(model, [sc = 1:scenarios], buoyancy[:,sc] .== buoyancy_interpolated[sc])
 

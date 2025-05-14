@@ -6,17 +6,18 @@ include("src/utils/test_instances.jl")
 using .StowagePlannerStochastic
 using JuMP
 
-parse_index = parse(Int, ARGS[1]) # Jobindex input
+#parse_index = parse(Int, ARGS[1]) # Jobindex input
+parse_index = 1
 
 # Choose instance:
-test_problem_name = Hollandia_test[1]
+test_problem_name = Hollandia_test[5]
 
 problem_det = load_data("hollandia", test_problem_name, "hazardous")
 
 # Folder name for results - date and hour
 HPC_folder = "Hollandia_"*Dates.format(now(), "dd_mm_HH")
  # Describe tests if necessary
- extra_info = "Ship: Hollandia, Test problem: "*test_problem_name*" - No scenario reduction"
+extra_info = "Ship: Hollandia, Test problem: "*test_problem_name*" - No scenario reduction"
 
 
 # First job index - create problem 
@@ -38,8 +39,8 @@ end
 scenarios = [10,20,30,40,50]
 sc = scenarios[parse_index] # number scenarios for current job
 n_cargo_unknownweight = [length(problem_det.cargo)] # all cargo weights are unknown
-time_limit = 60 * 60 # 1 hour
-repetitions = 1 # number of repetitions of same inputs
+time_limit = 60*60 # 1 hour
+repetitions = 2 # number of repetitions of same inputs
 
 # Check if folder and file has been created, otherwise create
 file_check = "Results/"*HPC_folder*"HPC_data.json"
@@ -47,6 +48,7 @@ if !isfile(file_check)
     # Save scenario and number of unknown weights
     write_HPC_data(repetitions, scenarios, n_cargo_unknownweight, time_limit, HPC_folder, extra_info)
 end
+println("Starter main script Hollandia")
 # Run tests
 for i in 1:repetitions
     # uniform random sampling method
@@ -81,6 +83,7 @@ for i in 1:repetitions
         write_solution(fitted_sol_slacked,foldername,"Fitted_Solution_slacked",HPC_folder)
         write_slack(HPC_folder, foldername, "Fitted_Solution", second_stage_m_slacked)
     end
+    println("første test færdig")
 
     # EVP method for uniform random sampling method 
     foldername = "EVP_random_sampling_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)"
@@ -112,6 +115,7 @@ for i in 1:repetitions
         write_solution(fitted_sol_slacked,foldername,"Fitted_Solution_slacked",HPC_folder)
         write_slack(HPC_folder, foldername, "Fitted_Solution", second_stage_m_slacked)
     end
+    println("anden test færdig")
 
     # Bootstrap method 1
     pro = create_stochastic_problem(problem_det, sc, n_cargo_unknownweight[1], [],Bootstrap_bookedweight_quantile) 
@@ -144,6 +148,7 @@ for i in 1:repetitions
         write_solution(fitted_sol_slacked,foldername,"Fitted_Solution_slacked",HPC_folder)
         write_slack(HPC_folder, foldername, "Fitted_Solution", second_stage_m_slacked)
     end
+    println("tredje test færdig")
 
     # EVP method for Bootstrap method 1
     foldername = "EVP_Bootstrap1_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)"
@@ -175,6 +180,7 @@ for i in 1:repetitions
         write_solution(fitted_sol_slacked,foldername,"Fitted_Solution_slacked",HPC_folder)
         write_slack(HPC_folder, foldername, "Fitted_Solution", second_stage_m_slacked)
     end
+    println("fjerde test færdig")
 end
 
 

@@ -9,7 +9,7 @@ using JuMP
 parse_index = parse(Int, ARGS[1]) # Jobindex input
 
 # Choose instance:
-test_problem_name = Finlandia_test[1]
+test_problem_name = Finlandia_test[5]
 
 problem_det = load_data("finlandia", test_problem_name, "hazardous")
 

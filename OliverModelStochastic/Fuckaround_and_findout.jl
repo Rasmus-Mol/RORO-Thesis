@@ -52,36 +52,69 @@ include("src/utils/test_instances.jl")
 include("src/representation/ScenarioReduction.jl")
 
 # Do stuff 
-test_instance_hol = Hollandia_test[1]
-test_instance_fin = Finlandia_test[1]
+test_instance_hol = Hollandia_test[5]
+test_instance_fin = Finlandia_test[5]
+
 Deterministic_problem_hol = load_data("hollandia",test_instance_hol,"hazardous")
-Deterministic_problem_fin = load_data("finlandia",test_instance_fin,"hazardous")
+Deterministic_problem_fin = load_data("finlandia","no_cars_medium_100_haz_eq_0.1","hazardous")
+#Deterministic_problem_fin = load_data("finlandia",test_instance_fin,"hazardous")
 
 pro_hol = create_stochastic_problem(Deterministic_problem_hol, 40, length(Deterministic_problem_hol.cargo), []) 
-pro_fin = create_stochastic_problem(Deterministic_problem_fin, 40, length(Deterministic_problem_fin.cargo), []) 
+pro_fin = create_stochastic_problem(Deterministic_problem_fin, 10, length(Deterministic_problem_fin.cargo), []) 
+
+
+vessel = pro_fin.vessel
+vessel.ballast_tanks[1].max_vol
+test = calculate_vcg_slopes(vessel)
+cargo = Deterministic_problem_fin.cargo
 
 # Hollandia
 model_hol = create_model(Deterministic_problem_hol)
 set_silent(model_hol) # removes terminal output
-set_time_limit_sec(model_hol, 60 * 5) # 5 minutes to solve model
+set_time_limit_sec(model_hol, 60 * 15) # 5 minutes to solve model
 optimize!(model_hol)
 model_stochastic_hol = create_model_stochastic(pro_hol)
 set_silent(model_stochastic_hol) # removes terminal output
-set_time_limit_sec(model_stochastic_hol, 60 * 5) # 5 minutes to solve model
+set_time_limit_sec(model_stochastic_hol, 60 * 2) # 5 minutes to solve model
 #set_time_limit_sec(model_stochastic, 60 * 15) # 10 minutes to solve model
 optimize!(model_stochastic_hol)
-
+sol_hol = extract_stochastic_solution(pro_hol,model_stochastic_hol)
+folder1 = "Temp1_delete"
+folder2 = "Temp2_delete"
+write_solution_stochastic(sol_hol,folder2,"Stochastic_Solution",folder1)
+cs_sol = sol_hol.cs
+second_stage_m = second_stage_model(cs_sol, Deterministic_problem_hol)
+set_silent(second_stage_m) # removes terminal output
+set_time_limit_sec(second_stage_m, 60) 
+optimize!(second_stage_m)
+fitted_sol = get_solution_second_stage_stochastic(Deterministic_problem_hol, second_stage_m, sol_hol)
+write_solution(fitted_sol,folder1,"Fitted_Solution",folder2)
 
 # Finlandia 
 model_fin = create_model(Deterministic_problem_fin)
 set_silent(model_fin) # removes terminal output
 set_time_limit_sec(model_fin, 60 * 5) # 5 minutes to solve model
 optimize!(model_fin)
+solution_det = extract_solution(Deterministic_problem_fin, model_fin)
+
+# med ingen ændringer
+# 89 sek med korrekt vcg slopes
+# 41 sek med korrekt z_min og z_max
+# med begge ændringer
+
 model_stochastic_fin = create_model_stochastic(pro_fin)
 set_silent(model_stochastic_fin) # removes terminal output
 set_time_limit_sec(model_stochastic_fin, 60 * 5) # 5 minutes to solve model
 #set_time_limit_sec(model_stochastic, 60 * 15) # 10 minutes to solve model
 optimize!(model_stochastic_fin)
+sol = extract_stochastic_solution(pro_fin,model_stochastic_fin)
+cs_sol = sol.cs
+
+# Solve second stage when we know unknown weights
+second_stage_m = second_stage_model(cs_sol, problem_det)
+set_silent(second_stage_m) # removes terminal output
+set_time_limit_sec(second_stage_m, time_limit) 
+optimize!(second_stage_m)
 
 #=
 for i in 1:length(vessel.decks)
