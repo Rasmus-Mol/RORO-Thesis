@@ -205,7 +205,7 @@ function create_model_stochastic_cargo_fraction(problem::StochasticStowageProble
 	# Penalty for slack variables
 	#M = 100000 # Should be determined more precisely at some point
     M = sum(cost)+1 # We would rather have no cargo, than violate constraints
-	# Might be a bit too large
+	# Might be a bit too large for model to handle
 
 	# One cargo per slot at most. Constraint (24)
 	@constraint(model, [s = 1:n_slots],

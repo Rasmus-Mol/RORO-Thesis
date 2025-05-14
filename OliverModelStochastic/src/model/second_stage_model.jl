@@ -88,7 +88,8 @@ function second_stage_model_slack(cs, problem::StowageProblem)
 	area = [get_length(cargo[c]) * get_width(cargo[c]) for c in 1:n_cargo]
 	
 	# Penalty for violating constraints
-	M = 100000 # Should be determined more precisely at some point
+	#M = 100000 # Should be determined more precisely at some point
+	M = sum(cost) +1 
 
     # Slot weight calculation. Constraint (27)
 	@constraint(model, [s = 1:n_slots],

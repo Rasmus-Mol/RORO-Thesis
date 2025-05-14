@@ -1,4 +1,4 @@
-# Rasmus: Creates an array with all tanks max_vcg
+# Rasmus: Creates an array with slope vcg for all tanks
 function calculate_vcg_slopes(vessel::Vessel)
 	n_tanks = length(vessel.ballast_tanks)
 	slopes = zeros(n_tanks)
@@ -6,7 +6,9 @@ function calculate_vcg_slopes(vessel::Vessel)
 		# Get tank properties
 		tank = vessel.ballast_tanks[tank_idx]
 		max_vcg = tank.max_vcg
-		slopes[tank_idx] = max_vcg
+		min_vcg = tank.min_vcg
+		max_vol = tank.max_vol
+		slopes[tank_idx] = (max_vcg - min_vcg) / max_vol
 	end
 	return slopes
 end
@@ -100,7 +102,8 @@ function add_stability_stochastic!(vessel::Vessel, model, pos_weight_cargo, lcg_
 	# Buoyancy calculations using vessel's buoyancy matrix
 	# Rasmus: I think this should be constraint (8) but it doesn't look right
 	@expression(model, buoyancy_interpolated[sc = 1:scenarios],
-		sum(vessel.buoyancy_displacement_weight_cumulative[b, :] .* z_min[b,sc]
+		sum(vessel.buoyancy_displacement_weight_cumulative[b, :] .* z_min[b,sc] +
+			vessel.buoyancy_displacement_weight_cumulative[b, :] .* z_max[b,sc] 
 			for b in draft_index_min:draft_index_max)
 	)
 	# # Force relationships
@@ -312,7 +315,8 @@ function add_stability_stochastic_slack_all!(vessel::Vessel, model, pos_weight_c
 	# Buoyancy calculations using vessel's buoyancy matrix
 	# Rasmus: I think this should be constraint (8) but it doesn't look right
 	@expression(model, buoyancy_interpolated[sc = 1:scenarios],
-		sum(vessel.buoyancy_displacement_weight_cumulative[b, :] .* z_min[b,sc]
+		sum(vessel.buoyancy_displacement_weight_cumulative[b, :] .* z_min[b,sc] +
+			vessel.buoyancy_displacement_weight_cumulative[b, :] .* z_max[b,sc]
 			for b in draft_index_min:draft_index_max)
 	)
 	# # Force relationships
