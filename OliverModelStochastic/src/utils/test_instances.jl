@@ -1,14 +1,19 @@
 # Test instances names
-#=
-Finlandia_test = [
-    "mixed_heavy_100",
-    "mixed_heavy_120",
-    "mixed_light_100",
-    "mixed_light_120","mixed_medium_100",
-    "mixed_medium_120",
-]
-    =#
 
+Finlandia_test = [
+    # All 4 types - different number of cargo
+    "mixed_light_60",
+    "mixed_light_100",
+    "mixed_heavy_60",
+    "mixed_heavy_100",
+    # No cars
+    "no_cars_light_60",
+    "no_cars_light_100",
+    "no_cars_heavy_60",
+    "no_cars_heavy_100",
+]
+
+#=
 Finlandia_test = [
     "all_equal_heavy_60",
     "all_equal_heavy_80",
@@ -86,14 +91,19 @@ Finlandia_test = [
     # as "no_cars_medium_100 - THEY ARE NOT
     # "no_cars_medium_100_haz_eq_0.1"
 ]
+=#
 
-Hollandia_test = [
-    "mixed_heavy_100",
-    "mixed_heavy_120",
-    "mixed_light_100",
-    "mixed_light_120",
-    "mixed_medium_100",
-    "mixed_medium_120",
+Hollandia_test =  [
+  # All 4 types - different number of cargo
+"mixed_light_60",
+"mixed_light_100",
+"mixed_heavy_60",
+"mixed_heavy_100",
+# No cars
+"no_cars_light_60",
+"no_cars_light_100",
+"no_cars_heavy_60",
+"no_cars_heavy_100",
 ]
 #=
 Hollandia_test = [

@@ -40,7 +40,8 @@ include("src/plots/solution.jl")
 # Load data Script
 include("src/utils/SaveData.jl")
 include("src/representation/VarianceOfWeight.jl")
-
+# Test instances
+include("src/utils/test_instances.jl")
 
 # load data from problems
 # Change to get different problems
@@ -334,7 +335,6 @@ plot(p..., layout=(xplots,yplots)) # Good plot I think
 savefig(plot_folder_historic*"Weight_variance_trailer_quantiles.png")
 
 
-
 q = [1,2,3,4]#,5,6,7,8]
 p = []
 cargoC_boot = Stochastic_problem_boot[1,1,1].cargo.items[1]
@@ -349,4 +349,14 @@ for i in 1:length(q)
     #println("i: $(i), secu: ", secu_weight)
     #println("i: $(i), trailer: ", trailer_weight)
 end
+
+
+###################################
+plot_folder = "Plots/Data/Scenarios"
+
+# Create folder for plots
+if !isdir(plot_folder)
+    mkpath(plot_folder)
+end
+
 

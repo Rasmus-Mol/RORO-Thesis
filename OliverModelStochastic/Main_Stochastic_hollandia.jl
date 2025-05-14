@@ -2,17 +2,22 @@
 push!(LOAD_PATH, pwd())
 # Doens't work without this, dont know why
 include("src/StowagePlannerStochastic.jl")
+include("src/utils/test_instances.jl")
 using .StowagePlannerStochastic
 using JuMP
 
 parse_index = parse(Int, ARGS[1]) # Jobindex input
 
-problem_det = load_data("finlandia", "no_cars_medium_100_haz_eq_0.1", "hazardous")
+# Choose instance:
+test_problem_name = Hollandia_test[1]
+
+problem_det = load_data("hollandia", test_problem_name, "hazardous")
 
 # Folder name for results - date and hour
-HPC_folder = "Finlandia_"*Dates.format(now(), "dd_mm_HH")
+HPC_folder = "Hollandia_"*Dates.format(now(), "dd_mm_HH")
  # Describe tests if necessary
-extra_info = "Change this"
+ extra_info = "Ship: Hollandia, Test problem: "*test_problem_name*" - No scenario reduction"
+
 
 # First job index - create problem 
 if parse_index == 1
@@ -23,7 +28,7 @@ if parse_index == 1
     optimize!(model_det)
     solution_det = extract_solution(problem_det, model_det)
     # Save Solution for deterministic problem
-    write_solution(solution_det,"Finlandia_deterministic","Deterministic_Solution",HPC_folder)
+    write_solution(solution_det,"Hollandia_deterministic","Deterministic_Solution",HPC_folder)
 end
 
 # Creates Stochastic problem and model

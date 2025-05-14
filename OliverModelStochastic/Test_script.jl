@@ -44,7 +44,7 @@ else
 end
 
 # load data
-problem = load_data("finlandia", "no_cars_medium_100_haz_eq_0.1", "hazardous")
+problem = load_data("finlandia", "mixed_heavy_60", "hazardous")
 scenarios = 20
 n_cargo_unknownweight = length(problem.cargo) # all cargo weights are unknown
 stochastic_problem1 = create_stochastic_problem(problem, scenarios, n_cargo_unknownweight,[])
@@ -125,7 +125,7 @@ set_silent(model_stochastic2)
 set_time_limit_sec(model_stochastic2, 60 * 5)
 optimize!(model_stochastic2)
 set_silent(model_deterministic) # removes terminal output
-set_time_limit_sec(model_deterministic, 60 * 5) # 5 minutes to solve model
+set_time_limit_sec(model_deterministic, 60 * 15) # 5 minutes to solve model
 optimize!(model_deterministic)
 
 set_silent(model_EVP1) # removes terminal output

@@ -49,31 +49,39 @@ include("src/model/stability_stochastic.jl")
 include("src/model/second_stage_model.jl")
 include("src/utils/helpers.jl")
 include("src/utils/test_instances.jl")
+include("src/representation/ScenarioReduction.jl")
 
 # Do stuff 
-Deterministic_problem_hol = load_data("hollandia","mixed_light_100","hazardous")
-Deterministic_problem_fin = load_data("finlandia","no_cars_medium_100","hazardous")
-length(Deterministic_problem_fin.slots)
+test_instance_hol = Hollandia_test[1]
+test_instance_fin = Finlandia_test[1]
+Deterministic_problem_hol = load_data("hollandia",test_instance_hol,"hazardous")
+Deterministic_problem_fin = load_data("finlandia",test_instance_fin,"hazardous")
 
-@unpack vessel, slots, cargo = Deterministic_problem_hol
-vessel_long = Vessel("finlandia")
-vessel_short = simplify_vessel(vessel_long, target_points=50)
+pro_hol = create_stochastic_problem(Deterministic_problem_hol, 40, length(Deterministic_problem_hol.cargo), []) 
+pro_fin = create_stochastic_problem(Deterministic_problem_fin, 40, length(Deterministic_problem_fin.cargo), []) 
 
-c_length = []
-for i in 1:length(Finlandia_test)
-    #println("Test instance: ", Finlandia_test[i])
-    Deterministic_problem = load_data("finlandia", Finlandia_test[i], "hazardous")
-    push!(c_length, length(Deterministic_problem.cargo))
-end
-println("Cargo lengths: ", c_length)
-findall(x -> x == 117, c_length)
-Finlandia_test[27]
-Finlandia_test[31]
-Finlandia_test[35]
+# Hollandia
+model_hol = create_model(Deterministic_problem_hol)
+set_silent(model_hol) # removes terminal output
+set_time_limit_sec(model_hol, 60 * 5) # 5 minutes to solve model
+optimize!(model_hol)
+model_stochastic_hol = create_model_stochastic(pro_hol)
+set_silent(model_stochastic_hol) # removes terminal output
+set_time_limit_sec(model_stochastic_hol, 60 * 5) # 5 minutes to solve model
+#set_time_limit_sec(model_stochastic, 60 * 15) # 10 minutes to solve model
+optimize!(model_stochastic_hol)
 
-lcg_all = [x.lcg for x in slots]
-minimum(lcg_all)
-maximum(lcg_all)
+
+# Finlandia 
+model_fin = create_model(Deterministic_problem_fin)
+set_silent(model_fin) # removes terminal output
+set_time_limit_sec(model_fin, 60 * 5) # 5 minutes to solve model
+optimize!(model_fin)
+model_stochastic_fin = create_model_stochastic(pro_fin)
+set_silent(model_stochastic_fin) # removes terminal output
+set_time_limit_sec(model_stochastic_fin, 60 * 5) # 5 minutes to solve model
+#set_time_limit_sec(model_stochastic, 60 * 15) # 10 minutes to solve model
+optimize!(model_stochastic_fin)
 
 #=
 for i in 1:length(vessel.decks)
@@ -120,3 +128,24 @@ println("cars: ", length(slots5[2]))
 println("Heavy machinery: ", length(slots5[3]))
 println("Secu: ", length(slots5[4]))
 =#
+
+for i in 1:length(Hollandia_test)
+    test_instance_hol = Hollandia_test[i]
+    test_instance_fin = Finlandia_test[i]
+Deterministic_problem_hol = load_data("hollandia",test_instance_hol,"hazardous")
+Deterministic_problem_fin = load_data("finlandia",test_instance_fin,"hazardous")
+
+    println("Finlandia test $(i)")
+    println("Total weight: ", Deterministic_problem_fin.cargo.total_weight)
+    println("number of cars:", length(filter(x -> x.cargo_type_id == 2, Deterministic_problem_fin.cargo)))
+    println("number of trucks:", length(filter(x -> x.cargo_type_id == 1, Deterministic_problem_fin.cargo)))
+    println("number of Secu-boxes:", length(filter(x -> x.cargo_type_id == 4, Deterministic_problem_fin.cargo)))
+    println("number of heavy machinery:", length(filter(x -> x.cargo_type_id == 3, Deterministic_problem_fin.cargo)))
+    
+    println("Hollandia test $(i)")
+    println("Total weight: ", Deterministic_problem_hol.cargo.total_weight)
+    println("number of cars:", length(filter(x -> x.cargo_type_id == 2, Deterministic_problem_hol.cargo)))
+    println("number of trucks:", length(filter(x -> x.cargo_type_id == 1, Deterministic_problem_hol.cargo)))
+    println("number of Secu-boxes:", length(filter(x -> x.cargo_type_id == 4, Deterministic_problem_hol.cargo)))
+    println("number of heavy machinery:", length(filter(x -> x.cargo_type_id == 3, Deterministic_problem_hol.cargo))) 
+end
