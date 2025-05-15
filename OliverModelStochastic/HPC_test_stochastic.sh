@@ -18,4 +18,4 @@ module load gurobi/12.0.1
 
 julia -e 'using Pkg; Pkg.activate("."); Pkg.instantiate()'
 
-julia Main_Stochastic.jl $LSB_JOBINDEX 
+julia Main_Stochastic_finlandia.jl $LSB_JOBINDEX 
