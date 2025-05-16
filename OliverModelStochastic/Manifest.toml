@@ -2,7 +2,7 @@
 
 julia_version = "1.11.3"
 manifest_format = "2.0"
-project_hash = "8a8c759ae2365de1a4b6f8d842716f4cb03a8bb7"
+project_hash = "5e4223573852763e99d6387e9152016f95b3859c"
 
 [[deps.AbstractFFTs]]
 deps = ["LinearAlgebra"]
@@ -581,6 +581,12 @@ deps = ["Artifacts", "CompilerSupportLibraries_jll", "JLLWrappers", "Libdl", "Zl
 git-tree-sha1 = "26694f04567e584b054b9f33a810cec52adafa38"
 uuid = "8fd58aa0-07eb-5a78-9b36-339c94fd15ea"
 version = "1.9.0+0"
+
+[[deps.Hungarian]]
+deps = ["LinearAlgebra", "SparseArrays"]
+git-tree-sha1 = "4f84db415ccb0ea750b10738bfecdd55388fd1b6"
+uuid = "e91730f6-4275-51fb-a7a0-7064cfbd3b39"
+version = "0.7.0"
 
 [[deps.HypergeometricFunctions]]
 deps = ["LinearAlgebra", "OpenLibm_jll", "SpecialFunctions"]

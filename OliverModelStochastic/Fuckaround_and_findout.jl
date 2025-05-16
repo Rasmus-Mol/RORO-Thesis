@@ -53,11 +53,11 @@ include("src/representation/ScenarioReduction.jl")
 
 # Do stuff 
 test_instance_hol = Hollandia_test[5]
-test_instance_fin = Finlandia_test[5]
+test_instance_fin = Finlandia_test[6]
 
 Deterministic_problem_hol = load_data("hollandia",test_instance_hol,"hazardous")
-Deterministic_problem_fin = load_data("finlandia","no_cars_medium_100_haz_eq_0.1","hazardous")
-#Deterministic_problem_fin = load_data("finlandia",test_instance_fin,"hazardous")
+#Deterministic_problem_fin = load_data("finlandia","no_cars_medium_100_haz_eq_0.1","hazardous")
+Deterministic_problem_fin = load_data("finlandia",test_instance_fin,"hazardous")
 
 pro_hol = create_stochastic_problem(Deterministic_problem_hol, 40, length(Deterministic_problem_hol.cargo), []) 
 pro_fin = create_stochastic_problem(Deterministic_problem_fin, 10, length(Deterministic_problem_fin.cargo), []) 

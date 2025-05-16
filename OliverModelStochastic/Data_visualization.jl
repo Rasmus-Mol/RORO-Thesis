@@ -256,33 +256,40 @@ qqplot(normal_var_truck, Normal(0, 1), title="Trucks Q-Q Plot", xlabel="Theoreti
 savefig(plot_folder_historic*"QQPlot_truck.png")
 # Removing outliers
 remove_outliers = true
-df_secu_quan, = seperate_data_into_quantiles(df_secu,n_quantiles,remove_outliers)
-df_trailer_quan, = seperate_data_into_quantiles(df_trailer,n_quantiles,remove_outliers)
+df_secu_quan,a = seperate_data_into_quantiles(df_secu,n_quantiles,remove_outliers)
+df_trailer_quan, b= seperate_data_into_quantiles(df_trailer,n_quantiles,remove_outliers)
+
+# Informed weight vs weight variance
+plot(df_secu_quan.CountBookedWeight./1000, df_secu_quan.Variance,
+xlabel = "Booked weight (t)", ylabel = "Weight variance (kg)",
+title = "Secu-boxes booked weight vs weight variance",
+legend=false, formatter=:plain)
+
 
 # Booked weight
 nbins = 20
-test = fit(Histogram, df_secu_quan.CountBookedWeight, nbins=nbins)
+test = fit(Histogram, df_secu_quan.CountBookedWeight./1000, nbins=nbins)
 binedges = test.edges[1]
-histogram(df_secu_quan.CountBookedWeight,bins = nbins, xlabel="Weight", 
+histogram(df_secu_quan.CountBookedWeight./1000,bins = nbins, xlabel="Weight (t.)", 
 ylabel="Frequency", title="Secu-boxes booked weight distribution", legend=false)
 xticks!(binedges)
 plot!(xtickfontsize=6,formatter=:plain)
 savefig(plot_folder_historic*"Weight_booked_Secu.png")
 # Er den her bedre?
-histogram(df_secu_quan.CountBookedWeight, xlabel="Weight", 
+histogram(df_secu_quan.CountBookedWeight./1000, xlabel="Weight (t.)", 
 ylabel="Frequency", title="SECU booked weight distribution", legend=false)
 plot!(formatter=:plain)
 
 nbins = 30
-test = fit(Histogram, df_trailer_quan.CountBookedWeight, nbins=nbins)
+test = fit(Histogram, df_trailer_quan.CountBookedWeight./1000, nbins=nbins)
 binedges = test.edges[1]
-histogram(df_trailer_quan.CountBookedWeight, bins=nbins, xlabel="Weight",
+histogram(df_trailer_quan.CountBookedWeight, bins=nbins, xlabel="Weight (t.)",
 ylabel="Frequency", title="Trailer booked weight distribution", legend=false)
 xticks!(binedges)
 plot!(xtickfontsize=4,formatter=:plain)
 savefig(plot_folder_historic*"Weight_booked_trailer.png")
 # Er den her bedre?
-histogram(df_trailer_quan.CountBookedWeight, xlabel="Weight",
+histogram(df_trailer_quan.CountBookedWeight./1000, xlabel="Weight (t.)",
 ylabel="Frequency", title="Trailer booked weight distribution", legend=false)
 plot!(formatter=:plain)
 
@@ -350,13 +357,5 @@ for i in 1:length(q)
     #println("i: $(i), trailer: ", trailer_weight)
 end
 
-
-###################################
-plot_folder = "Plots/Data/Scenarios"
-
-# Create folder for plots
-if !isdir(plot_folder)
-    mkpath(plot_folder)
-end
 
 

@@ -46,6 +46,7 @@ include("representation/CargoScenarios.jl")
 include("model/second_stage_model.jl")
 include("utils/SaveData.jl")
 include("representation/VarianceOfWeight.jl")
+include("model/random_stowage_plan.jl")
 
 #include("loadmaster/types.jl")
 #include("loadmaster/api.jl")
@@ -78,6 +79,7 @@ export Bootstrap_bookedweight_quantile
 # Other models
 export random_stowage_plan, random_cargocollection, sort_cargocollection
 export create_random_stowageplan_model, create_model_stochastic_cargo_fraction
+export create_random_stowageplan_model, random_cargocollection, random_stowage_plan
 
 # Functions to connect to LoadMaster
 #export LoadMaster, getcurrentvessel, resetvessel, upload_solution, getresults, parse_result, uri, headers, struct_to_json

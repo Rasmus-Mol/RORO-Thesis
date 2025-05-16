@@ -1,5 +1,6 @@
 # Creates random stowage plan and minimizes shifts and ballast-water until feasible
 
+# Generates random stowage plan
 function random_stowage_plan(CargoC::CargoCollection, slots)
     # Function creates a list of slot ids which are equal to the cargo type id input "t"
     valid_slots(t::Int) = [slot.id for slot in filter(x -> x.cargo_type_id == t, slots)]
@@ -93,15 +94,16 @@ function random_cargocollection(ntypes::Vector{Int}, shuffle::Bool = true)
 end
 
 # sort cargo collection by type
-function sort_cargocollection(cargoc::CargoCollection)
+function sort_cargocollection(cargoc::CargoCollection, order::Vector{Int64})
     cargoes = [cargoc.items[i] for i in 1:length(cargoc.items)]
     # Sort by cargo type - change order if wanted
-    sorted_cargo = filter(x -> x.cargo_type_id == 1, cargoes)
-    append!(sorted_cargo,filter(x -> x.cargo_type_id == 4, cargoes))
-    append!(sorted_cargo,filter(x -> x.cargo_type_id == 3, cargoes))
-    append!(sorted_cargo,filter(x -> x.cargo_type_id == 2, cargoes))
+    sorted_cargo = filter(x -> x.cargo_type_id == order[1], cargoes)
+    append!(sorted_cargo,filter(x -> x.cargo_type_id == order[2], cargoes))
+    append!(sorted_cargo,filter(x -> x.cargo_type_id == order[3], cargoes))
+    append!(sorted_cargo,filter(x -> x.cargo_type_id == order[4], cargoes))
     return CargoCollection(sorted_cargo)
 end
+
 # Minimizes ballast water and shifts. 
 # Only shifts if it cannot stabilize the ship otherwise, 
 # i.e. if random stowage plan is not feasible
@@ -195,7 +197,9 @@ function create_random_stowageplan_model(cs_old,not_stowed,cargo,vessel,slots, n
     end
 
     # Penalty for moving cargo
-	M = 1000000 # Should be determined more precisely at some point
+	M = 100000 # Should be determined more precisely at some point
+    #M = sum(cost)+1
+
     @constraint(model, [c = 1:n_cargo, s = 1:n_slots], 
         y[c] >= cs[c,s] - cs_old[c,s]) # cargo is moved
     @constraint(model, [c = 1:n_cargo, s = 1:n_slots], 

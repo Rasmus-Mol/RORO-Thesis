@@ -27,7 +27,7 @@ function plot_weights(problem::StochasticStowageProblem,sc::Int64 = 1)
     max_weight = maximum(max_weight)
     bin_width = 2 # bin width in tons
     edges = min_weight:bin_width:max_weight
-    hist = histogram(weights, bins = edges, stack =true, xlabel = "Weight", ylabel = "Frequency", label = ["Type 1" "Type 2" "Type 3" "Type 4"], title = "Scenario $sc")
+    hist = histogram(weights, bins = edges, stack =true, xlabel = "Weight (t.)", ylabel = "Frequency", label = ["Type 1" "Type 2" "Type 3" "Type 4"], title = "Scenario $sc")
     return hist
 end
 
@@ -55,18 +55,18 @@ function plot_cargo_OG(problem::StowageProblem,OG::Bool = true)
     edges4 = min_weight4:bin_width:max_weight4
     if length(weight2) > 0
         p = plot(
-            histogram(weight1,bin = edges1, xlabel = "Weight", ylabel = "Frequency", label = "Type 1"),
-            histogram(weight2,bin = edges2, xlabel = "Weight", ylabel = "Frequency", label = "Type 2"),
-            histogram(weight3, bin = edges3, xlabel = "Weight", ylabel = "Frequency", label = "Type 3"),
-            histogram(weight4, bin = edges4, xlabel = "Weight", ylabel = "Frequency", label = "Type 4"),
+            histogram(weight1,bin = edges1, xlabel = "Weight (t.)", ylabel = "Frequency", label = "Truck"),
+            histogram(weight2,bin = edges2, xlabel = "Weight (t.)", ylabel = "Frequency", label = "Car"),
+            histogram(weight3, bin = edges3, xlabel = "Weight (t.)", ylabel = "Frequency", label = "Heavy Machine"),
+            histogram(weight4, bin = edges4, xlabel = "Weight (t.)", ylabel = "Frequency", label = "Secu-box"),
             layout = (2,2),
             plot_title = OG ? "Cargo weight distribution for original problem" : "Cargo weight distribution for EVP"
             )
     else
         p = plot(
-            histogram(weight1,bin = edges1, xlabel = "Weight", ylabel = "Frequency", label = "Type 1"),
-            histogram(weight3, bin = edges3, xlabel = "Weight", ylabel = "Frequency", label = "Type 3"),
-            histogram(weight4, bin = edges4, xlabel = "Weight", ylabel = "Frequency", label = "Type 4"),
+            histogram(weight1,bin = edges1, xlabel = "Weight (t.)", ylabel = "Frequency", label = "Truck"),
+            histogram(weight3, bin = edges3, xlabel = "Weight (t.)", ylabel = "Frequency", label = "Heavy Machine"),
+            histogram(weight4, bin = edges4, xlabel = "Weight (t.)", ylabel = "Frequency", label = "Secu-box"),
             layout = (2,2),
             plot_title = OG ? "Cargo weight distribution for original problem" : "Cargo weight distribution for EVP"
             )
@@ -86,12 +86,12 @@ function plot_cargo_OG(problem::StowageProblem,OG::Bool = true)
     bin_width = 2 # bin width in tons
     edges = min_weight:bin_width:max_weight
     if length(weight2)>0
-        hist = histogram(weights, bins = edges, stack =true, xlabel = "Weight", ylabel = "Frequency", 
-        label = ["Type 1" "Type 2" "Type 3" "Type 4"], 
+        hist = histogram(weights, bins = edges, stack =true, xlabel = "Weight (t.)", ylabel = "Frequency", 
+        label = ["Truck" "Car" "Heavy Machine" "Secu-box"], 
         title = OG ? "Cargo weight distribution for original problem" : "Cargo weight distribution for EVP")
     else
-        hist = histogram([weight1,weight3,weight4], bins = edges, stack =true, xlabel = "Weight", 
-        ylabel = "Frequency", label = ["Type 1" "Type 3" "Type 4"], 
+        hist = histogram([weight1,weight3,weight4], bins = edges, stack =true, xlabel = "Weight (t.)", 
+        ylabel = "Frequency", label = ["Truck" "Heavy Machine" "Secu-box"], 
         title = OG ? "Cargo weight distribution for original problem" : "Cargo weight distribution for EVP")
     end
     push!(plots,hist)
