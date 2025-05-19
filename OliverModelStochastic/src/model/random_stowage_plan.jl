@@ -107,7 +107,7 @@ end
 # Minimizes ballast water and shifts. 
 # Only shifts if it cannot stabilize the ship otherwise, 
 # i.e. if random stowage plan is not feasible
-function create_random_stowageplan_model(cs_old,not_stowed,cargo,vessel,slots, new_cargo_allowed::Bool = false)
+function create_random_stowageplan_model(cs_old, not_stowed, cargo, vessel, slots, new_cargo_allowed::Bool = false)
 
     n_slots = length(slots)
 	cargo_types = cargo.cargo_types
@@ -130,6 +130,7 @@ function create_random_stowageplan_model(cs_old,not_stowed,cargo,vessel,slots, n
 	# Rasmus: cs is a binary matrix, 1 if cargo c is assigned to slot s
 	@variable(model, cs[1:n_cargo, 1:n_slots], Bin)  # Assignment variables
 	@variable(model, cargo_slack[1:n_cargo], Bin) # 1 if cargo is assigned a slot
+    # New variable
     @variable(model, y[1:n_cargo], Bin) # 1 if cargo i is moved from orignal stowage plan
 
     CSC = sum(vessel.ballast_tanks[t].max_vol for t in 1:n_ballast_tanks)
@@ -200,6 +201,7 @@ function create_random_stowageplan_model(cs_old,not_stowed,cargo,vessel,slots, n
 	M = 100000 # Should be determined more precisely at some point
     #M = sum(cost)+1
 
+    # New constraints 
     @constraint(model, [c = 1:n_cargo, s = 1:n_slots], 
         y[c] >= cs[c,s] - cs_old[c,s]) # cargo is moved
     @constraint(model, [c = 1:n_cargo, s = 1:n_slots], 

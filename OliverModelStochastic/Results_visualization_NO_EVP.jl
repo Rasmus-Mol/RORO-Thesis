@@ -54,8 +54,8 @@ include("src/utils/test_instances.jl")
 
 # load data from solutions
 # HPC_folder
-test_instance = Finlandia_test[5]
-HPC_folder = "Finlandia_"*test_instance*"_14_05_20"
+test_instance = Finlandia_test[8]
+HPC_folder = "Finlandia_"*test_instance*"_15_05_09"
 plot_folder = "Plots/Results/Finlandia_"*test_instance*"/"
 # Create folder for plots
 if !isdir(plot_folder)
@@ -73,12 +73,12 @@ Deterministic_problem = load_data(problemname1,problemname2,problemname3)
 Deterministic_Solution = get_solution_deterministic("Finlandia_deterministic",
 "Deterministic_Solution",HPC_folder)
 # soluton arrays
-EVP_gen = Array{Any}(undef, repetitions, sc,n)
-EVP_gen_fitted = Array{Any}(undef, repetitions, sc,n)
+#EVP_gen = Array{Any}(undef, repetitions, sc,n)
+#EVP_gen_fitted = Array{Any}(undef, repetitions, sc,n)
 Stochastic_gen = Array{Any}(undef, repetitions, sc,n)
 Stochastic_gen_fitted = Array{Any}(undef, repetitions, sc,n)
-EVP_boot = Array{Any}(undef, repetitions, sc,n)
-EVP_boot_fitted = Array{Any}(undef, repetitions, sc,n)
+#EVP_boot = Array{Any}(undef, repetitions, sc,n)
+#EVP_boot_fitted = Array{Any}(undef, repetitions, sc,n)
 Stochastic_boot = Array{Any}(undef, repetitions, sc,n)
 Stochastic_boot_fitted = Array{Any}(undef, repetitions, sc,n)
 
@@ -88,18 +88,18 @@ for i in 1:repetitions
         for k in 1:n
             # Solutions
             # EVP
-            foldername = "EVP_random_sampling_rep$(i)_sc$(scenarios[j])_unknown$(n_unknown[k])_time$(time_limit)"
-            filename = "EVP_Solution"
-            EVP_gen[i,j,k] = get_solution_deterministic(foldername,
-            filename,HPC_folder)
-            EVP_gen_fitted[i,j,k] = get_solution_deterministic(foldername,
-            "Fitted_Solution",HPC_folder)
-            foldername = "EVP_Bootstrap1_rep$(i)_sc$(scenarios[j])_unknown$(n_unknown[k])_time$(time_limit)"
-            filename = "EVP_Solution"
-            EVP_boot[i,j,k] = get_solution_deterministic(foldername,
-            filename,HPC_folder)
-            EVP_boot_fitted[i,j,k] = get_solution_deterministic(foldername,
-            "Fitted_Solution",HPC_folder)
+            #foldername = "EVP_random_sampling_rep$(i)_sc$(scenarios[j])_unknown$(n_unknown[k])_time$(time_limit)"
+            #filename = "EVP_Solution"
+            #EVP_gen[i,j,k] = get_solution_deterministic(foldername,
+            #filename,HPC_folder)
+            #EVP_gen_fitted[i,j,k] = get_solution_deterministic(foldername,
+            #"Fitted_Solution",HPC_folder)
+            #foldername = "EVP_Bootstrap1_rep$(i)_sc$(scenarios[j])_unknown$(n_unknown[k])_time$(time_limit)"
+            #filename = "EVP_Solution"
+            #EVP_boot[i,j,k] = get_solution_deterministic(foldername,
+            #filename,HPC_folder)
+            #EVP_boot_fitted[i,j,k] = get_solution_deterministic(foldername,
+            #"Fitted_Solution",HPC_folder)
             # Stochastic
             foldername = "Stochastic_random_sampling_rep$(i)_sc$(scenarios[j])_unknown$(n_unknown[k])_time$(time_limit)"
             filename = "Stochastic_Solution"
@@ -117,102 +117,112 @@ for i in 1:repetitions
     end
 end
 
-test = Stochastic_boot_fitted[1,3,1]
-test.status == "INFEASIBLE"
+println("Cargo in problem: ", length(Deterministic_problem.cargo))
+println("Deterministic solution packs: ",Deterministic_Solution.n_cargo_loaded)
 
 println("##########################")
 println("Total number of models :", repetitions*sc*n)
+println("Deterministic solution, Cargo loaded: ", Deterministic_Solution.n_cargo_loaded)
 for i in 1:repetitions
     for j in 1:sc
         for k in 1:n
             println("############################")
             println("Number of scnearios: ", scenarios[j])
-            println("EVP model gen, Cargo loaded: ", EVP_gen[i,j,k].n_cargo_loaded)
-            println("EVP model gen after realization, Cargo loaded: ", EVP_gen_fitted[i,j,k].n_cargo_loaded)
+            #println("EVP model gen, Cargo loaded: ", EVP_gen[i,j,k].n_cargo_loaded)
+            #println("EVP model gen after realization, Cargo loaded: ", EVP_gen_fitted[i,j,k].n_cargo_loaded)
             println("Stochastic model gen, Cargo loaded: ", Stochastic_gen[i,j,k].n_cargo_loaded)
             println("Stochastic model gen after realization, Cargo loaded: ", Stochastic_gen_fitted[i,j,k].n_cargo_loaded)
-            println("EVP model boot, Cargo loaded: ", EVP_boot[i,j,k].n_cargo_loaded)
-            println("EVP model boot after realization, Cargo loaded: ", EVP_boot_fitted[i,j,k].n_cargo_loaded)
+            #println("EVP model boot, Cargo loaded: ", EVP_boot[i,j,k].n_cargo_loaded)
+            #println("EVP model boot after realization, Cargo loaded: ", EVP_boot_fitted[i,j,k].n_cargo_loaded)
             println("Stochastic model boot, Cargo loaded: ", Stochastic_boot[i,j,k].n_cargo_loaded)
             println("Stochastic model boot after realization, Cargo loaded: ", Stochastic_boot_fitted[i,j,k].n_cargo_loaded)
         end
     end
 end
+println("##########################")
+for i in 1:sc
+    println("Average number of cargo loaded, scenarios = $(scenarios[i]) - gen: ",
+    sum([Stochastic_gen[j,i,end].n_cargo_loaded for j in 1:repetitions])/repetitions)
+    println("Average number of cargo loaded, scenarios = $(scenarios[i]) - boot: ",
+    sum([Stochastic_boot[j,i,end].n_cargo_loaded for j in 1:repetitions])/repetitions)
+end
+println("##########################")
 
 # Plot cargo loaded
 n_models = 4
 r = 1 # choose repetition number
-cargo_loaded_EVP_gen = zeros(Int64,sc,n)
-cargo_loaded_EVP_gen_fitted = zeros(Int64,sc,n)
+#cargo_loaded_EVP_gen = zeros(Int64,sc,n)
+#cargo_loaded_EVP_gen_fitted = zeros(Int64,sc,n)
 cargo_loaded_Stochastic_gen = zeros(Int64,sc,n)
 cargo_loaded_Stochastic_gen_fitted = zeros(Int64,sc,n)
-cargo_loaded_EVP_boot = zeros(Int64,sc,n)
-cargo_loaded_EVP_boot_fitted = zeros(Int64,sc,n)
+#cargo_loaded_EVP_boot = zeros(Int64,sc,n)
+#cargo_loaded_EVP_boot_fitted = zeros(Int64,sc,n)
 cargo_loaded_Stochastic_boot = zeros(Int64,sc,n)
 cargo_loaded_Stochastic_boot_fitted = zeros(Int64,sc,n)
-gap_EVP_gen = zeros(Float64,sc,n)
+#gap_EVP_gen = zeros(Float64,sc,n)
 gap_Stochastic_gen = zeros(Float64,sc,n)
-gap_EVP_boot = zeros(Float64,sc,n)
+#gap_EVP_boot = zeros(Float64,sc,n)
 gap_Stochastic_boot = zeros(Float64,sc,n)
 for i in 1:sc
     for j in 1:n
-        cargo_loaded_EVP_gen[i,j] = Int(EVP_gen[r,i,j].n_cargo_loaded)
-        cargo_loaded_EVP_gen_fitted[i,j] = Int(EVP_gen_fitted[r,i,j].n_cargo_loaded)
+        #cargo_loaded_EVP_gen[i,j] = Int(EVP_gen[r,i,j].n_cargo_loaded)
+        #cargo_loaded_EVP_gen_fitted[i,j] = Int(EVP_gen_fitted[r,i,j].n_cargo_loaded)
         cargo_loaded_Stochastic_gen[i,j] = Int(Stochastic_gen[r,i,j].n_cargo_loaded)
         cargo_loaded_Stochastic_gen_fitted[i,j] = Int(Stochastic_gen_fitted[r,i,j].n_cargo_loaded)
-        cargo_loaded_EVP_boot[i,j] = Int(EVP_boot[r,i,j].n_cargo_loaded)
-        cargo_loaded_EVP_boot_fitted[i,j] = Int(EVP_boot_fitted[r,i,j].n_cargo_loaded)
+        #cargo_loaded_EVP_boot[i,j] = Int(EVP_boot[r,i,j].n_cargo_loaded)
+        #cargo_loaded_EVP_boot_fitted[i,j] = Int(EVP_boot_fitted[r,i,j].n_cargo_loaded)
         cargo_loaded_Stochastic_boot[i,j] = Int(Stochastic_boot[r,i,j].n_cargo_loaded)
         cargo_loaded_Stochastic_boot_fitted[i,j] = Int(Stochastic_boot_fitted[r,i,j].n_cargo_loaded)
-        gap_EVP_gen[i,j] = EVP_gen[r,i,j].gap
+        #gap_EVP_gen[i,j] = EVP_gen[r,i,j].gap
         gap_Stochastic_gen[i,j] = Stochastic_gen[r,i,j].gap
-        gap_EVP_boot[i,j] = EVP_boot[r,i,j].gap
+        #gap_EVP_boot[i,j] = EVP_boot[r,i,j].gap
         gap_Stochastic_boot[i,j] = Stochastic_boot[r,i,j].gap
     end
 end
 # Display loaded cargo
 # EVP gen
 linew = 1
-p = plot(scenarios,cargo_loaded_EVP_gen[:,end],xlabel="Scenarios",ylabel="Cargo loaded",
-title="Cargo loaded for different models,\n before realization of cargo weight", label = "EVP-Gen", linewidth =linew)
-plot!(scenarios,cargo_loaded_EVP_boot[:,end],label = "EVP-Boot", linewidth =linew)
-plot!(scenarios,cargo_loaded_Stochastic_gen[:,end],label = "Sto-Gen", linewidth =linew)
+p = plot(scenarios,cargo_loaded_Stochastic_gen[:,end],xlabel="Scenarios",ylabel="Cargo loaded",
+title="Cargo loaded for different models,\n before realization of cargo weight", label = "Sto-Gen", linewidth =linew)
+#plot!(scenarios,cargo_loaded_EVP_boot[:,end],label = "EVP-Boot", linewidth =linew)
+#plot!(scenarios,cargo_loaded_Stochastic_gen[:,end],label = "Sto-Gen", linewidth =linew)
 plot!(scenarios,cargo_loaded_Stochastic_boot[:,end],label = "Sto-Boot", linewidth =linew)
 plot!(scenarios,ones(length(scenarios))*Deterministic_Solution.n_cargo_loaded,label = "Deterministic", linewidth =linew, linestyle=:dash)
 display(p)
 savefig(plot_folder*"CargoLoaded_BeforeRealization.png")
-p = plot(scenarios,cargo_loaded_EVP_gen_fitted[:,end],xlabel="Scenarios",ylabel="Cargo loaded",
-title="Cargo loaded for different models,\n after realization of cargo weight", label = "EVP-Gen", linewidth =linew)
-plot!(scenarios,cargo_loaded_EVP_boot_fitted[:,end],label = "EVP-Boot", linewidth =linew)
-plot!(scenarios,cargo_loaded_Stochastic_gen_fitted[:,end],label = "Sto-Gen", linewidth =linew)
+p = plot(scenarios,cargo_loaded_Stochastic_gen_fitted[:,end],xlabel="Scenarios",ylabel="Cargo loaded",
+title="Cargo loaded for different models,\n after realization of cargo weight", label = "Sto-Gen", linewidth =linew)
+#plot!(scenarios,cargo_loaded_EVP_boot_fitted[:,end],label = "EVP-Boot", linewidth =linew)
+#plot!(scenarios,cargo_loaded_Stochastic_gen_fitted[:,end],label = "Sto-Gen", linewidth =linew)
 plot!(scenarios,cargo_loaded_Stochastic_boot_fitted[:,end],label = "Sto-Boot", linewidth =linew)
 plot!(scenarios,ones(length(scenarios))*Deterministic_Solution.n_cargo_loaded,label = "Deterministic", linewidth =linew, linestyle=:dash)
 display(p)
 savefig(plot_folder*"CargoLoaded_AfterRealization.png")
 
 # Display Gaps
-p = plot(scenarios,gap_EVP_gen[:,end] .*100,xlabel="Scenarios",ylabel="Gap (%)",
-title="Gap for different models,\n before realization of cargo weight", label = "EVP-Gen", linewidth =linew)
-plot!(scenarios,gap_EVP_boot[:,end] .*100,label = "EVP-Boot", linewidth =linew)
-plot!(scenarios,gap_Stochastic_gen[:,end] .* 100,label = "Sto-Gen", linewidth =linew)
+p = plot(scenarios,gap_Stochastic_gen[:,end] .*100,xlabel="Scenarios",ylabel="Gap (%)",
+title="Gap for different models,\n before realization of cargo weight", label = "Sto-Gen", linewidth =linew)
+#plot!(scenarios,gap_EVP_boot[:,end] .*100,label = "EVP-Boot", linewidth =linew)
+#plot!(scenarios,gap_Stochastic_gen[:,end] .* 100,label = "Sto-Gen", linewidth =linew)
 plot!(scenarios,gap_Stochastic_boot[:,end] .* 100,label = "Sto-Boot", linewidth =linew)
 plot!(scenarios,ones(length(scenarios))*Deterministic_Solution.gap .*100,label = "Deterministic", linewidth =linew, linestyle=:dash)
 display(p)
 savefig(plot_folder*"Gap_BeforeRealization.png")
 # Zoomed in
-p = plot(scenarios,gap_EVP_gen[:,end].*100,xlabel="Scenarios",ylabel="Gap (%)",
-title="Gap for different models,\n before realization of cargo weight", label = "EVP-Gen", linewidth =linew)
-plot!(scenarios,gap_EVP_boot[:,end].*100,label = "EVP-Boot", linewidth =linew)
+p = plot(scenarios,gap_Stochastic_boot[:,end].*100,xlabel="Scenarios",ylabel="Gap (%)",
+title="Gap for different models,\n before realization of cargo weight", label = "Sto-Boot", linewidth =linew)
+#plot!(scenarios,gap_EVP_boot[:,end].*100,label = "EVP-Boot", linewidth =linew)
 #plot!(scenarios,gap_Stochastic_gen[:,end],label = "Sto-Gen", linewidth =linew)
-plot!(scenarios,gap_Stochastic_boot[:,end].*100,label = "Sto-Boot", linewidth =linew)
+#plot!(scenarios,gap_Stochastic_boot[:,end].*100,label = "Sto-Boot", linewidth =linew)
 plot!(scenarios,ones(length(scenarios))*Deterministic_Solution.gap .*100,label = "Deterministic", linewidth =linew, linestyle=:dash)
 display(p)
 savefig(plot_folder*"Gap_BeforeRealization_zoomed.png")
 
 ##########################
 # Display ballast water from different models
-p = plot(scenarios, ones(sc)*Deterministic_Solution.ballast_weight, marker = :utriangle, xlabel = "scenarios", 
-ylabel = "Ballast weight (t)", label = "Deterministic", title = "Ballast weight for different models")
+p = plot(scenarios, ones(sc)*Deterministic_Solution.ballast_weight, marker = :utriangle, xlabel = "Scenarios", 
+ylabel = "Ballast weight (t)", label = "Deterministic", title = "Ballast weight for different models",
+formatter=:plain)
 annotate!(scenarios[1], Deterministic_Solution.ballast_weight + 15, text(Deterministic_Solution.n_cargo_loaded, 6))
 annotate!(scenarios[2], Deterministic_Solution.ballast_weight + 15, text(Deterministic_Solution.n_cargo_loaded, 6))
 annotate!(scenarios[3], Deterministic_Solution.ballast_weight + 15, text(Deterministic_Solution.n_cargo_loaded, 6))
@@ -233,21 +243,22 @@ for i in 1:sc
         push!(ytemp[2],Stochastic_boot_fitted[1,i,end].ballast_weight)
         push!(cargo_n[2],Stochastic_boot_fitted[1,i,end].n_cargo_loaded)
     end
-    if EVP_gen_fitted[1,i,end].status != "INFEASIBLE" # have a solution 
-        push!(xtemp[3],scenarios[i])
-        push!(ytemp[3],EVP_gen_fitted[1,i,end].ballast_weight)
-        push!(cargo_n[3],EVP_gen_fitted[1,i,end].n_cargo_loaded)
-    end
-    if EVP_boot_fitted[1,i,end].status != "INFEASIBLE" # have a solution 
-        push!(xtemp[4],scenarios[i])
-        push!(ytemp[4],EVP_boot_fitted[1,i,end].ballast_weight)
-        push!(cargo_n[4],EVP_boot_fitted[1,i,end].n_cargo_loaded)
-    end
+    #if EVP_gen_fitted[1,i,end].status != "INFEASIBLE" # have a solution 
+    #    push!(xtemp[3],scenarios[i])
+    #    push!(ytemp[3],EVP_gen_fitted[1,i,end].ballast_weight)
+    #    push!(cargo_n[3],EVP_gen_fitted[1,i,end].n_cargo_loaded)
+    #end
+    #if EVP_boot_fitted[1,i,end].status != "INFEASIBLE" # have a solution 
+    #    push!(xtemp[4],scenarios[i])
+    #    push!(ytemp[4],EVP_boot_fitted[1,i,end].ballast_weight)
+    #    push!(cargo_n[4],EVP_boot_fitted[1,i,end].n_cargo_loaded)
+    #end
 end
 plot!(xtemp[1],ytemp[1], label = "Stochastic Gen", marker = :circle, markersize = 4)
 plot!(xtemp[2],ytemp[2], label = "Stochastic Boot", marker = :circle, markersize = 4)
-plot!(xtemp[3],ytemp[3], label = "EVP Gen", marker = :circle, markersize = 4)
-plot!(xtemp[4],ytemp[4], label = "EVP Boot", marker = :circle, markersize = 4)
+plot!(formatte=:plain)
+#plot!(xtemp[3],ytemp[3], label = "EVP Gen", marker = :circle, markersize = 4)
+#plot!(xtemp[4],ytemp[4], label = "EVP Boot", marker = :circle, markersize = 4)
 for j in 1:length(xtemp)
     for i = 1:length(xtemp[j])
         annotate!(xtemp[j][i], ytemp[j][i] + 20, text(cargo_n[j][i],6))
@@ -256,32 +267,31 @@ end
 display(p)
 savefig(plot_folder*"BallastWeight.png")
 
-
 # Number of times problem was unfeasible
-EVP_gen_inf = []
-EVP_gen_fitted_inf = []
+#EVP_gen_inf = []
+#EVP_gen_fitted_inf = []
 Stochastic_gen_inf = []
 Stochastic_gen_fitted_inf = []
-EVP_boot_inf = []
-EVP_boot_fitted_inf = []
+#EVP_boot_inf = []
+#EVP_boot_fitted_inf = []
 Stochastic_boot_inf = []
 Stochastic_boot_fitted_inf = []
-
+println("Checing problems for infeasibility")
 for i in 1:sc
     for j in 1:n
         # print if not optimal
-        if EVP_gen[r,i,j].status != "OPTIMAL"
-            push!(EVP_gen_inf,EVP_gen[r,i,j])
-            println("##########################")
-            println("EVP gen model infeasible for repetition $(r), scenario $(scenarios[(i)]), unknown cargo $(j)")
-            println("Status: ", EVP_gen[r,i,j].status)
-        end
-        if EVP_gen_fitted[r,i,j].status != "OPTIMAL"
-            push!(EVP_gen_fitted_inf,EVP_gen_fitted[r,i,j])
-            println("##########################")
-            println("EVP gen fitted model jnfeasible for repetition $(r), scenario $(scenarios[(i)]), unknown cargo $(j)")
-            println("Status: ", EVP_gen_fitted[r,i,j].status)
-        end
+        #if EVP_gen[r,i,j].status != "OPTIMAL"
+        #    push!(EVP_gen_inf,EVP_gen[r,i,j])
+        #    println("##########################")
+        #    println("EVP gen model infeasible for repetition $(r), scenario $(scenarios[(i)]), unknown cargo $(j)")
+        #    println("Status: ", EVP_gen[r,i,j].status)
+        #end
+        #if EVP_gen_fitted[r,i,j].status != "OPTIMAL"
+        #    push!(EVP_gen_fitted_inf,EVP_gen_fitted[r,i,j])
+        #    println("##########################")
+        #    println("EVP gen fitted model jnfeasible for repetition $(r), scenario $(scenarios[(i)]), unknown cargo $(j)")
+        #    println("Status: ", EVP_gen_fitted[r,i,j].status)
+        #end
         if Stochastic_gen[r,i,j].status != "OPTIMAL"
             push!(Stochastic_gen_inf,Stochastic_gen[r,i,j])
             println("##########################")
@@ -294,18 +304,18 @@ for i in 1:sc
             println("Stochastic gen fitted model infeasible for repetition $(r), scenario $(scenarios[(i)]), unknown cargo $(j)")
             println("Status: ", Stochastic_gen_fitted[r,i,j].status)
         end
-        if EVP_boot[r,i,j].status != "OPTIMAL"
-            push!(EVP_boot_inf,EVP_boot[r,i,j])
-            println("##########################")
-            println("EVP boot model infeasible for repetition $(r), scenario $(scenarios[(i)]), unknown cargo $(j)")
-            println("Status: ", EVP_boot[r,i,j].status)
-        end
-        if EVP_boot_fitted[r,i,j].status != "OPTIMAL"
-            push!(EVP_boot_fitted_inf,EVP_boot_fitted[r,i,j])
-            println("##########################")
-            println("EVP boot fitted model infeasible for repetition $(r), scenario $(scenarios[(i)]), unknown cargo $(j)")
-            println("Status: ", EVP_boot_fitted[r,i,j].status)
-        end
+        #if EVP_boot[r,i,j].status != "OPTIMAL"
+        #    push!(EVP_boot_inf,EVP_boot[r,i,j])
+        #    println("##########################")
+        #    println("EVP boot model infeasible for repetition $(r), scenario $(scenarios[(i)]), unknown cargo $(j)")
+        #    println("Status: ", EVP_boot[r,i,j].status)
+        #end
+        #if EVP_boot_fitted[r,i,j].status != "OPTIMAL"
+        #    push!(EVP_boot_fitted_inf,EVP_boot_fitted[r,i,j])
+        #    println("##########################")
+        #    println("EVP boot fitted model infeasible for repetition $(r), scenario $(scenarios[(i)]), unknown cargo $(j)")
+        #    println("Status: ", EVP_boot_fitted[r,i,j].status)
+        #end
         if Stochastic_boot[r,i,j].status != "OPTIMAL"
             push!(Stochastic_boot_inf,Stochastic_boot[r,i,j])
             println("##########################")
@@ -322,9 +332,10 @@ for i in 1:sc
 end
 println("##########################")
 println("Number of different parameters: ", sc*n)
-println("Stochastic models + EVP models: ", length(EVP_gen)+length(EVP_boot)+length(Stochastic_gen)+length(Stochastic_boot))
+#println("Stochastic models + EVP models: ", length(EVP_gen)+length(EVP_boot)+length(Stochastic_gen)+length(Stochastic_boot))
 println("##########################")
 # EVP models - normally none of them should be infeasible
+#=
 for i in 1:length(EVP_gen_inf)
     println("EVP-gen Status: ", EVP_gen_inf[i].status)
     println("Index: ", i)
@@ -334,6 +345,7 @@ for i in 1:length(EVP_boot_inf)
     println("EVP-boot Status: ", EVP_boot_inf[i].status)
     println("Index: ", i)
 end
+=#
 # Stochastic models 
 println("##########################")
 println("Stochastic gen model:")
@@ -364,6 +376,7 @@ end
 # After the realization: The recourse Model
 println("##########################")
 # EVP models - normally none of them should be infeasible
+#=
 println("EVP-fitted gen model:")
 for i in 1:length(EVP_gen_fitted_inf)
     println("Status: ", EVP_gen_fitted_inf[i].status)
@@ -376,6 +389,7 @@ for i in 1:length(EVP_boot_fitted_inf)
         # TODO Do something to check why this is the case
     end
 end
+=#
 # Stochastic models 
 println("##########################")
 println("Stochastic-fitted gen model:")
@@ -450,6 +464,7 @@ for i in 1:length(slack_variables_boot)
 end
 
 # EVP Boot
+#=
 slack_variables_EVP_boot = []
 slack_variables_EVP_boot_index = []
 for i in 1:sc
@@ -497,6 +512,7 @@ for i in 1:length(slack_variables_EVP_boot)
         end
     end
 end
+=#
 # Stochastic Gen 
 slack_variables_gen = []
 slack_variables_gen_index = []
@@ -546,6 +562,7 @@ for i in 1:length(slack_variables_gen)
     end
 end
 # EVP Gen 
+#=
 slack_variables_EVP_gen = []
 slack_variables_EVP_gen_index = []
 for i in 1:sc
@@ -595,7 +612,7 @@ for i in 1:length(slack_variables_EVP_gen)
         end
     end
 end
-
+=#
 
 
 # Looking into limiting factor - Deck 1
@@ -615,23 +632,24 @@ deck_diff = [[[],[],[],[]],[[],[],[],[]],[[],[],[],[]]]
 for i in 1:repetitions
     for j in 1:sc
         for l in 1:n
-            if EVP_gen_fitted[i,j,l].status == "TIME_LIMIT" || EVP_gen_fitted[i,j,l].status == "OPTIMAL"
-                EVP_gen_fitted_PlacementDecks = [filter(x -> x.deck == k, EVP_gen_fitted[i,j,l].cargo) for k in 1:n_decks]
-                println("#################")
-                push!(xtemp[1],scenarios[j])
-                for k in 1:n_decks
-                    push!(deck_diff[k][1], deck_limits[k]-sum(EVP_gen_fitted_PlacementDecks[k][m].weight for m in 1:length(EVP_gen_fitted_PlacementDecks[k])))
-                    println("EVP gen fitted model $(i), scenarios $(scenarios[j]), unknown cargo $(n_unknown[l]) weight-difference on deck $(k): ", deck_limits[k]-sum(EVP_gen_fitted_PlacementDecks[k][m].weight for m in 1:length(EVP_gen_fitted_PlacementDecks[k])))
-                end
-            else # not feasible, probably due to deck 1
-                push!(xtemp[1],scenarios[j])
-                EVP_gen_PlacementDecks = [filter(x -> x.deck == k,EVP_gen[i,j,l].cargo) for k in 1:n_decks]
+            #if EVP_gen_fitted[i,j,l].status == "TIME_LIMIT" || EVP_gen_fitted[i,j,l].status == "OPTIMAL"
+            #    EVP_gen_fitted_PlacementDecks = [filter(x -> x.deck == k, EVP_gen_fitted[i,j,l].cargo) for k in 1:n_decks]
+            #    println("#################")
+            #    push!(xtemp[1],scenarios[j])
+            #    for k in 1:n_decks
+            #        push!(deck_diff[k][1], deck_limits[k]-sum(EVP_gen_fitted_PlacementDecks[k][m].weight for m in 1:length(EVP_gen_fitted_PlacementDecks[k])))
+            #        println("EVP gen fitted model $(i), scenarios $(scenarios[j]), unknown cargo $(n_unknown[l]) weight-difference on deck $(k): ", deck_limits[k]-sum(EVP_gen_fitted_PlacementDecks[k][m].weight for m in 1:length(EVP_gen_fitted_PlacementDecks[k])))
+            #    end
+            #else # not feasible, probably due to deck 1
+            #    push!(xtemp[1],scenarios[j])
+            #    EVP_gen_PlacementDecks = [filter(x -> x.deck == k,EVP_gen[i,j,l].cargo) for k in 1:n_decks]
                 # calculate how much over limit - same as slack variables?
-                for k in 1:n_decks
-                    actual_weight = [filter(x -> x.id == EVP_gen_PlacementDecks[k][i].id, Deterministic_problem.cargo.items)[1].weight for i in 1:length(EVP_gen_PlacementDecks[k])]
-                    push!(deck_diff[k][1], deck_limits[k]-sum(actual_weight))
-                end
-            end
+            #    for k in 1:n_decks
+            #        actual_weight = [filter(x -> x.id == EVP_gen_PlacementDecks[k][i].id, Deterministic_problem.cargo.items)[1].weight for i in 1:length(EVP_gen_PlacementDecks[k])]
+            #        push!(deck_diff[k][1], deck_limits[k]-sum(actual_weight))
+            #    end
+            #end
+            #=
             if EVP_boot_fitted[i,j,l].status == "TIME_LIMIT" || EVP_boot_fitted[i,j,l].status == "OPTIMAL"
                 EVP_boot_fitted_PlacementDecks = [filter(x -> x.deck == k, EVP_boot_fitted[i,j,l].cargo) for k in 1:n_decks]
                 println("#################")
@@ -649,6 +667,7 @@ for i in 1:repetitions
                     push!(deck_diff[k][2], deck_limits[k]-sum(actual_weight))
                 end
             end
+            =#
             if Stochastic_gen_fitted[i,j,l].status == "TIME_LIMIT" || Stochastic_gen_fitted[i,j,l].status == "OPTIMAL"
                 Stochastic_gen_fitted_PlacementDecks = [filter(x -> x.deck == k, Stochastic_gen_fitted[i,j,l].cargo) for k in 1:n_decks]
                 println("#################")
@@ -689,11 +708,11 @@ end
 # plot for decks
 p = []
 for i in 1:n_decks
-    pl = plot(xtemp[1],deck_diff[i][1], label = "EVP-gen", marker = :circle, markersize = 4,
+    pl = plot(xtemp[3],deck_diff[i][3], label = "Sto-gen", marker = :circle, markersize = 4,
     xlabel="Scenarios", ylabel="Weight diff. (t)",
     title = "Unused Weight Capacity on Deck $(i)\n for different models")
-    plot!(xtemp[2],deck_diff[i][2], label = "EVP-boot", marker = :circle, markersize = 4)
-    plot!(xtemp[3],deck_diff[i][3], label = "Sto-gen", marker = :circle, markersize = 4)
+    #plot!(xtemp[2],deck_diff[i][2], label = "EVP-boot", marker = :circle, markersize = 4)
+    #plot!(xtemp[3],deck_diff[i][3], label = "Sto-gen", marker = :circle, markersize = 4)
     plot!(xtemp[4],deck_diff[i][4], label = "Sto-boot", marker = :circle, markersize = 4)
     savefig(plot_folder*"Deck$(i)_WeightDiff.png")
     push!(p,pl)

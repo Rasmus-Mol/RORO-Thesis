@@ -1,55 +1,4 @@
-# Script to fuck around in and find out
-push!(LOAD_PATH, pwd())
-using Base: @kwdef
-import Base: length, getindex, lastindex, keys, eachindex, iterate, eltype, firstindex
-
-using Random
-using StatsBase
-using StructArrays
-using JSON3, JSON
-using DataFrames
-using CSV, XLSX
-using Dates
-using Interpolations
-using UnPack
-using JuMP, HiGHS, GLPK, Gurobi
-using Plots
-using HTTP
-using URIs
-# News
-using Statistics
-using HypothesisTests
-using Distributions
-using StructTypes
-
-include("src/representation/cargo.jl")
-include("src/representation/deck.jl")
-include("src/representation/slot.jl")
-include("src/representation/vessel.jl")
-include("src/representation/instance.jl")
-include("src/representation/problem.jl")
-# New: Stochastic 
-include("src/representation/CargoScenarios.jl")
-# Plot weight distribution
-include("src/plots/weight_plots.jl")
-# Solution 
-include("src/solution.jl")
-include("src/CompareSolutions.jl")
-include("src/plots/solution.jl")
-# Load data Script
-include("src/utils/SaveData.jl")
-
-# model
-include("src/representation/CargoScenarios.jl")
-include("src/plots/weight_plots.jl")
-include("src/model/base_model.jl")
-include("src/model/stability.jl")
-include("src/model/base_stochastic_model.jl")
-include("src/model/stability_stochastic.jl")
-include("src/model/second_stage_model.jl")
-include("src/utils/helpers.jl")
-include("src/utils/test_instances.jl")
-include("src/representation/ScenarioReduction.jl")
+include("packages_and_files.jl")
 
 # Do stuff 
 test_instance_hol = Hollandia_test[5]
@@ -59,25 +8,57 @@ Deterministic_problem_hol = load_data("hollandia",test_instance_hol,"hazardous")
 #Deterministic_problem_fin = load_data("finlandia","no_cars_medium_100_haz_eq_0.1","hazardous")
 Deterministic_problem_fin = load_data("finlandia",test_instance_fin,"hazardous")
 
-pro_hol = create_stochastic_problem(Deterministic_problem_hol, 40, length(Deterministic_problem_hol.cargo), []) 
-pro_fin = create_stochastic_problem(Deterministic_problem_fin, 10, length(Deterministic_problem_fin.cargo), []) 
+pro_hol = create_stochastic_problem(Deterministic_problem_hol, 10, length(Deterministic_problem_hol.cargo), []) 
+pro_fin = create_stochastic_problem(Deterministic_problem_fin, 10, length(Deterministic_problem_fin.cargo), [])
 
-
-vessel = pro_fin.vessel
-vessel.ballast_tanks[1].max_vol
-test = calculate_vcg_slopes(vessel)
-cargo = Deterministic_problem_fin.cargo
-
+#######################
 # Hollandia
 model_hol = create_model(Deterministic_problem_hol)
 set_silent(model_hol) # removes terminal output
 set_time_limit_sec(model_hol, 60 * 15) # 5 minutes to solve model
 optimize!(model_hol)
+using MathOptInterface
+const MOI = MathOptInterface
+if termination_status(model_hol) in [MOI.INFEASIBLE, MOI.INFEASIBLE_OR_UNBOUNDED]
+    println("Model is infeasible. Computing conflict...")
+    MOI.compute_conflict!(JuMP.backend(model_hol))
+end
+for (func, set) in JuMP.list_of_constraint_types(model_hol)
+    for constraint_ref in JuMP.all_constraints(model_hol, func, set)
+        status = MOI.get(
+            JuMP.backend(model_hol),
+            MOI.ConstraintConflictStatus(),
+            JuMP.constraint_object(constraint_ref)
+        )
+        if status == MOI.IN_CONFLICT
+            println("Constraint in conflict: ", constraint_ref)
+        end
+    end
+end
+
+for v in JuMP.all_variables(model_hol)
+    var_index = MOI.VariableIndex(v)
+    lb_status = MOI.get(JuMP.backend(model_hol), MOI.VariableConflictStatus(), var_index, MOI.LOWER)
+    ub_status = MOI.get(JuMP.backend(model_hol), MOI.VariableConflictStatus(), var_index, MOI.UPPER)
+
+    if lb_status == MOI.IN_CONFLICT
+        println("Lower bound of variable $(v) is in conflict")
+    end
+    if ub_status == MOI.IN_CONFLICT
+        println("Upper bound of variable $(v) is in conflict")
+    end
+end
+
+
+
+
+
 model_stochastic_hol = create_model_stochastic(pro_hol)
 set_silent(model_stochastic_hol) # removes terminal output
 set_time_limit_sec(model_stochastic_hol, 60 * 2) # 5 minutes to solve model
 #set_time_limit_sec(model_stochastic, 60 * 15) # 10 minutes to solve model
 optimize!(model_stochastic_hol)
+
 sol_hol = extract_stochastic_solution(pro_hol,model_stochastic_hol)
 folder1 = "Temp1_delete"
 folder2 = "Temp2_delete"
@@ -90,6 +71,7 @@ optimize!(second_stage_m)
 fitted_sol = get_solution_second_stage_stochastic(Deterministic_problem_hol, second_stage_m, sol_hol)
 write_solution(fitted_sol,folder1,"Fitted_Solution",folder2)
 
+#########################
 # Finlandia 
 model_fin = create_model(Deterministic_problem_fin)
 set_silent(model_fin) # removes terminal output
