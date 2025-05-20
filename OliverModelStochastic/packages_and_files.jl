@@ -22,6 +22,7 @@ using Statistics
 using HypothesisTests
 using Distributions
 using StructTypes
+using Hungarian
 
 include("src/representation/cargo.jl")
 include("src/representation/deck.jl")
@@ -52,3 +53,4 @@ include("src/utils/helpers.jl")
 include("src/utils/test_instances.jl")
 include("src/representation/ScenarioReduction.jl")
 include("src/model/random_stowage_plan.jl")
+include("src/representation/VarianceOfWeight.jl")

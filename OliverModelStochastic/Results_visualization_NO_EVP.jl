@@ -54,8 +54,8 @@ include("src/utils/test_instances.jl")
 
 # load data from solutions
 # HPC_folder
-test_instance = Finlandia_test[8]
-HPC_folder = "Finlandia_"*test_instance*"_15_05_09"
+test_instance = Finlandia_test[4]
+HPC_folder = "Finlandia_"*test_instance*"_15_05_17"
 plot_folder = "Plots/Results/Finlandia_"*test_instance*"/"
 # Create folder for plots
 if !isdir(plot_folder)

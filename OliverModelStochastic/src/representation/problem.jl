@@ -62,6 +62,27 @@ function create_stochastic_problem(problem::StowageProblem, s::Int64,n::Int64, i
     )
 end
 
+# Generates the stochastic problem using scenario reduction
+# Generate CargoCollectionScenarios. s is number of scenarios, n is number of random cargos with weight changed
+# generate_method is a function that generates scenarios, default is generate_simple_cargo_scenarios
+function create_stochastic_problem_scenarioreduction(problem::StowageProblem, s_reduced::Int64,n::Int64, s_total::Int64, ids = [], 
+    generate_method::Function = generate_simple_cargo_scenarios, reduction_method::Function = scenario_reduction_naive, timelimit::Int64 = 60)
+    ids = ids == [] ? random_ids(problem.cargo,n) : ids # if ids are not given, generate random ids
+    cargo_scenarios, probability = generate_method(problem, s_total, ids)
+    temp_problem = StochasticStowageProblem(
+        vessel = problem.vessel,
+        slots = problem.slots,
+        cargo = cargo_scenarios,
+        unknown_weights = sort(ids),
+        known_weights = sort(setdiff([i for i in 1:length(problem.cargo.items)],ids)),
+        scenarios = s_total,
+        probability = probability,
+        name = problem.name)
+    reduced_problem = scenario_reduced(temp_problem, s_reduced, reduction_method, timelimit)
+
+    return reduced_problem
+end
+
 
 # Create expected value problem from stochastic problem
 function expected_value_problem(problem::StochasticStowageProblem)

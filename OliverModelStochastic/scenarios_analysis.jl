@@ -146,4 +146,6 @@ p = plot!([1:scenarios[sc]], ones(scenarios[sc])*Deterministic_problem.cargo.ite
 savefig(p,plot_folder*"Weight_uniform_random_sampling_nocars_light60_item_$(item_id).png")
 
 
-Det_pro_nocars_heavy_60.cargo.items
+# Test scenario reduction
+
+# test speed

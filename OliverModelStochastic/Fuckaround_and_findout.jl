@@ -2,7 +2,7 @@ include("packages_and_files.jl")
 
 # Do stuff 
 test_instance_hol = Hollandia_test[5]
-test_instance_fin = Finlandia_test[6]
+test_instance_fin = Finlandia_test[5]
 
 Deterministic_problem_hol = load_data("hollandia",test_instance_hol,"hazardous")
 #Deterministic_problem_fin = load_data("finlandia","no_cars_medium_100_haz_eq_0.1","hazardous")
@@ -10,6 +10,43 @@ Deterministic_problem_fin = load_data("finlandia",test_instance_fin,"hazardous")
 
 pro_hol = create_stochastic_problem(Deterministic_problem_hol, 10, length(Deterministic_problem_hol.cargo), []) 
 pro_fin = create_stochastic_problem(Deterministic_problem_fin, 10, length(Deterministic_problem_fin.cargo), [])
+pro_fin_1 = create_stochastic_problem(Deterministic_problem_fin, 10, length(Deterministic_problem_fin.cargo), [], Bootstrap_bookedweight_quantile)
+pro_fin_2 = create_stochastic_problem_scenarioreduction(Deterministic_problem_fin, 5,
+length(Deterministic_problem_fin.cargo), 10, [], Bootstrap_bookedweight_quantile, scenario_reduction_heuristic, 30)
+println(pro_fin_2.probability)
+
+ids = random_ids(Deterministic_problem_fin.cargo,length(Deterministic_problem_fin.cargo))
+sc = 100
+cargo_scenarios, probability = generate_simple_cargo_scenarios(Deterministic_problem_fin, sc, [1])
+weight_id_1 = [cargo_scenarios.items[i].items[1].weight for i in 1:sc]
+CargoC1, probability1 = scenario_reduction_heuristic(cargo_scenarios, probability, 10, 5*60)
+weight_id_1_H = [CargoC1.items[i].items[1].weight for i in 1:5]
+CargoC2, probability2 = scenario_reduction_naive(cargo_scenarios,probability, 10, 5*60)
+weight_id_1_naive = [CargoC2.items[i].items[1].weight for i in 1:5]
+
+p1 = plot(Deterministic_problem_fin.cargo.items[1].weight*ones(sc), label = "Original weight")
+scatter!(weight_id_1_H, label = "Heuristic")
+scatter!(weight_id_1, label = "Original scenarios")
+
+p2 = plot(Deterministic_problem_fin.cargo.items[1].weight*ones(sc), label = "Original weight")
+scatter!(weight_id_1_naive, label = "Naive")
+scatter!(weight_id_1, label = "Original scenarios")
+
+
+pro_fin_3 = create_stochastic_problem_scenarioreduction(Deterministic_problem_fin, 10,
+length(Deterministic_problem_fin.cargo), 50, [], Bootstrap_bookedweight_quantile, )
+times = []
+for i in 1:10
+    start = time_ns()
+    pro_fin_2 = create_stochastic_problem_scenarioreduction(Deterministic_problem_fin, 10,length(Deterministic_problem_fin.cargo), 100, [], Bootstrap_bookedweight_quantile)
+    elapsed = (time_ns() - start) / 1e9
+    push!(times, elapsed)
+end
+println(times)
+println(elapsed)
+pro_fin_2.probability
+temp = pro_fin_2.cargo
+length(temp.items[1])
 
 #######################
 # Hollandia

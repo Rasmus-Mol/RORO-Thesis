@@ -21,6 +21,7 @@ using Statistics
 using Distributions
 using HypothesisTests 
 using StructTypes
+using Hungarian
 
 include("representation/cargo.jl")
 include("representation/deck.jl")
@@ -47,6 +48,7 @@ include("model/second_stage_model.jl")
 include("utils/SaveData.jl")
 include("representation/VarianceOfWeight.jl")
 include("model/random_stowage_plan.jl")
+include("representation/ScenarioReduction.jl")
 
 #include("loadmaster/types.jl")
 #include("loadmaster/api.jl")
@@ -80,6 +82,10 @@ export Bootstrap_bookedweight_quantile
 export random_stowage_plan, random_cargocollection, sort_cargocollection
 export create_random_stowageplan_model, create_model_stochastic_cargo_fraction
 export create_random_stowageplan_model, random_cargocollection, random_stowage_plan
+
+# Scenario reduction problem
+export create_stochastic_problem_scenarioreduction, generate_simple_cargo_scenarios
+export scenario_reduction_heuristic, scenario_reduction_naive
 
 # Functions to connect to LoadMaster
 #export LoadMaster, getcurrentvessel, resetvessel, upload_solution, getresults, parse_result, uri, headers, struct_to_json

@@ -16,7 +16,7 @@ problem_det = load_data("finlandia", test_problem_name, "hazardous")
 # Folder name for results - date and hour
 HPC_folder = "Finlandia_"*test_problem_name*"_"*Dates.format(now(), "dd_mm_HH")
  # Describe tests if necessary
-extra_info = "Ship: Finlandia, Test problem: "*test_problem_name*" - No scenario reduction, No EVP"
+extra_info = "Ship: Finlandia, Test problem: "*test_problem_name*" - Scenario reduction, No EVP"
 
 # First job index - create problem 
 if parse_index == 1
