@@ -115,8 +115,6 @@ function add_stability_stochastic!(vessel::Vessel, model, pos_weight_cargo, lcg_
 			for b in draft_index_min:draft_index_max)./2
 	)
 	
-
-
 	# # Force relationships
 	@constraint(model, [sc = 1:scenarios], buoyancy[:,sc] .== buoyancy_interpolated[sc])
 
@@ -328,7 +326,7 @@ function add_stability_stochastic_slack_all!(vessel::Vessel, model, pos_weight_c
 	@expression(model, buoyancy_interpolated[sc = 1:scenarios],
 		sum(vessel.buoyancy_displacement_weight_cumulative[b, :] .* z_min[b,sc] +
 			vessel.buoyancy_displacement_weight_cumulative[b, :] .* z_max[b,sc]
-			for b in draft_index_min:draft_index_max)
+			for b in draft_index_min:draft_index_max)./2
 	)
 	# # Force relationships
 	@constraint(model, [sc = 1:scenarios], buoyancy[:,sc] .== buoyancy_interpolated[sc])
@@ -400,7 +398,7 @@ function add_stability_stochastic_slack_all!(vessel::Vessel, model, pos_weight_c
 	)
 	# Constraint (14)
 	@constraint(model, tcg_min[sc = 1:scenarios],
-		tcg_total[sc] + slack_Tmin >= TCGmin * cumulative_weight[end]
+		tcg_total[sc] + slack_Tmin[sc] >= TCGmin * cumulative_weight[end]
 	)
 	# Some of the left-hand side of constraint (15) & (16)
 	# Rasmus: vcg_slope relates to m_{hat}^{V,T} in the paper

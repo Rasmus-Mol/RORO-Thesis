@@ -203,8 +203,8 @@ function create_model_stochastic_cargo_fraction(problem::StochasticStowageProble
 	area = [get_length(Cargo_1_scenario[c]) * get_width(Cargo_1_scenario[c]) for c in 1:n_cargo]
 
 	# Penalty for slack variables
-	#M = 100000 # Should be determined more precisely at some point
-    M = sum(cost)+1 # We would rather have no cargo, than violate constraints
+	M = 100000 # Should be determined more precisely at some point
+    #M = sum(cost)+1 # We would rather have no cargo, than violate constraints
 	# Might be a bit too large for model to handle
 
 	# One cargo per slot at most. Constraint (24)
@@ -263,8 +263,8 @@ function create_model_stochastic_cargo_fraction(problem::StochasticStowageProble
 	slack_Tmax = model[:slack_Tmax]
 	slack_Lmin = model[:slack_Lmin]
 	slack_Lmax = model[:slack_Lmax]
-	slack_shear1 = model[:slack_shear1]
-	slack_shear2 = model[:slack_shear2]
+	#slack_shear1 = model[:slack_shear1]
+	#slack_shear2 = model[:slack_shear2]
 	slack_shearMin = model[:slack_shearMin]
 	slack_shearMax = model[:slack_shearMax]
 	slack_bendingMax = model[:slack_bendingMax]
@@ -276,7 +276,8 @@ function create_model_stochastic_cargo_fraction(problem::StochasticStowageProble
 		sum(cost[c] * cargo_slack[c] for c ∈ 1:n_cargo)
 		+ # penalty part
 		M * (sum(slack_Vmax)+sum(slack_Vmin)+sum(slack_Tmax)+sum(slack_Tmin)+sum(slack_Lmax)+sum(slack_Lmin)
-		+ sum(slack_shear1)+sum(slack_shear2)+sum(slack_shearMax)+sum(slack_shearMin)+sum(slack_bendingMax)
+		#+ sum(slack_shear1)+sum(slack_shear2)
+		+sum(slack_shearMax)+sum(slack_shearMin)+sum(slack_bendingMax)
 		+ sum(slack_deck) + sum(slack_ballast_tanks)
 		)
 	)

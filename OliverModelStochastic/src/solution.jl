@@ -640,3 +640,4 @@ function get_solution_second_stage_deterministic(problem, model, sol::Solution)
         solver_nodes = 0
     )
 end
+

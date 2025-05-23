@@ -54,8 +54,8 @@ include("src/utils/test_instances.jl")
 
 # load data from solutions
 # HPC_folder
-test_instance = Finlandia_test[4]
-HPC_folder = "Finlandia_"*test_instance*"_15_05_17"
+test_instance = Finlandia_test[8]
+HPC_folder = "Finlandia_"*test_instance*"_15_05_09"
 plot_folder = "Plots/Results/Finlandia_"*test_instance*"/"
 # Create folder for plots
 if !isdir(plot_folder)
@@ -116,6 +116,21 @@ for i in 1:repetitions
         end
     end
 end
+#=
+include("src/utils/SaveData.jl")
+test = get_stochastic_problem("Stochastic_Bootstrap1_rep$(1)_sc$(scenarios[1])_unknown$(n_unknown[1])_time$(time_limit)",
+"Stochastic_Problem",HPC_folder,problemname1,problemname2,problemname3)
+cargo = test.cargo
+test3 = create_model_stochastic_cargo_fraction(test,0.9)
+set_silent(test2) # removes terminal output
+set_time_limit_sec(test3, 5*60) # 5 minutes to start with
+optimize!(test3)
+=#
+
+test_Det = get_solution_deterministic("Finlandia_deterministic","Deterministic_Solution",HPC_folder)
+
+println("##########################")
+
 
 println("Cargo in problem: ", length(Deterministic_problem.cargo))
 println("Deterministic solution packs: ",Deterministic_Solution.n_cargo_loaded)

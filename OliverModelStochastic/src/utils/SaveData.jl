@@ -313,9 +313,10 @@ function write_slack(HPC_folder::String, foldername::String, filename::String, m
     slack = [value.(model[:slack_deck]), value.(model[:slack_Vmax]),value.(model[:slack_Vmin]),
             value.(model[:slack_Tmin]), value.(model[:slack_Tmax]), 
             value.(model[:slack_Lmin]), value.(model[:slack_Lmax]),
-            value.(model[:slack_shear1]), value.(model[:slack_shear2]), 
+            #value.(model[:slack_shear1]), value.(model[:slack_shear2]), 
             value.(model[:slack_shearMin]),
-            value.(model[:slack_shearMax]), value.(model[:slack_bendingMax])
+            value.(model[:slack_shearMax]), value.(model[:slack_bendingMax]),
+             value.([:,slack_ballast_tanks])
             ]   
     # Creates HPC_folder for results for this HPC instance
     if !isdir("Results/"*HPC_folder)
@@ -339,13 +340,14 @@ function get_slack(foldername::String,filename::String,HPC_folder::String)
         slack_Tmax = slack[5]
         slack_Lmin = slack[6]
         slack_Lmax = slack[7]
-        slack_shear1 = slack[8]
-        slack_shear2 = slack[9]
-        slack_shearMin = slack[10]
-        slack_shearMax = slack[11]
-        slack_bending = slack[12]
+        #slack_shear1 = slack[8]
+        #slack_shear2 = slack[9]
+        slack_shearMin = slack[8]
+        slack_shearMax = slack[9]
+        slack_bending = slack[10]
+        slack_ballast_tanks = slack[11]
         return slack_deck, slack_Vmin, slack_Vmax, slack_Tmin, slack_Tmax,
                 slack_Lmin, slack_Lmax, slack_shear1, slack_shear2,
-                slack_shearMin, slack_shearMax, slack_bending
+                slack_shearMin, slack_shearMax, slack_bending, slack_ballast_tanks
     end
 end
