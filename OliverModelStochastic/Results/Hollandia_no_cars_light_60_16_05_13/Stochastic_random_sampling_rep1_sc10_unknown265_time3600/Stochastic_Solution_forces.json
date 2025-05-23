@@ -1,0 +1,14 @@
+[
+    {
+        "cargo_weight": 0.0,
+        "total_weight": 0.0,
+        "ballast_weight": 0.0,
+        "ballast_distribution": [],
+        "shear_force": [],
+        "bending_moment": [],
+        "ballast_volume": [],
+        "lcg": 0.0,
+        "tcg": 0.0,
+        "vcg": 0.0
+    }
+]
