@@ -14,7 +14,8 @@ test_problem_name = Finlandia_test[8]
 problem_det = load_data("finlandia", test_problem_name, "hazardous")
 problemname1, problemname2, problemname3 = "finlandia", test_problem_name, "hazardous"
 # Folder name for results - date and hour
-HPC_folder = "Finlandia_"*test_problem_name*"_Slacktest_"*Dates.format(now(), "dd_mm_HH")
+HPC_folder_save = "Finlandia_"*test_problem_name*"_Slacktest_"*Dates.format(now(), "dd_mm_HH")
+HPC_folder_load = "Finlandia_"*test_problem_name*"_15_05_09"
  # Describe tests if necessary
 extra_info = "Ship: Finlandia, Test problem: "*test_problem_name*" - Slack test"
 
@@ -27,7 +28,7 @@ if parse_index == 1
     optimize!(model_det)
     solution_det = extract_solution(problem_det, model_det)
     # Save Solution for deterministic problem
-    write_solution(solution_det,"Finlandia_deterministic","Deterministic_Solution",HPC_folder)
+    write_solution(solution_det,"Finlandia_deterministic","Deterministic_Solution",HPC_folder_save)
 end
 
 # Creates Stochastic problem and model
@@ -43,10 +44,10 @@ time_limit = 60 * 60 # 1 hour
 repetitions = 5 # number of repetitions of same inputs
 
 # Check if folder and file has been created, otherwise create
-file_check = "Results/"*HPC_folder*"HPC_data.json"
+file_check = "Results/"*HPC_folder_save*"HPC_data.json"
 if !isfile(file_check)
     # Save scenario and number of unknown weights
-    write_HPC_data(repetitions, scenarios, n_cargo_unknownweight, time_limit, HPC_folder, extra_info)
+    write_HPC_data(repetitions, scenarios, n_cargo_unknownweight, time_limit, HPC_folder_save, extra_info)
 end
 # Run tests
 for i in 1:repetitions
@@ -54,7 +55,7 @@ for i in 1:repetitions
     # Load problem 
     #pro = create_stochastic_problem(problem_det, sc, n_cargo_unknownweight[1], [])
     foldername = "Stochastic_random_sampling_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)"
-    pro = get_stochastic_problem(foldername,"Stochastic_Problem",HPC_folder,problemname1,problemname2,problemname3)
+    pro = get_stochastic_problem(foldername,"Stochastic_Problem",HPC_folder_load,problemname1,problemname2,problemname3)
     # Model
     mo = create_model_stochastic_cargo_fraction(pro,fraction)
     set_silent(mo) # removes terminal output
@@ -63,8 +64,8 @@ for i in 1:repetitions
     sol = extract_stochastic_solution(pro,mo)
     # Save solution
     foldername = "Stochastic_random_sampling_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)_slacktest_$(fraction)"
-    write_solution_stochastic(sol,foldername,"Stochastic_Solution",HPC_folder)
-    write_slack(HPC_folder, foldername, "Slack_test", mo)
+    write_solution_stochastic(sol,foldername,"Stochastic_Solution",HPC_folder_save)
+    write_slack(HPC_folder_save, foldername, "Slack_test", mo)
     #=
     cs_sol = sol.cs
     # Solve second stage when we know unknown weights
@@ -123,7 +124,7 @@ for i in 1:repetitions
     #pro = create_stochastic_problem(problem_det, sc, n_cargo_unknownweight[1], [],Bootstrap_bookedweight_quantile) 
     # load problem
     foldername = "Stochastic_Bootstrap1_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)"
-    pro = get_stochastic_problem(foldername,"Stochastic_Problem",HPC_folder,problemname1,problemname2,problemname3)
+    pro = get_stochastic_problem(foldername,"Stochastic_Problem",HPC_folder_load,problemname1,problemname2,problemname3)
     # Model
     mo = create_model_stochastic_cargo_fraction(pro,fraction)
     set_silent(mo) # removes terminal output
@@ -132,8 +133,8 @@ for i in 1:repetitions
     sol = extract_stochastic_solution(pro,mo)
     # Save solution
     foldername = "Stochastic_Bootstrap1_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)_slacktest_$(fraction)"
-    write_solution_stochastic(sol,foldername,"Stochastic_Solution",HPC_folder)
-    write_slack(HPC_folder, foldername, "Slack_test", mo)
+    write_solution_stochastic(sol,foldername,"Stochastic_Solution",HPC_folder_save)
+    write_slack(HPC_folder_save, foldername, "Slack_test", mo)
     #=
     cs_sol = sol.cs
     # Solve second stage when we know unknown weights

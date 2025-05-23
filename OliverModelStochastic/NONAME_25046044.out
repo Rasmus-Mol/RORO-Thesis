@@ -1,0 +1,38 @@
+/bin/bash: line 1: ./HPC_test_stochastic.sh: Permission denied
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@hpc.dtu.dk>
+Subject: Job 25046044: <NONAME> in cluster <dcc> Exited
+
+Job <NONAME> was submitted from host <n-62-27-22> by user <s194364> in cluster <dcc> at Fri May 23 11:37:59 2025
+Job was executed on host(s) <n-62-31-5>, in queue <hpc>, as user <s194364> in cluster <dcc> at Fri May 23 11:37:59 2025
+</zhome/e3/5/146953> was used as the home directory.
+</zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic> was used as the working directory.
+Started at Fri May 23 11:37:59 2025
+Terminated at Fri May 23 11:38:00 2025
+Results reported at Fri May 23 11:38:00 2025
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+HPC_test_stochastic.sh
+------------------------------------------------------------
+
+Exited with exit code 126.
+
+Resource usage summary:
+
+    CPU time :                                   0.49 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     1024.00 MB
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   47 sec.
+    Turnaround time :                            1 sec.
+
+The output (if any) is above this job summary.
+

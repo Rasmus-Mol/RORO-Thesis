@@ -70,6 +70,7 @@ export StochasticStowageProblem, SolutionStochastic
 export plot_cargo_weights, plot_cargo_OG
 # EVP
 export expected_value_problem
+
 # Save data to JSON files
 export write_problem, write_problem_stochastic, write_solution, write_solution_stochastic, write_HPC_data
 # Get data from JSON files
@@ -82,6 +83,7 @@ export Bootstrap_bookedweight_quantile
 export random_stowage_plan, random_cargocollection, sort_cargocollection
 export create_random_stowageplan_model, create_model_stochastic_cargo_fraction
 export create_random_stowageplan_model, random_cargocollection, random_stowage_plan
+
 
 # Scenario reduction problem
 export create_stochastic_problem_scenarioreduction, generate_simple_cargo_scenarios

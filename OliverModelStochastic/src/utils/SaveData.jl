@@ -316,7 +316,7 @@ function write_slack(HPC_folder::String, foldername::String, filename::String, m
             #value.(model[:slack_shear1]), value.(model[:slack_shear2]), 
             value.(model[:slack_shearMin]),
             value.(model[:slack_shearMax]), value.(model[:slack_bendingMax]),
-             value.([:,slack_ballast_tanks])
+             value.([:slack_ballast_tanks])
             ]   
     # Creates HPC_folder for results for this HPC instance
     if !isdir("Results/"*HPC_folder)
