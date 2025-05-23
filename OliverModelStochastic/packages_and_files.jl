@@ -54,3 +54,6 @@ include("src/utils/test_instances.jl")
 include("src/representation/ScenarioReduction.jl")
 include("src/model/random_stowage_plan.jl")
 include("src/representation/VarianceOfWeight.jl")
+include("Feasibility_check.jl")
+include("src/model/second_stage_model_v2.jl")
+

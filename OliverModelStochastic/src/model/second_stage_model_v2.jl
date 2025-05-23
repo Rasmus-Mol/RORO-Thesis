@@ -51,7 +51,7 @@ function second_stage_model_v2(cs, problem::StowageProblem)
 	# Rasmus: Don't understand why is not using weight[s]
 	@expression(model, vcg_cargo, sum(cs[c, s] * cargo[c].weight * (slots[s].vcg + get_height(cargo[c]) / 2) for s ∈ 1:n_slots, c ∈ 1:n_cargo))
 
-    add_stability!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo, tcg_cargo, vcg_cargo)
+    add_stability!(vessel::vessel, model, pos_weight_cargo, lcg_cargo, tcg_cargo, vcg_cargo)
 
 	ballast_volume = model[:ballast_volume]
 

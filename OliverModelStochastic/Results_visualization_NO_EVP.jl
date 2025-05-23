@@ -127,7 +127,7 @@ set_time_limit_sec(test3, 5*60) # 5 minutes to start with
 optimize!(test3)
 =#
 
-test_Det = get_solution_deterministic("Finlandia_deterministic","Deterministic_Solution",HPC_folder)
+#test_Det = get_solution_deterministic("Finlandia_deterministic","Deterministic_Solution",HPC_folder)
 
 println("##########################")
 
