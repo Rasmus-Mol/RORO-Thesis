@@ -16,7 +16,7 @@ problem_det = load_data("finlandia", test_problem_name, "hazardous")
 # Folder name for results - date and hour
 HPC_folder = "Finlandia_" * test_problem_name * "_Scenario_test_" * Dates.format(now(), "dd_mm_HH")
 # Describe tests if necessary
-extra_info = "Ship: Finlandia, Test problem: " * test_problem_name * " - Scenario test, no EVP"
+extra_info = "Ship: Finlandia, Test problem: " * test_problem_name * " - Scenario test, no EVP, noise on Bootstrap"
 
 # First job index - create problem 
 if parse_index == 1
@@ -186,11 +186,12 @@ for i in 1:repetitions
         end
         =#
         # Bootstrap method 1
-        pro = create_stochastic_problem(problem_det, sc, n_cargo_unknownweight[1], [], Bootstrap_bookedweight_quantile)
+        problem_det_noise = add_white_noise_to_test_instance(problem_det)
+        pro = create_stochastic_problem(problem_det_noise, sc, n_cargo_unknownweight[1], [], Bootstrap_bookedweight_quantile)
         # Reduce scenarios
-        pro_H = create_stochastic_problem_scenarioreduction(problem_det, sc, 
+        pro_H = create_stochastic_problem_scenarioreduction(problem_det_noise, sc, 
         n_cargo_unknownweight[1], scenario_test[j], [], Bootstrap_bookedweight_quantile, scenario_reduction_heuristic, 5*60)
-        pro_naive = create_stochastic_problem_scenarioreduction(problem_det, sc, 
+        pro_naive = create_stochastic_problem_scenarioreduction(problem_det_noise, sc, 
         n_cargo_unknownweight[1], scenario_test[j], [], Bootstrap_bookedweight_quantile, scenario_reduction_naive, 5*60)
 
         # Save problem

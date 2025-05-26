@@ -601,7 +601,11 @@ function get_solution_second_stage_deterministic(problem, model, sol::Solution)
     vcg = value.(model[:vcg_total]) / total_weight
 
     # Calculate area utilization
-    total_cargo_area = sum(p.length * p.width for p in placements)
+    if length(placements) > 0 
+        total_cargo_area = sum(p.length * p.width for p in placements)
+    else
+        total_cargo_area = 0
+    end
     total_vessel_area = sum(
         slot.length * slot.width
         for slot in problem.slots

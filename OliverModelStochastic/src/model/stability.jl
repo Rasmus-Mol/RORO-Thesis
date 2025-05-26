@@ -326,8 +326,8 @@ function add_stability_slack!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo
 	@constraint(model, buoyancy .== buoyancy_interpolated)
 
 	# Constraint (17) - First is correct
-	@constraint(model, shear .+ slack_shear2 .== cumulative_weight .- buoyancy .+ slack_shear1)
-	#@constraint(model, shear .== cumulative_weight .+ buoyancy)
+	#@constraint(model, shear .+ slack_shear2 .== cumulative_weight .- buoyancy .+ slack_shear1)
+	@constraint(model, shear .== cumulative_weight .- buoyancy)
 
 	# @constraint(model, -100 <= sum(shear[i] * frame_length[i] for i in 1:n_positions-1) <= 100)
 

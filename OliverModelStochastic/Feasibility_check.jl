@@ -34,16 +34,15 @@ function feasibility_check(sol::Solution, problem::StowageProblem, CargoC::Cargo
     end
     # Optimize stability with locked cargo placements and new cargo weights.
     pro = StowageProblem(
-        # Core components
-    vessel = vessel,
-    slots = slots,
-    cargo = CargoC,  
-    name = name,
-    timestamp = now()
-    )
+        vessel = vessel,
+        slots = slots,
+        cargo = CargoC,  
+        name = name,
+        timestamp = now()
+        )
     # Create and optimize model
     model = second_stage_model_v2(cs, pro)
-    set_time_limit_sec(model, 60 * 5) # 5 minutes
+    set_time_limit_sec(model, 60 * 15) # 5 minutes - should maybe be changed.
     set_silent(model)
     optimize!(model)
     # Check if the model is feasible
@@ -51,12 +50,17 @@ function feasibility_check(sol::Solution, problem::StowageProblem, CargoC::Cargo
         str = "Model is infeasible - cannot be stable with this weight."
         println(str)
         feasible = false
-        return feasible, str, 0
+        # Solve slacked version to find the problem
+        model = second_stage_model_slack(cs, pro)
+        set_time_limit_sec(model, 60 * 15) # 5 minutes - should maybe be changed.
+        set_silent(model)
+        optimize!(model)
+        return feasible, str, model
     end
-    if termination_status(model) == MOI.TIMEOUT
+    if termination_status(model) == MOI.TIME_LIMIT
         str = "Stability Model timed out"
         println(str)
-        feasible = false
+        feasible = true
         return feasible, str, model
     end
     if termination_status(model) == MOI.OPTIMAL
@@ -66,4 +70,5 @@ function feasibility_check(sol::Solution, problem::StowageProblem, CargoC::Cargo
         return feasible, str, model
     end
 end
+
 

@@ -1,49 +1,27 @@
-# Script to plot data from problem instances and historic data 
-push!(LOAD_PATH, pwd())
-using Base: @kwdef
-import Base: length, getindex, lastindex, keys, eachindex, iterate, eltype, firstindex
+include("packages_and_files.jl")
 
-using Random
-using StatsBase
-using StructArrays
-using JSON3, JSON
-using DataFrames
-using CSV, XLSX
-using Dates
-using Interpolations
-using UnPack
-using JuMP, HiGHS, GLPK, Gurobi
-using Plots
-using HTTP
-using URIs
-# News
-using Statistics
-using HypothesisTests
-using Distributions
-using StructTypes
-using StatsPlots
-
-include("src/representation/cargo.jl")
-include("src/representation/deck.jl")
-include("src/representation/slot.jl")
-include("src/representation/vessel.jl")
-include("src/representation/instance.jl")
-include("src/representation/problem.jl")
-# New: Stochastic 
-include("src/representation/CargoScenarios.jl")
-# Plot weight distribution
-include("src/plots/weight_plots.jl")
-# Solution 
-include("src/solution.jl")
-include("src/CompareSolutions.jl")
-include("src/plots/solution.jl")
-# Load data Script
-include("src/utils/SaveData.jl")
-include("src/representation/VarianceOfWeight.jl")
-# Test instances
-include("src/utils/test_instances.jl")
+# New analysis
+plot_folder = "Plots/Data/Scenarios_new/"
+# Create folder for plots
+if !isdir(plot_folder)
+    mkpath(plot_folder)
+end
+HPC_folder = "Findlandia_no_cars_heavy_100_Scenario_test_20_05_18"
+repetitions, scenarios, n_unknown, time_limit, note = get_HPC_data(HPC_folder)
+test_problem = Finlandia_test[8]
+sc = length(scenarios)
+n = length(n_unknown)
+# Change if not Finlandia problem
+problemname1, problemname2, problemname3 = "finlandia", test_problem, "hazardous"
+Deterministic_problem = load_data(problemname1,problemname2,problemname3)
+EVP_problem_gen = Array{Any}(undef, repetitions, sc,n)
+Stochastic_problem_gen = Array{Any}(undef, repetitions, sc,n)
+EVP_problem_boot = Array{Any}(undef, repetitions, sc,n)
+Stochastic_problem_boot = Array{Any}(undef, repetitions, sc,n)
 
 
+
+# Old analysis
 # Scenario analysis
 plot_folder = "Plots/Data/Scenarios/"
 # Create folder for plots

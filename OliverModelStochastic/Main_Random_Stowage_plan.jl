@@ -11,111 +11,296 @@ using JuMP
 include("packages_and_files.jl")
 
 #parse_index = parse(Int, ARGS[1]) # Jobindex input
-#parse_index = 1
 # Choose instance:
-test_problem_name = Finlandia_test[5]
-
-#problem_det = load_data("finlandia", test_problem_name, "hazardous")
-
-# Folder name for results - date and hour
-HPC_folder_save = "Finlandia_"*test_problem_name*"_RandomPlan_"*Dates.format(now(), "dd_mm_HH")
- # Describe tests if necessary
-extra_info = "Ship: Finlandia, Test problem: "*test_problem_name*" - Random stowage plan tests"
-
-# Scenarios we test - length has to fit to
-scenarios = [10,20,30,40,50]
-sc = scenarios[parse_index] # number scenarios for current job
-n_cargo_unknownweight = [length(problem_det.cargo)] # all cargo weights are unknown
-time_limit = 60 * 60 # 1 hour
-repetitions = 1 # number of repetitions of same inputs
-
-# Check if folder and file has been created, otherwise create
-file_check = "Results/"*HPC_folder_save*"HPC_data.json"
-if !isfile(file_check)
-    # Save scenario and number of unknown weights
-    write_HPC_data(repetitions, scenarios, n_cargo_unknownweight, time_limit, HPC_folder, extra_info)
-end
 
 # test 1 - load solution and change weight and test feasibility.
-# Load deterministic 
-HPC_folder_load = "Finlandia_"*test_problem_name*"_14_05_20"
-det_sol = get_solution_deterministic("Finlandia_deterministic",
-"Deterministic_Solution",HPC_folder_load)
 problemname1, problemname3 = "finlandia", "hazardous"
-det_pro = load_data(problemname1,test_problem_name,problemname3)
-det_sol_cs = Deterministic_Solution.cs
-sto_pro = create_stochastic_problem(det_pro, 10, length(det_pro.cargo), []) 
-f = Vector{Bool}(undef, 10)
-strs = Vector{String}(undef, 10)
-mo = Vector{Any}(undef, 10)
-for i in 1:10
-    new_c = sto_pro.cargo.items[1]
-    f[i], str[i], mo[i] = feasibility_check(det_sol,det_pro,new_c)
+HPC_folders = [
+    "Finlandia_mixed_light_60_15_05_13",
+    "Finlandia_mixed_light_100_15_05_15",
+    "Finlandia_mixed_heavy_60_15_05_17",
+    "Finlandia_mixed_heavy_100_15_05_17",
+    "Finlandia_no_cars_light_60_14_05_20",
+    "Finlandia_no_cars_light_100_15_05_10",
+    "Finlandia_no_cars_heavy_60_15_05_10",
+    "Finlandia_no_cars_heavy_100_15_05_09",
+]
+#HPC_folders = ["Finlandia_mixed_light_60_15_05_13"]
+tests = length(HPC_folders)
+no_test = 10
+no_test2 = 10
+
+infeasible_test1_gen = zeros(tests,no_test)
+infeasible_test2_boot = zeros(tests,no_test)
+
+for j in 1:length(HPC_folders)
+    println("Iteration $(j) of $(length(HPC_folders))")
+    test_problem_name = Finlandia_test[j]
+    HPC_folder_load = HPC_folders[j]
+    # Load solution
+    det_sol = get_solution_deterministic("Finlandia_deterministic",
+        "Deterministic_Solution", HPC_folder_load)
+    det_pro = load_data(problemname1, test_problem_name, problemname3)
+    slots = det_pro.slots
+    vessel = det_pro.vessel
+    sto_pro = create_stochastic_problem(det_pro, no_test, length(det_pro.cargo), [])
+    # test
+    HPC_folder_save = HPC_folder_load # save in same folder
+    foldername = "Determinitic_Stability_randomscenarios_uniformsampling"
+    # save scenario
+    filename = "Stochastic_Problem"
+    write_problem_stochastic(sto_pro, foldername, filename, HPC_folder_save)
+    # Test 1
+    for i in 1:no_test
+        new_c = sto_pro.cargo.items[i]
+        f, strs, mo = feasibility_check(det_sol, det_pro, new_c)
+        if f == true # found solution
+            sol = get_solution_second_stage_deterministic(det_pro, mo, det_sol)
+            # save result
+            filename = "Solution_$(i)"
+            write_solution(sol, foldername, filename, HPC_folder_save)
+        else # Problem was infeasible
+            fitted_sol_slacked = get_solution_second_stage_stochastic(det_pro, mo, det_sol)
+            write_solution(fitted_sol_slacked,foldername,"Solution_$(i)_slacked",HPC_folder)
+            write_slack(HPC_folder, foldername, "Fitted_Solution_slacked", second_stage_m_slacked)
+            #infeasible_test1_gen[j,i] = 1 # infeasible
+        end
+    end
+    # Now using other method for generating scenarios
+    pro = create_stochastic_problem(det_pro, no_test, length(det_pro.cargo), [],Bootstrap_bookedweight_quantile) 
+    # test
+    HPC_folder_save = HPC_folder_load # save in same folder
+    foldername = "Determinitic_Stability_randomscenarios_bootstrapsampling"
+    # save scenario
+    filename = "Stochastic_Problem"
+    write_problem_stochastic(sto_pro, foldername, filename, HPC_folder_save)
+    # Test 1
+    for i in 1:no_test
+        new_c = sto_pro.cargo.items[i]
+        f, strs, mo = feasibility_check(det_sol, det_pro, new_c)
+        if f == true # found solution
+            sol = get_solution_second_stage_deterministic(det_pro, mo, det_sol)
+            # save result
+            filename = "Solution_$(i)"
+            write_solution(sol, foldername, filename, HPC_folder_save)
+        else
+            fitted_sol_slacked = get_solution_second_stage_stochastic(det_pro, mo, det_sol)
+            write_solution(fitted_sol_slacked,foldername,"Solution_$(i)_slacked",HPC_folder)
+            write_slack(HPC_folder, foldername, "Fitted_Solution_slacked", second_stage_m_slacked)
+            infeasible_test2_boot[j,i] = 1 # infeasible
+        end
+    end
+    #####################
+    # Test 2 - Random stowage plan
+    cargoc = det_pro.cargo
+    ntypes = [length(findall(x->x.cargo_type_id == i, cargoc)) for i in 1:4]
+    # Random stowage plan, placed in cargoc order ie cargoc order: 
+    # truck, car, Machine, Secu
+    foldername = "Random_Stowage_Plan_Trucks_first"
+    for i in 1:no_test
+        cs_random, not_stowed = random_stowage_plan(cargoc, slots)
+        random_plan_not_solved = Solution(
+            gap = Inf,
+            status = 0,
+            objective = Inf,
+            time = 0,
+            cargo_weight = 0.0,
+            total_weight = 0.0,
+            ballast_weight = 0.0, 
+            area_utilization = 0.0,
+            cargo = CargoPlacement[],
+            cs = cs_random,
+            n_cargo_total = length(cargoc),
+            n_cargo_loaded = length(cargoc)-length(not_stowed),
+            shear_force = Float64[],
+            bending_moment = Float64[],
+            ballast_volume = Float64[],
+            lcg = 0.0,
+            tcg = 0.0, 
+            vcg = 0.0,
+            n_variables = 0,
+            n_binary_variables = 0,
+            n_constraints = 0,
+            model_size = 0,
+            solver_name = "Gurobi",
+            solver_iterations = 0,
+            solver_nodes = 0
+            )
+        filename = "Random_plan"
+        write_solution(random_plan_not_solved,foldername,filename,HPC_folder_save)
+        # Punishing shifts
+        mo = create_random_stowageplan_model(cs_random, not_stowed, cargoc, vessel, slots)
+        set_time_limit_sec(mo, 60 * 15) # 5 minutes
+        set_silent(mo) 
+        optimize!(mo)
+        sol_no_shifts = extract_solution(det_pro, mo)
+        write_solution(sol_no_shifts, foldername, "Solution_no_shifts_$(i)", HPC_folder_save)
+        #cs_test2[j,i] = cs_random
+        #ballast_water_no_shifts[j,i] = sum(value.(mo[:ballast_volume]))
+        #cs_test2_no_shifts[j,i] = value.(mo[:cs])
+        # allows shifts
+        mo = random_stowageplan_allowshifts(cs_random,cargoc,vessel,slots)
+        set_time_limit_sec(mo, 60 * 15) # 5 minutes
+        set_silent(mo) 
+        optimize!(mo)
+        sol_shifts = extract_solution(det_pro, mo)
+        write_solution(sol_shifts, foldername, "Solution_shifts_$(i)", HPC_folder_save)
+        #cs_test2_shifts[j,i] = value.(mo[:cs])
+        #ballast_water_shifts[j,i] = sum(value.(mo[:ballast_volume]))
+    end
+    # Sort cargocollection - car first
+    sort_order = [2, 1, 3, 4] # car, truck, machine, secu
+    cargoc_carfirst = sort_cargocollection(cargoc, sort_order)
+    foldername = "Random_Stowage_Plan_Cars_first"
+    for i in 1:no_test
+        cs_random_carfirst, not_stowaged_carfirst = random_stowage_plan(cargoc_carfirst, slots)
+        random_plan_not_solved = Solution(
+            gap = Inf,
+            status = 0,
+            objective = Inf,
+            time = 0,
+            cargo_weight = 0.0,
+            total_weight = 0.0,
+            ballast_weight = 0.0, 
+            area_utilization = 0.0,
+            cargo = CargoPlacement[],
+            cs = cs_random_carfirst,
+            n_cargo_total = length(cargoc),
+            n_cargo_loaded = length(cargoc)-length(not_stowaged_carfirst),
+            shear_force = Float64[],
+            bending_moment = Float64[],
+            ballast_volume = Float64[],
+            lcg = 0.0,
+            tcg = 0.0, 
+            vcg = 0.0,
+            n_variables = 0,
+            n_binary_variables = 0,
+            n_constraints = 0,
+            model_size = 0,
+            solver_name = "Gurobi",
+            solver_iterations = 0,
+            solver_nodes = 0
+            )
+        write_solution(random_plan_not_solved,foldername,"Random_plan",HPC_folder_save)
+        # Punishing shifts
+        mo = create_random_stowageplan_model(cs_random_carfirst, not_stowaged_carfirst, cargoc, vessel, slots)
+        set_time_limit_sec(mo, 60 * 15) # 5 minutes
+        set_silent(mo)
+        optimize!(mo)
+        sol_no_shifts = extract_solution(det_pro, mo)
+        write_solution(sol_no_shifts, foldername, "Solution_no_shifts_$(i)", HPC_folder_save)
+        #cs_test2_carfirst[j,i] = cs_random_carfirst
+        #ballast_water_no_shifts_carfirst[j,i] = sum(value.(mo[:ballast_volume]))
+        #cs_test2_no_shifts_carfirst[j,i] = value.(mo[:cs])
+        # allows shifts
+        mo = random_stowageplan_allowshifts(cs_random_carfirst,cargoc,vessel,slots)
+        set_time_limit_sec(mo, 60 * 15) # 5 minutes
+        set_silent(mo)
+        optimize!(mo)
+        sol_shifts = extract_solution(det_pro, mo)
+        write_solution(sol_shifts, foldername, "Solution_shifts_$(i)", HPC_folder_save)
+        #cs_test2_shifts_carfirst[j,i] = value.(mo[:cs])
+        #ballast_water_shifts_carfirst[j,i] = sum(value.(mo[:ballast_volume]))
+    end
+    # Sort cargocollection - Secu first
+    sort_order = [4, 1, 2, 3] # secu, truck, car, machine
+    cargoc_secufirst = sort_cargocollection(cargoc, sort_order)
+    foldername = "Random_Stowage_Plan_Secu_first"
+    for i in 1:no_test
+        cs_random_secufirst, not_stowaged_secufirst = random_stowage_plan(cargoc_secufirst, slots)
+        random_plan_not_solved = Solution(
+            gap = Inf,
+            status = 0,
+            objective = Inf,
+            time = 0,
+            cargo_weight = 0.0,
+            total_weight = 0.0,
+            ballast_weight = 0.0, 
+            area_utilization = 0.0,
+            cargo = CargoPlacement[],
+            cs = cs_random_secufirst,
+            n_cargo_total = length(cargoc),
+            n_cargo_loaded = length(cargoc)-length(not_stowaged_secufirst),
+            shear_force = Float64[],
+            bending_moment = Float64[],
+            ballast_volume = Float64[],
+            lcg = 0.0,
+            tcg = 0.0, 
+            vcg = 0.0,
+            n_variables = 0,
+            n_binary_variables = 0,
+            n_constraints = 0,
+            model_size = 0,
+            solver_name = "Gurobi",
+            solver_iterations = 0,
+            solver_nodes = 0
+            )
+        filename = "Random_plan"
+        write_solution(random_plan_not_solved,foldername,filename,HPC_folder_save)
+        # Punishing shifts
+        mo = create_random_stowageplan_model(cs_random_secufirst, not_stowaged_secufirst, cargoc, vessel, slots)
+        set_time_limit_sec(mo, 60 * 15) # 5 minutes
+        set_silent(mo)
+        optimize!(mo)
+        sol_no_shifts = extract_solution(det_pro, mo)
+        write_solution(sol_no_shifts, foldername, "Solution_no_shifts_$(i)", HPC_folder_save)
+        #cs_test2_secufirst[j,i] = cs_random_secufirst
+        #ballast_water_no_shifts_secufirst[j,i] = sum(value.(mo[:ballast_volume]))
+        #cs_test2_no_shifts_secufirst[j,i] = value.(mo[:cs])
+        # allows shifts
+        mo = random_stowageplan_allowshifts(cs_random_secufirst,cargoc,vessel,slots)
+        set_time_limit_sec(mo, 60 * 15) # 5 minutes
+        set_silent(mo)
+        optimize!(mo)
+        sol_shifts = extract_solution(det_pro, mo)
+        write_solution(sol_shifts, foldername, "Solution_shifts_$(i)", HPC_folder_save)
+        #cs_test2_shifts_secufirst[j,i] = value.(mo[:cs])
+        #ballast_water_shifts_secufirst[j,i] = sum(value.(mo[:ballast_volume]))
+    end
 end
-
-# test 2 - create random stowage plan and check if it is feasible.
-
-
-test_problem_name_cars_60 = Finlandia_test[1]
-test_problem_name_cars_100 = Finlandia_test[2]
-problem_det_cars_60 = load_data("finlandia", test_problem_name_cars_60, "hazardous")
-problem_det_cars_100 = load_data("finlandia", test_problem_name_cars_100, "hazardous")
-CargoC_cars_60 = problem_det_cars_60.cargo
-CargoC_cars_100 = problem_det_cars_100.cargo
-ntypes_cars_60 = [length(findall(x->x.cargo_type_id == i, CargoC_cars_60)) for i in 1:4]
-ntypes_cars_100 = [length(findall(x->x.cargo_type_id == i, CargoC_cars_100)) for i in 1:4]
-slots_fin = problem_det_cars_60.slots
-vessel_fin = problem_det_cars_60.vessel
-sort_order = [1,4,3,2]
-# Random plan with cargo from 
-cs_cars_60, not_stowaged_cars_60 = random_stowage_plan(CargoC_cars_60, slots_fin)
-cs_cars_100, not_stowaged_cars_100 = random_stowage_plan(CargoC_cars_100, slots_fin)
-println("Number of cargo not placed - cars60: ", length(not_stowaged_cars_60))
-println("Number of cargo not placed - cars100: ", length(not_stowaged_cars_100))
-println("Weight not placed - cars60: ", length(not_stowaged_cars_60)>0 ? sum([not_stowaged_cars_60[i].weight for i in 1:length(not_stowaged_cars_60)]) : 0)
-println("Weight not placed - cars100: ", length(not_stowaged_cars_100)>0 ? sum([not_stowaged_cars_100[i].weight for i in 1:length(not_stowaged_cars_100)]) : 0)
-plot_solution_random_plan(cs_cars_60, CargoC_cars_60, slots_fin)
-plot_solution_random_plan(cs_cars_100, CargoC_cars_100, slots_fin)
-# Sort cargocollection, so we do not start with placing cars
-CargoC_cars_60_sorted = sort_cargocollection(CargoC_cars_60, sort_order)
-CargoC_cars_100_sorted = sort_cargocollection(CargoC_cars_100, sort_order)
-cs_cars_60_sorted, not_stowaged_cars_60_sorted = random_stowage_plan(CargoC_cars_60_sorted, slots_fin)
-cs_cars_100_sorted, not_stowaged_cars_100_sorted = random_stowage_plan(CargoC_cars_100_sorted, slots_fin)
-println("Number of cargo not placed, sorted - cars60: ", length(not_stowaged_cars_60_sorted))
-println("Number of cargo not placed, sorted - cars100: ", length(not_stowaged_cars_100_sorted))
-println("Weight not placed, sorted - cars60: ", length(not_stowaged_cars_60_sorted)>0 ? sum([not_stowaged_cars_60_sorted[i].weight for i in 1:length(not_stowaged_cars_60_sorted)]) : 0)
-println("Weight not placed, sorted - cars100: ", length(not_stowaged_cars_100_sorted)>0 ? sum([not_stowaged_cars_100_sorted[i].weight for i in 1:length(not_stowaged_cars_100_sorted)]) : 0)
-plot_solution_random_plan(cs_cars_60_sorted, CargoC_cars_60_sorted, slots_fin)
-plot_solution_random_plan(cs_cars_100_sorted, CargoC_cars_100_sorted, slots_fin)
-# Create random cargo collection
-# random_cargocollection(ntypes::Vector{Int}, shuffle::Bool = true)
-
-# Solving the problem with the random stowage plan
-# Making it feasible
-model_cars_60 = create_random_stowageplan_model(cs_cars_60, not_stowaged_cars_60, CargoC_cars_60, vessel_fin, slots_fin)
-set_time_limit_sec(model_cars_60, 60 * 5) # 5 minutes
-set_silent(model_cars_60) 
-optimize!(model_cars_60)
-y_60 = value.(model_cars_60[:y])
-println("Number of changes:", sum(y_60))
-model_cars_100 = create_random_stowageplan_model(cs_cars_100, not_stowaged_cars_100, CargoC_cars_100, vessel_fin, slots_fin)
-set_time_limit_sec(model_cars_100, 60 * 5) # 5 minutes
-set_silent(model_cars_100) 
-optimize!(model_cars_100)
-y_100 = value.(model_cars_100[:y])
-println("Number of changes:", sum(y_100))
-model_cars_60_sorted = create_random_stowageplan_model(cs_cars_60_sorted, not_stowaged_cars_60_sorted, CargoC_cars_60_sorted, vessel_fin, slots_fin)
-set_time_limit_sec(model_cars_60_sorted, 60 * 5) # 5 minutes
-set_silent(model_cars_60_sorted) 
-optimize!(model_cars_60_sorted)
-y_60_sorted = value.(model_cars_60_sorted[:y])
-println("Number of changes:", sum(y_60_sorted))
-model_cars_100_sorted = create_random_stowageplan_model(cs_cars_100_sorted, not_stowaged_cars_100_sorted, CargoC_cars_100_sorted, vessel_fin, slots_fin)
-set_time_limit_sec(model_cars_100_sorted, 60 * 5) # 5 minutes
-set_silent(model_cars_100_sorted) 
-optimize!(model_cars_100_sorted)
-y_100_sorted = value.(model_cars_100_sorted[:y])
-println("Number of changes:", sum(y_100_sorted))
-
-
-# create_random_stowageplan_model(cs_old,not_stowed,cargo,vessel,slots, new_cargo_allowed::Bool = false)
+#####################
+# What issues does an empty ship have.
+test_problem_name = Finlandia_test[1]
+HPC_folder_load = HPC_folders[1]
+HPC_folder_save = HPC_folder_load
+# Load solution
+det_sol = get_solution_deterministic("Finlandia_deterministic",
+        "Deterministic_Solution", HPC_folder_load)
+det_pro = load_data(problemname1, test_problem_name, problemname3)
+cs_empty = zeros(length(det_pro.cargo),length(det_pro.slots))
+model_empty_no_slack = second_stage_model(cs_empty, det_pro)
+set_time_limit_sec(model_empty_no_slack, 60 * 15) # 5 minutes
+set_silent(model_empty_no_slack)
+optimize!(model_empty_no_slack)
+temp_sol = Solution(
+            gap = Inf,
+            status = 0,
+            objective = Inf,
+            time = solve_time(model_empty_no_slack),
+            cargo_weight = 0.0,
+            total_weight = 0.0,
+            ballast_weight = 0.0, 
+            area_utilization = 0.0,
+            cargo = CargoPlacement[],
+            cs = zeros(length(det_pro.cargo), length(det_pro.slots)),
+            n_cargo_total = length(det_pro.cargo),
+            n_cargo_loaded = 0,
+            shear_force = Float64[],
+            bending_moment = Float64[],
+            ballast_volume = Float64[],
+            lcg = 0.0,
+            tcg = 0.0, 
+            vcg = 0.0,
+            n_variables = num_variables(model_empty_no_slack),
+            n_binary_variables = count(is_binary, all_variables(model_empty_no_slack)),
+            n_constraints = num_constraints(model_empty_no_slack; count_variable_in_set_constraints=true),
+            model_size = Base.summarysize(model_empty_no_slack),
+            solver_name = string(JuMP.solver_name(model_empty_no_slack)),
+            solver_iterations = 0,
+            solver_nodes = 0
+        )
+temp_sol.cs
+sol = get_solution_second_stage_deterministic(det_pro, model_empty_no_slack, temp_sol)
+# Save Solution for empty ship
+write_solution(sol,"Finlandia_deterministic","Empty_ship",HPC_folder_save)
+#############

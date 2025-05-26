@@ -1,10 +1,8 @@
 # Script to add noise white noise to test instances.
 
-# Snak med Oliver om det giver mening at gøre
-
 # Adds white noise with mean 0 and standard deviation noise_level to the cargo weight
 # Default noise is [truck, car, machine, secu] = []
-function add_white_noise_to_test_instance(problem::StowageProblem, noise_level::Vector{Float64} = [4,0.2,2,8])
+function add_white_noise_to_test_instance(problem::StowageProblem, noise_level::Vector{Float64} = [2.5,0.1,1.2,4])
     cargo = problem.cargo
     n = length(cargo)
     n_types = [length(filter(c -> c.cargo_type_id == i, cargo)) for i in 1:4]
