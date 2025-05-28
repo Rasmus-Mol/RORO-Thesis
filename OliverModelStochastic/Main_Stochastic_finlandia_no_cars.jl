@@ -3,20 +3,21 @@ push!(LOAD_PATH, pwd())
 # Doens't work without this, dont know why
 include("src/StowagePlannerStochastic.jl")
 include("src/utils/test_instances.jl")
+#include("src/utils/addnoise.jl")
 using .StowagePlannerStochastic
 using JuMP
 
 parse_index = parse(Int, ARGS[1]) # Jobindex input
 #parse_index = 1
 # Choose instance:
-test_problem_name = Finlandia_test[4]
+test_problem_name = Finlandia_test[8]
 
 problem_det = load_data("finlandia", test_problem_name, "hazardous")
 
 # Folder name for results - date and hour
 HPC_folder = "Finlandia_"*test_problem_name*"_"*Dates.format(now(), "dd_mm_HH")
  # Describe tests if necessary
-extra_info = "Ship: Finlandia, Test problem: "*test_problem_name*" - Scenario reduction, noise, No EVP"
+extra_info = "Ship: Finlandia, Test problem: "*test_problem_name*" - No Scenario reduction, Yes noise, No EVP"
 
 # First job index - create problem 
 if parse_index == 1
@@ -38,7 +39,7 @@ scenarios = [10,20,30,40,50]
 sc = scenarios[parse_index] # number scenarios for current job
 n_cargo_unknownweight = [length(problem_det.cargo)] # all cargo weights are unknown
 time_limit = 60 * 60 # 1 hour
-repetitions = 5 # number of repetitions of same inputs
+repetitions = 10 # number of repetitions of same inputs
 
 # Check if folder and file has been created, otherwise create
 file_check = "Results/"*HPC_folder*"HPC_data.json"
@@ -114,9 +115,9 @@ for i in 1:repetitions
     end
     =#
     # Bootstrap method 1
-    # TODO: scenario reduction and noise
+    # TODO: scenario reduction
     problem_det_noise = add_white_noise_to_test_instance(problem_det)
-    pro = create_stochastic_problem(problem_det, sc, n_cargo_unknownweight[1], [],Bootstrap_bookedweight_quantile) 
+    pro = create_stochastic_problem(problem_det_noise, sc, n_cargo_unknownweight[1], [],Bootstrap_bookedweight_quantile) 
     # Save problem
     foldername = "Stochastic_Bootstrap1_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)"
     write_problem_stochastic(pro,foldername,"Stochastic_Problem",HPC_folder)

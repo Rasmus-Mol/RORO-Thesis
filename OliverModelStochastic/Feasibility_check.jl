@@ -27,9 +27,22 @@ function feasibility_check(sol::Solution, problem::StowageProblem, CargoC::Cargo
         deck_weight = sum(weight[s] for s in [x.id for x in filter(x -> x.deck_id == d, slots)])
         if deck_weight > vessel.decks[d].weight_limit
             str = "Deck weight limit exceeded on deck $(d)"
+            #str = "Model is infeasible - cannot be stable with this weight."
             println(str)
             feasible = false
-            return feasible, str, 0
+            # Solve slacked version to find the problem
+            pro = StowageProblem(
+                vessel = vessel,
+                slots = slots,
+                cargo = CargoC,  
+                name = name,
+                timestamp = now()
+                )
+            model = second_stage_model_slack(cs, pro)
+            set_time_limit_sec(model, 60 * 15) # 5 minutes - should maybe be changed.
+            set_silent(model)
+            optimize!(model)
+            return feasible, str, model
         end
     end
     # Optimize stability with locked cargo placements and new cargo weights.

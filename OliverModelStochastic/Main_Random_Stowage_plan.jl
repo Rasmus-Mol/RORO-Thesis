@@ -60,9 +60,9 @@ for j in 1:length(HPC_folders)
             filename = "Solution_$(i)"
             write_solution(sol, foldername, filename, HPC_folder_save)
         else # Problem was infeasible
-            fitted_sol_slacked = get_solution_second_stage_stochastic(det_pro, mo, det_sol)
-            write_solution(fitted_sol_slacked,foldername,"Solution_$(i)_slacked",HPC_folder)
-            write_slack(HPC_folder, foldername, "Fitted_Solution_slacked", second_stage_m_slacked)
+            fitted_sol_slacked = get_solution_second_stage_deterministic(det_pro, mo, det_sol)
+            write_solution(fitted_sol_slacked,foldername,"Solution_$(i)_slacked",HPC_folder_save)
+            write_slack(HPC_folder_save, foldername, "Fitted_Solution_slacked", mo)
             #infeasible_test1_gen[j,i] = 1 # infeasible
         end
     end
@@ -84,9 +84,9 @@ for j in 1:length(HPC_folders)
             filename = "Solution_$(i)"
             write_solution(sol, foldername, filename, HPC_folder_save)
         else
-            fitted_sol_slacked = get_solution_second_stage_stochastic(det_pro, mo, det_sol)
-            write_solution(fitted_sol_slacked,foldername,"Solution_$(i)_slacked",HPC_folder)
-            write_slack(HPC_folder, foldername, "Fitted_Solution_slacked", second_stage_m_slacked)
+            fitted_sol_slacked = get_solution_second_stage_deterministic(det_pro, mo, det_sol)
+            write_solution(fitted_sol_slacked,foldername,"Solution_$(i)_slacked",HPC_folder_save)
+            write_slack(HPC_folder_save, foldername, "Fitted_Solution_slacked", mo)
             infeasible_test2_boot[j,i] = 1 # infeasible
         end
     end
@@ -269,7 +269,7 @@ det_sol = get_solution_deterministic("Finlandia_deterministic",
 det_pro = load_data(problemname1, test_problem_name, problemname3)
 cs_empty = zeros(length(det_pro.cargo),length(det_pro.slots))
 model_empty_no_slack = second_stage_model(cs_empty, det_pro)
-set_time_limit_sec(model_empty_no_slack, 60 * 15) # 5 minutes
+set_time_limit_sec(model_empty_no_slack, 60 * 60) # 60 minutes
 set_silent(model_empty_no_slack)
 optimize!(model_empty_no_slack)
 temp_sol = Solution(

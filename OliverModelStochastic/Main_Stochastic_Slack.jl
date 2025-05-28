@@ -39,16 +39,12 @@ scenarios = [10,20,30,40,50]
 sc = scenarios[parse_index] # number scenarios for current job
 n_cargo_unknownweight = [length(problem_det.cargo)] # all cargo weights are unknown
 fractions = [1,0.9, 0.8]
-fraction = fractions[1] # change to test different fractions
+fraction = fractions[3] # change to test different fractions
 time_limit = 60 * 60 # 1 hour
-repetitions = 5 # number of repetitions of same inputs
+#repetitions = 5 # number of repetitions of same inputs
 
-# Check if folder and file has been created, otherwise create
-file_check = "Results/"*HPC_folder_save*"HPC_data.json"
-if !isfile(file_check)
-    # Save scenario and number of unknown weights
-    write_HPC_data(repetitions, scenarios, n_cargo_unknownweight, time_limit, HPC_folder_save, extra_info)
-end
+# load data from test
+repetitions, a1, a2, a3, note = get_HPC_data(HPC_folder_load)
 # Run tests
 for i in 1:repetitions
     # uniform random sampling method
