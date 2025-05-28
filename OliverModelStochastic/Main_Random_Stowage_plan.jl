@@ -126,7 +126,7 @@ for j in 1:length(HPC_folders)
             solver_iterations = 0,
             solver_nodes = 0
             )
-        filename = "Random_plan"
+        filename = "Random_plan_$(i)"
         write_solution(random_plan_not_solved,foldername,filename,HPC_folder_save)
         # Punishing shifts
         mo = create_random_stowageplan_model(cs_random, not_stowed, cargoc, vessel, slots)
@@ -181,7 +181,7 @@ for j in 1:length(HPC_folders)
             solver_iterations = 0,
             solver_nodes = 0
             )
-        write_solution(random_plan_not_solved,foldername,"Random_plan",HPC_folder_save)
+        write_solution(random_plan_not_solved,foldername,"Random_plan_$(i)",HPC_folder_save)
         # Punishing shifts
         mo = create_random_stowageplan_model(cs_random_carfirst, not_stowaged_carfirst, cargoc, vessel, slots)
         set_time_limit_sec(mo, 60 * 15) # 5 minutes
@@ -235,7 +235,7 @@ for j in 1:length(HPC_folders)
             solver_iterations = 0,
             solver_nodes = 0
             )
-        filename = "Random_plan"
+        filename = "Random_plan_$(i)"
         write_solution(random_plan_not_solved,foldername,filename,HPC_folder_save)
         # Punishing shifts
         mo = create_random_stowageplan_model(cs_random_secufirst, not_stowaged_secufirst, cargoc, vessel, slots)
