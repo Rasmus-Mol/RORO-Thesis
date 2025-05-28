@@ -49,6 +49,7 @@ include("utils/SaveData.jl")
 include("representation/VarianceOfWeight.jl")
 include("model/random_stowage_plan.jl")
 include("representation/ScenarioReduction.jl")
+include("utils/addnoise.jl")
 
 #include("loadmaster/types.jl")
 #include("loadmaster/api.jl")
@@ -84,10 +85,12 @@ export random_stowage_plan, random_cargocollection, sort_cargocollection
 export create_random_stowageplan_model, create_model_stochastic_cargo_fraction
 export create_random_stowageplan_model, random_cargocollection, random_stowage_plan
 
-
 # Scenario reduction problem
 export create_stochastic_problem_scenarioreduction, generate_simple_cargo_scenarios
 export scenario_reduction_heuristic, scenario_reduction_naive
+
+# Noise
+export add_white_noise_to_test_instance
 
 # Functions to connect to LoadMaster
 #export LoadMaster, getcurrentvessel, resetvessel, upload_solution, getresults, parse_result, uri, headers, struct_to_json

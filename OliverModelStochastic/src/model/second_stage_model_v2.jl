@@ -38,8 +38,7 @@ function second_stage_model_v2(cs, problem::StowageProblem)
     # Rasmus: This calculates the weight of cargo in each frame. Constraint (28)
 	@expression(model, pos_weight_cargo[p = 1:n_positions],
     # Cargo weights using precalculated proportions
-    sum(weight[s] * slots_to_frame[s, p] for s ∈ 1:n_slots)
-)
+    sum(weight[s] * slots_to_frame[s, p] for s ∈ 1:n_slots))
     # # # Deck weight limit. Constraint (29)
 	#@constraint(model,[d = 1:n_deck],
 	#	sum(weight[s] for s in [x.id for x in filter(x -> x.deck_id == d, slots)]) <= vessel.decks[d].weight_limit

@@ -128,10 +128,12 @@ function second_stage_model_slack(cs, problem::StowageProblem)
 	@variable(model, slack_shearMin[1:length(stress_limits)]>=0)
 	@variable(model, slack_shearMax[1:length(stress_limits)]>=0)
 	@variable(model, slack_bendingMax[1:length(stress_limits)]>=0)
+	# Ballast tanks
+	@variable(model, slack_ballast_tanks[1:n_ballast_tanks] >= 0)
 
     add_stability_slack!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo, tcg_cargo, vcg_cargo,
 	slack_Vmax,slack_Vmin,slack_Tmin,slack_Tmax,slack_Lmin,slack_Lmax,
-	slack_shear1,slack_shear2,slack_shearMin,slack_shearMax,slack_bendingMax)
+	slack_shear1,slack_shear2,slack_shearMin,slack_shearMax,slack_bendingMax,slack_ballast_tanks)
 
 	ballast_volume = model[:ballast_volume]
 
@@ -141,7 +143,7 @@ function second_stage_model_slack(cs, problem::StowageProblem)
 		sum(cost[c] * cargo_slack[c] for c ∈ 1:n_cargo)
 		+ M * (slack_Lmax+slack_Lmin+slack_Tmax+slack_Tmin+slack_Vmax+slack_Vmin
 		+ sum(slack_shear1) + sum(slack_shear2)+sum(slack_shearMax) + sum(slack_shearMin) + sum(slack_bendingMax)
-		+ sum(slack_deck))
+		+ sum(slack_deck)+sum(slack_ballast_tanks))
 		)
 	return model
 end

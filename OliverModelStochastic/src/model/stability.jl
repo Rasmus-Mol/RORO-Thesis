@@ -228,7 +228,7 @@ end
 # Slack added at: Centers of gravity
 function add_stability_slack!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo, tcg_cargo, vcg_cargo, 
 		slack_Vmax,slack_Vmin,slack_Tmin,slack_Tmax,slack_Lmin,slack_Lmax, # slack for center of gravity
-		slack_shear1,slack_shear2,slack_shearMin,slack_shearMax,slack_bendingMax) # slack for stress and bending
+		slack_shear1,slack_shear2,slack_shearMin,slack_shearMax,slack_bendingMax,slack_ballast_tanks) # slack for stress and bending
 
 	vcg_slope = calculate_vcg_slopes(vessel)
 
@@ -276,7 +276,7 @@ function add_stability_slack!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo
 	@constraint(
 		model,
 		[t = 1:n_ballast_tanks],
-		ballast_volume[t] <= vessel.ballast_tanks[t].max_vol * ρ
+		ballast_volume[t] <= vessel.ballast_tanks[t].max_vol * ρ + slack_ballast_tanks[t]
 	)
 
 	# Draft index constraints. Constraint (3), (4), (5)
