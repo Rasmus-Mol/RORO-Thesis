@@ -153,8 +153,14 @@ function get_solution_deterministic(foldername::String,filename::String,HPC_fold
     open(joinpath("Results",HPC_folder,foldername,filename*"_info"*".json"), "r") do file
         info = JSON3.read(read(file, String), Vector{Any})
         gap = info[1]
+        if isnothing(gap)
+            gap = Inf # no solution
+        end
         status = info[2]
         objective = info[3]
+        if isnothing(objective)
+            objective = Inf # no solution
+        end
         time = info[4]
         cargo_weight = info[5]
         total_weight = info[6]
@@ -227,8 +233,14 @@ function get_solution_stochastic(foldername::String,filename::String,HPC_folder:
     open(joinpath("Results",HPC_folder,foldername,filename*"_info"*".json"), "r") do file
         info = JSON3.read(read(file, String), Vector{Any})
         gap = info[1]
+        if isnothing(gap)
+            gap = Inf # no solution
+        end
         status = info[2]
         objective = info[3]
+        if isnothing(objective)
+            objective = Inf # no solution
+        end
         objective_scenario = info[4]
         time = info[5]
         area_utilization = info[6]

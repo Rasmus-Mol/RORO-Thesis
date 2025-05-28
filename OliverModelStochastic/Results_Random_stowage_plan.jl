@@ -23,8 +23,8 @@ test1_solutions_gen = Array{Any}(undef, no_folders,no_test1)
 test1_solutions_boot = Array{Any}(undef, no_folders,no_test1)
 #slack_sol_gen = Array{Any}(undef, no_folders,no_test1)
 #slack_sol_boot = Array{Any}(undef, no_folders,no_test1)
-slack_sol_gen = zeros(no_folders,test1)
-slack_sol_boot = zeros(no_folders,test1)
+slack_sol_gen = zeros(no_folders,no_test1)
+slack_sol_boot = zeros(no_folders,no_test1)
 
 initial_random_plan_trucksfirst = Array{Any}(undef, no_folders,no_test2)
 initial_random_plan_carsfirst = Array{Any}(undef, no_folders,no_test2)
@@ -101,3 +101,5 @@ end
 # Empty ship
 HPC_folder_load = HPC_folders[1]
 sol_empty_ship = get_solution_deterministic("Finlandia_deterministic","Empty_ship", HPC_folder_load)
+
+sol_empty_ship.gap
