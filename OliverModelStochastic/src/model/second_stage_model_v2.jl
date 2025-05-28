@@ -3,7 +3,7 @@
 # cs is the placement for the cargo, decided in the first stage model.
 # problem is the deterministic version of the problem.
 # This version assumes all first stage constraints are satisfied.
-function second_stage_model_v2(cs, problem::StowageProblem)
+function second_stage_model_v2(cs1, problem::StowageProblem)
 
     @unpack vessel, slots, cargo = problem
 
@@ -20,20 +20,50 @@ function second_stage_model_v2(cs, problem::StowageProblem)
 	# number should match number of cores used at HPC
 	set_optimizer_attribute(model, "Threads", 4)
     @variable(model, weight[1:n_slots] >= 0)   # Weight at each slot
-    
+    @variable(model, cs[1:n_cargo, 1:n_slots], Bin)  # Assignment variables
+	@variable(model, cargo_slack[1:n_cargo], Bin) # 1 if cargo is assigned a slot
+
+	# Ensure placement is the same
+	@constraint(model, [c = 1:n_cargo, s = 1:n_slots],
+		cs[c, s] == cs1[c, s])
+
     CSC = sum(vessel.ballast_tanks[t].max_vol for t in 1:n_ballast_tanks)
 	haz_cargo = [c.hazardous for c in cargo] .!= 18 # Rasmus: Boolean array, why 18?
 	cost = [CSC for c in cargo]
 	cost = cost .+ haz_cargo * CSC # Rasmus: Pretty sure this is the pseudo-revenue for the objective function
 	area = [get_length(cargo[c]) * get_width(cargo[c]) for c in 1:n_cargo]
 
+	# One cargo per slot at most. Constraint (24)
+	@constraint(model, [s = 1:n_slots],
+		sum(cs[c, s] for c ∈ 1:n_cargo) <= 1)
+	# One slot per cargo at most. Constraint not in paper. Constraint (25)
+	@constraint(
+		model,
+		[c = 1:n_cargo], sum(cs[c, s] for s ∈ 1:n_slots) <= 1)
+
+
     # Slot weight calculation. Constraint (27)
-	#@constraint(model, [s = 1:n_slots],
-    #weight[s] == sum(cargo[c].weight * cs[c, s] for c ∈ 1:n_cargo))
+	@constraint(model, [s = 1:n_slots],
+    weight[s] == sum(cargo[c].weight * cs[c, s] for c ∈ 1:n_cargo))
 
     # Expression for cargo_slack
-    @expression(model,cargo_slack[c = 1:n_cargo],
-		sum(cs[c, s] for s ∈ 1:n_slots))
+    #@expression(model,cargo_slack[c = 1:n_cargo],
+#		sum(cs[c, s] for s ∈ 1:n_slots))
+	@constraint(model,[c = 1:n_cargo],
+		sum(cs[c, s] for s ∈ 1:n_slots) == cargo_slack[c]
+	)
+	# Rasmus: Function creates a list of slot ids which are not equal to the cargo type id input "t"
+	invalid_slots(t::Int) = [slot.id for slot in filter(x -> x.cargo_type_id != t, slots)]
+	# Rasmus: Sets all slots which are not compatible with the cargo type to 0
+	@constraint(model,
+		[t in cargo_types,
+			i in [cargo.id for cargo in filter(x -> x.cargo_type_id == t, cargo)]],
+		sum(cs[i, j] for j in invalid_slots(t)) == 0)
+	# Rasmus: Overlapping slots 
+	overlapping_indicies = [Tuple(ix) for ix in findall(slots.overlap_matrix)]
+	# Rasmus: Can only use one of two slots if they overlap. Constraint (26)
+	@constraint(model, [(x, y) in overlapping_indicies], sum(cs[:, x]) + sum(cs[:, y]) <= 1)
+
 
     # Rasmus: This calculates the weight of cargo in each frame. Constraint (28)
 	@expression(model, pos_weight_cargo[p = 1:n_positions],
@@ -50,7 +80,7 @@ function second_stage_model_v2(cs, problem::StowageProblem)
 	# Rasmus: Don't understand why is not using weight[s]
 	@expression(model, vcg_cargo, sum(cs[c, s] * cargo[c].weight * (slots[s].vcg + get_height(cargo[c]) / 2) for s ∈ 1:n_slots, c ∈ 1:n_cargo))
 
-    add_stability!(vessel, model, pos_weight_cargo, lcg_cargo, tcg_cargo, vcg_cargo)
+	add_stability!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo, tcg_cargo, vcg_cargo)
 
 	ballast_volume = model[:ballast_volume]
 

@@ -56,8 +56,6 @@ function create_model(problem::StowageProblem)
 	# Rasmus: cargo_slack is x_c in paper
 	@variable(model, cargo_slack[1:n_cargo], Bin) # 1 if cargo is assigned a slot
 
-
-
 	function check_refrigeration_compatibility(cargo::Cargo, slot::Slot)::Bool
 		# If cargo needs refrigeration, slot must be refrigerated
 		if cargo.refers

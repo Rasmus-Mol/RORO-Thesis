@@ -16,7 +16,6 @@ no_test2 = 10
 
 # Load problems and results
 no_folders = length(HPC_folders)
-foldername = "Determinitic_Stability_randomscenarios_uniformsampling"
 test1_problems_gen = Array{Any}(undef, no_folders)
 test1_problems_boot = Array{Any}(undef, no_folders)
 test1_solutions_gen = Array{Any}(undef, no_folders,no_test1)
@@ -36,9 +35,15 @@ sol_shifts_trucksfirst = Array{Any}(undef, no_folders,no_test2)
 sol_shifts_carsfirst = Array{Any}(undef, no_folders,no_test2)
 sol_shifts_secufirst = Array{Any}(undef, no_folders,no_test2)
 
-for i in 1:1#no_folders
+Det_sol = Array{Any}(undef, no_folders)
+Det_pro = Array{Any}(undef, no_folders)
+for i in 1:no_folders
     test_problem_name = Finlandia_test[i]
     HPC_folder_load = HPC_folders[i]
+    # load deterministic solution and problem
+    Det_sol[i] =  get_solution_deterministic("Finlandia_deterministic",
+    "Deterministic_Solution", HPC_folder_load)
+    Det_pro[i] = load_data(problemname1, test_problem_name, problemname3)
     # Test 1 - Uniform sampling
     foldername = "Determinitic_Stability_randomscenarios_uniformsampling"
     filename = "Stochastic_Problem"
@@ -102,4 +107,70 @@ end
 HPC_folder_load = HPC_folders[1]
 sol_empty_ship = get_solution_deterministic("Finlandia_deterministic","Empty_ship", HPC_folder_load)
 
-sol_empty_ship.gap
+#######################
+# test 1
+idx_gen = findall(x -> x==1, slack_sol_gen)
+idx_boot = findall(x -> x==1, slack_sol_boot)
+println("Test that were infeasible - gen: ",idx_gen)
+println("Test that were infeasible - boot: ",idx_boot)
+println("number of test that were unfeasible: ", Int(sum(slack_sol_gen)),"/", no_folders*no_test1)
+println("number of test that were unfeasible boot: ", Int(sum(slack_sol_boot)),"/", no_folders*no_test1)
+
+# infeasible because: Needs new results before doing
+
+# Change in ballast water
+ballast_water_gen = zeros(no_folders,no_test1)
+ballast_water_boot = zeros(no_folders,no_test1)
+avg_ballast_water_gen = zeros(no_folders)
+avg_ballast_water_boot = zeros(no_folders)
+for i in 1:no_folders
+    for j in 1:no_test1
+        if slack_sol_gen[i,j] == 0 # was feasible
+            ballast_water_gen[i,j] = test1_solutions_gen[i,j].ballast_weight
+        end
+        if slack_sol_boot[i,j] == 0 # was feasible
+            ballast_water_boot[i,j] = test1_solutions_boot[i,j].ballast_weight
+        end
+    end
+    println("####################")
+    println("Deterministic ballast water: ", Det_sol[i].ballast_weight)
+    println("Ballast water gen: ", ballast_water_gen[i,:])
+    println("Ballast water boot: ", ballast_water_boot[i,:])
+end
+
+temp = test1_solutions_gen[1,1]
+cargoc = test1_problems_gen[1].cargo.items[1]
+pro = load_data(problemname1, Finlandia_test[1], problemname3)
+sol = Det_sol[1]
+f, strs, mo = feasibility_check(sol, pro, cargoc)
+value.(mo[:ballast_volume])
+sum(value.(mo[:ballast_volume]))
+sum(value.(mo[:cs]))
+strs
+sol.ballast_weight
+
+f, strs, mo = feasibility_check(sol, pro, pro.cargo)
+sum(value.(mo[:ballast_volume]))
+
+model = second_stage_model_v2(sol.cs, pro)
+    set_time_limit_sec(model, 60 * 15) # 5 minutes - should maybe be changed.
+    set_silent(model)
+    optimize!(model)
+
+    model = second_stage_model(sol.cs, pro)
+    set_time_limit_sec(model, 60 * 15) # 5 minutes - should maybe be changed.
+    set_silent(model)
+    optimize!(model) 
+sum(value.(model[:ballast_volume]))
+
+
+termination_status(mo) 
+sum(sol.ballast_volume)
+
+
+second_stage_model(cs1, pro)
+second_stage_model_v2(cs1, pro)
+
+
+#######################
+# test 2
