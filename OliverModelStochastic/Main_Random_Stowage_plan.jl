@@ -62,7 +62,7 @@ for j in 1:length(HPC_folders)
         else # Problem was infeasible
             fitted_sol_slacked = get_solution_second_stage_deterministic(det_pro, mo, det_sol)
             write_solution(fitted_sol_slacked,foldername,"Solution_$(i)_slacked",HPC_folder_save)
-            write_slack(HPC_folder_save, foldername, "Fitted_Solution_slacked", mo)
+            write_slack(HPC_folder_save, foldername, "Fitted_Solution_slacked_$(i)", mo)
             #infeasible_test1_gen[j,i] = 1 # infeasible
         end
     end
@@ -86,7 +86,7 @@ for j in 1:length(HPC_folders)
         else
             fitted_sol_slacked = get_solution_second_stage_deterministic(det_pro, mo, det_sol)
             write_solution(fitted_sol_slacked,foldername,"Solution_$(i)_slacked",HPC_folder_save)
-            write_slack(HPC_folder_save, foldername, "Fitted_Solution_slacked", mo)
+            write_slack(HPC_folder_save, foldername, "Fitted_Solution_slacked_$(i)", mo)
             infeasible_test2_boot[j,i] = 1 # infeasible
         end
     end

@@ -11,18 +11,39 @@ Deterministic_problem_fin = load_data("finlandia",test_instance_fin,"hazardous")
 pro_hol = create_stochastic_problem(Deterministic_problem_hol, 10, length(Deterministic_problem_hol.cargo), []) 
 pro_fin = create_stochastic_problem(Deterministic_problem_fin, 10, length(Deterministic_problem_fin.cargo), [])
 pro_fin_1 = create_stochastic_problem(Deterministic_problem_fin, 10, length(Deterministic_problem_fin.cargo), [], Bootstrap_bookedweight_quantile)
-pro_fin_2 = create_stochastic_problem_scenarioreduction(Deterministic_problem_fin, 5,
-length(Deterministic_problem_fin.cargo), 10, [], Bootstrap_bookedweight_quantile, scenario_reduction_heuristic, 30)
-println(pro_fin_2.probability)
+pro_fin_2 = create_stochastic_problem_scenarioreduction(Deterministic_problem_fin, 20,
+length(Deterministic_problem_fin.cargo), 200, [], Bootstrap_bookedweight_quantile, scenario_reduction_heuristic, 5*60)
+
+pro_fin_3= create_stochastic_problem_scenarioreduction(Deterministic_problem_fin, 20,
+length(Deterministic_problem_fin.cargo), 200, [], Bootstrap_bookedweight_quantile, scenario_reduction_naive, 5*60)
+
+plot(cargoc.items.total_weight)
+plot(pro_fin_3.cargo.items.total_weight)
+plot!(pro_fin_2[1].cargo.items.total_weight)
+
+
+plot(pro_fin_3.probability, label = "Naive", title = "initial prob = $(1/sc),\n initial scenarios = $(sc)")
+plot!(pro_fin_2[1].probability, label = "Heuristic")
+
+
 
 ids = random_ids(Deterministic_problem_fin.cargo,length(Deterministic_problem_fin.cargo))
-sc = 100
-cargo_scenarios, probability = generate_simple_cargo_scenarios(Deterministic_problem_fin, sc, [1])
+sc = 200
+cargo_scenarios, probability = Bootstrap_bookedweight_quantile(Deterministic_problem_fin, sc, random_ids(Deterministic_problem_fin.cargo,length(Deterministic_problem_fin.cargo)))
+#generate_simple_cargo_scenarios(Deterministic_problem_fin, sc, random_ids(Deterministic_problem_fin.cargo,length(Deterministic_problem_fin.cargo)))
 weight_id_1 = [cargo_scenarios.items[i].items[1].weight for i in 1:sc]
-CargoC1, probability1 = scenario_reduction_heuristic(cargo_scenarios, probability, 10, 5*60)
+
+CargoC1, probability1 = scenario_reduction_heuristic(cargo_scenarios, probability, 20, 5*60)
 weight_id_1_H = [CargoC1.items[i].items[1].weight for i in 1:5]
-CargoC2, probability2 = scenario_reduction_naive(cargo_scenarios,probability, 10, 5*60)
+
+CargoC2, probability2 = scenario_reduction_naive(cargo_scenarios,probability, 20, 5*60)
 weight_id_1_naive = [CargoC2.items[i].items[1].weight for i in 1:5]
+
+println(probability2)
+println(probability1)
+plot(probability2, label = "Naive", title = "initial prob = $(1/sc),\n initial scenarios = $(sc)")
+plot!(probability1, label = "Heuristic")
+
 
 p1 = plot(Deterministic_problem_fin.cargo.items[1].weight*ones(sc), label = "Original weight")
 scatter!(weight_id_1_H, label = "Heuristic")
@@ -32,22 +53,37 @@ p2 = plot(Deterministic_problem_fin.cargo.items[1].weight*ones(sc), label = "Ori
 scatter!(weight_id_1_naive, label = "Naive")
 scatter!(weight_id_1, label = "Original scenarios")
 
-
-pro_fin_3 = create_stochastic_problem_scenarioreduction(Deterministic_problem_fin, 10,
-length(Deterministic_problem_fin.cargo), 50, [], Bootstrap_bookedweight_quantile, )
-times = []
-for i in 1:10
-    start = time_ns()
-    pro_fin_2 = create_stochastic_problem_scenarioreduction(Deterministic_problem_fin, 10,length(Deterministic_problem_fin.cargo), 100, [], Bootstrap_bookedweight_quantile)
-    elapsed = (time_ns() - start) / 1e9
-    push!(times, elapsed)
+cost1 = zeros(sc, sc)
+cost2 = zeros(sc, sc)
+for i in 1:(sc-1), j in (i+1):sc
+    cost1[i,j] = sum(abs(cargo_scenarios.items[i].items[c].weight - cargo_scenarios.items[j].items[c].weight) for c in 1:length(cargo_scenarios.items[1].items))
+    cost2[i,j] = sum(abs.(getfield.(cargo_scenarios.items[i],:weight) .- getfield.(cargo_scenarios.items[j],:weight)))
 end
-println(times)
-println(elapsed)
-pro_fin_2.probability
-temp = pro_fin_2.cargo
-length(temp.items[1])
+idx = findall(x -> x > 0.5, cost2)
+vals = cost[idx]
+min_val, relative_idx = findmin(vals)
+idx[relative_idx]
+cost2[97,115]
 
+assignment, cost = find_assignment(cargo_scenarios, 97, 155)
+n = length(cargo_scenarios.items[1])
+    cost_matrix = Matrix{Union{Float64, Missing}}(undef, n, n)
+    for i in 1:n
+        for j in 1:n
+            if (cargo_scenarios.items[97].items[i].cargo_type_id == cargo_scenarios.items[155].items[j].cargo_type_id)
+                cost_matrix[i,j] = abs(cargo_scenarios.items[97].items[i].weight - cargo_scenarios.items[155].items[j].weight)
+            else
+                cost_matrix[i,j] = missing
+            end
+        end
+    end
+cost_matrix[1,5]
+cost_matrix[5,1]
+abs(cargo_scenarios.items[97].items[1].weight - cargo_scenarios.items[155].items[5].weight)
+abs(cargo_scenarios.items[155].items[5].weight - cargo_scenarios.items[97].items[1].weight)
+cargo_scenarios.items[97].items[5].weight
+cargo_scenarios.items[155].items[1].weight
+abs(10.5-35)
 #######################
 # Hollandia
 model_hol = create_model(Deterministic_problem_hol)

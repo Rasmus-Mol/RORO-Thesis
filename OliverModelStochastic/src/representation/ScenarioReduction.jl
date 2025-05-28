@@ -5,6 +5,7 @@ function scenario_reduced(problem::StochasticStowageProblem, sc::Int64,
     pr = problem.probability
     cargoc, probability = reduction_method(cargoC, pr, sc, timelimit)
     # create new problem
+    #println("prob:", probability)
     new_problem = StochasticStowageProblem(
         vessel = problem.vessel,
         slots = problem.slots,
@@ -111,7 +112,7 @@ function Find_one_reduction_naive(CargoC::CargoCollectionScenarios, sc_old)
     @constraint(model, sum(x[i,j] for i ∈ 1:(sc_old-1), j ∈ (i+1):sc_old) == 1)
     # Cost of contraction of scenarios
     @expression(model, cost[i = 1:(sc_old-1),j = (i+1):sc_old],
-        sum(abs(CargoC.items[i].items[c].weight - CargoC.items[j].items[c].weight) for c ∈ 1:n_cargo)
+        sum(abs.(getfield.(cargo_scenarios.items[i],:weight) .- getfield.(cargo_scenarios.items[j],:weight)))
         )
     # Objective function
     @objective(model, Min,
@@ -188,12 +189,14 @@ function find_assignment(CargoC::CargoCollectionScenarios, sc1, sc2)
     # Build cost matrix
     n = length(CargoC.items[1])
     cost_matrix = Matrix{Union{Float64, Missing}}(undef, n, n)
-    for i in 1:n
-        for j in 1:n
+    for i in 1:(n-1)
+        for j in (i+1):n
             if (CargoC.items[sc1].items[i].cargo_type_id == CargoC.items[sc2].items[j].cargo_type_id)
                 cost_matrix[i,j] = abs(CargoC.items[sc1].items[i].weight - CargoC.items[sc2].items[j].weight)
+                cost_matrix[j,i] = cost_matrix[i,j] # symmetric matrix
             else
                 cost_matrix[i,j] = missing
+                cost_matrix[j,i] = missing
             end
         end
     end

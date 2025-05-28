@@ -23,6 +23,7 @@ using HypothesisTests
 using Distributions
 using StructTypes
 using Hungarian
+using PrettyTables
 
 include("src/representation/cargo.jl")
 include("src/representation/deck.jl")

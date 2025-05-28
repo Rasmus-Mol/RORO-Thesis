@@ -79,8 +79,7 @@ function create_stochastic_problem_scenarioreduction(problem::StowageProblem, s_
         probability = probability,
         name = problem.name)
     reduced_problem = scenario_reduced(temp_problem, s_reduced, reduction_method, timelimit)
-
-    return reduced_problem
+    return reduced_problem#, cargo_scenarios, probability
 end
 
 
