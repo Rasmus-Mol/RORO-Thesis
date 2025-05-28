@@ -138,39 +138,9 @@ for i in 1:no_folders
     println("Ballast water boot: ", ballast_water_boot[i,:])
 end
 
-temp = test1_solutions_gen[1,1]
-cargoc = test1_problems_gen[1].cargo.items[1]
-pro = load_data(problemname1, Finlandia_test[1], problemname3)
-sol = Det_sol[1]
-f, strs, mo = feasibility_check(sol, pro, cargoc)
-value.(mo[:ballast_volume])
-sum(value.(mo[:ballast_volume]))
-sum(value.(mo[:cs]))
-strs
-sol.ballast_weight
-
-f, strs, mo = feasibility_check(sol, pro, pro.cargo)
-sum(value.(mo[:ballast_volume]))
-
-model = second_stage_model_v2(sol.cs, pro)
-    set_time_limit_sec(model, 60 * 15) # 5 minutes - should maybe be changed.
-    set_silent(model)
-    optimize!(model)
-
-    model = second_stage_model(sol.cs, pro)
-    set_time_limit_sec(model, 60 * 15) # 5 minutes - should maybe be changed.
-    set_silent(model)
-    optimize!(model) 
-sum(value.(model[:ballast_volume]))
-
-
-termination_status(mo) 
-sum(sol.ballast_volume)
-
-
-second_stage_model(cs1, pro)
-second_stage_model_v2(cs1, pro)
 
 
 #######################
 # test 2
+
+
