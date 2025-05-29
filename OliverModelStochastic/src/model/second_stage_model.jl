@@ -93,7 +93,7 @@ function second_stage_model(cs1, problem::StowageProblem)
 end
 
 # Same model, just with slack variable to see why the model is infeasible
-function second_stage_model_slack(cs, problem::StowageProblem)
+function second_stage_model_slack(cs1, problem::StowageProblem)
     @unpack vessel, slots, cargo = problem
 	n_slots = length(slots)
 	cargo_types = cargo.cargo_types
@@ -108,8 +108,12 @@ function second_stage_model_slack(cs, problem::StowageProblem)
 	# number should match number of cores used at HPC
 	set_optimizer_attribute(model, "Threads", 4)
     @variable(model, weight[1:n_slots] >= 0)   # Weight at each slot
-    
-	
+    @variable(model, cs[1:n_cargo, 1:n_slots], Bin)  # Assignment variables
+	@variable(model, cargo_slack[1:n_cargo], Bin) # 1 if cargo is assigned a slot
+	# Ensure placement is the same
+	@constraint(model, [c = 1:n_cargo, s = 1:n_slots],
+		cs[c, s] == cs1[c, s])
+
     CSC = sum(vessel.ballast_tanks[t].max_vol for t in 1:n_ballast_tanks)
 	haz_cargo = [c.hazardous for c in cargo] .!= 18 # Rasmus: Boolean array, why 18?
 	cost = [CSC for c in cargo]
@@ -117,16 +121,31 @@ function second_stage_model_slack(cs, problem::StowageProblem)
 	area = [get_length(cargo[c]) * get_width(cargo[c]) for c in 1:n_cargo]
 	
 	# Penalty for violating constraints
-	#M = 100000 # Should be determined more precisely at some point
-	M = sum(cost) +1 
+	M = 100000 # Should be determined more precisely at some point
+	#M = sum(cost) +1 
 
     # Slot weight calculation. Constraint (27)
 	@constraint(model, [s = 1:n_slots],
     weight[s] == sum(cargo[c].weight * cs[c, s] for c ∈ 1:n_cargo))
 
     # Expression for cargo_slack
-    @expression(model,cargo_slack[c = 1:n_cargo],
-		sum(cs[c, s] for s ∈ 1:n_slots))
+    #@expression(model,cargo_slack[c = 1:n_cargo],
+	#	sum(cs[c, s] for s ∈ 1:n_slots))
+	@constraint(model,[c = 1:n_cargo],
+		sum(cs[c, s] for s ∈ 1:n_slots) == cargo_slack[c]
+	)
+
+	# Rasmus: Function creates a list of slot ids which are not equal to the cargo type id input "t"
+	invalid_slots(t::Int) = [slot.id for slot in filter(x -> x.cargo_type_id != t, slots)]
+	# Rasmus: Sets all slots which are not compatible with the cargo type to 0
+	@constraint(model,
+		[t in cargo_types,
+			i in [cargo.id for cargo in filter(x -> x.cargo_type_id == t, cargo)]],
+		sum(cs[i, j] for j in invalid_slots(t)) == 0)
+	# Rasmus: Overlapping slots 
+	overlapping_indicies = [Tuple(ix) for ix in findall(slots.overlap_matrix)]
+	# Rasmus: Can only use one of two slots if they overlap. Constraint (26)
+	@constraint(model, [(x, y) in overlapping_indicies], sum(cs[:, x]) + sum(cs[:, y]) <= 1)
 
     # Rasmus: This calculates the weight of cargo in each frame. Constraint (28)
 	@expression(model, pos_weight_cargo[p = 1:n_positions],
