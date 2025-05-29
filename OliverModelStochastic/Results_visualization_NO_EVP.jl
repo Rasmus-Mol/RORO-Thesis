@@ -1,121 +1,130 @@
-# Script to plot results
-# Script to plot data from problem instances and historic data 
-push!(LOAD_PATH, pwd())
-using Base: @kwdef
-import Base: length, getindex, lastindex, keys, eachindex, iterate, eltype, firstindex
-
-using Random
-using StatsBase
-using StructArrays
-using JSON3, JSON
-using DataFrames
-using CSV, XLSX
-using Dates
-using Interpolations
-using UnPack
-using JuMP, HiGHS, GLPK, Gurobi
-using Plots
-using HTTP
-using URIs
-# News
-using Statistics
-using HypothesisTests
-using Distributions
-using StructTypes
-
-include("src/representation/cargo.jl")
-include("src/representation/deck.jl")
-include("src/representation/slot.jl")
-include("src/representation/vessel.jl")
-include("src/representation/instance.jl")
-include("src/representation/problem.jl")
-# New: Stochastic 
-include("src/representation/CargoScenarios.jl")
-# Plot weight distribution
-include("src/plots/weight_plots.jl")
-# Solution 
-include("src/solution.jl")
-include("src/CompareSolutions.jl")
-include("src/plots/solution.jl")
-# Load data Script
-include("src/utils/SaveData.jl")
-
-# model
-include("src/representation/CargoScenarios.jl")
-include("src/plots/weight_plots.jl")
-include("src/model/base_model.jl")
-include("src/model/stability.jl")
-include("src/model/base_stochastic_model.jl")
-include("src/model/stability_stochastic.jl")
-include("src/model/second_stage_model.jl")
-include("src/utils/helpers.jl")
-
-include("src/utils/test_instances.jl")
-
+include("packages_and_files.jl")
 # load data from solutions
+HPC_folders = [
+    "Finlandia_mixed_light_60_15_05_13",
+    "Finlandia_mixed_light_100_15_05_15",
+    "Finlandia_mixed_heavy_60_15_05_17",
+    "Finlandia_mixed_heavy_100_15_05_17",
+    "Finlandia_no_cars_light_60_14_05_20",
+    "Finlandia_no_cars_light_100_15_05_10",
+    "Finlandia_no_cars_heavy_60_15_05_10",
+    "Finlandia_no_cars_heavy_100_15_05_09",
+]
 # HPC_folder
-test_instance = Finlandia_test[8]
-HPC_folder = "Finlandia_"*test_instance*"_15_05_09"
+test_instance = Finlandia_test[1]
+HPC_folder = HPC_folders[1]#"Finlandia_"*test_instance*"_15_05_09"
+#=
 plot_folder = "Plots/Results/Finlandia_"*test_instance*"/"
 # Create folder for plots
 if !isdir(plot_folder)
     mkpath(plot_folder)
-end
+end=#
 # Load data from HPC
 repetitions, scenarios, n_unknown, time_limit, note = get_HPC_data(HPC_folder)
 println("Extra info about test: ", note)
 #repetitions = 1 # didn't finish running
 sc = length(scenarios)
 n = length(n_unknown)
-# Change if not Finlandia problem
-problemname1, problemname2, problemname3 = "finlandia", test_instance, "hazardous"
-Deterministic_problem = load_data(problemname1,problemname2,problemname3)
-Deterministic_Solution = get_solution_deterministic("Finlandia_deterministic",
-"Deterministic_Solution",HPC_folder)
-# soluton arrays
-#EVP_gen = Array{Any}(undef, repetitions, sc,n)
-#EVP_gen_fitted = Array{Any}(undef, repetitions, sc,n)
-Stochastic_gen = Array{Any}(undef, repetitions, sc,n)
-Stochastic_gen_fitted = Array{Any}(undef, repetitions, sc,n)
-#EVP_boot = Array{Any}(undef, repetitions, sc,n)
-#EVP_boot_fitted = Array{Any}(undef, repetitions, sc,n)
-Stochastic_boot = Array{Any}(undef, repetitions, sc,n)
-Stochastic_boot_fitted = Array{Any}(undef, repetitions, sc,n)
 
 
-for i in 1:repetitions
-    for j in 1:sc
-        for k in 1:n
-            # Solutions
-            # EVP
-            #foldername = "EVP_random_sampling_rep$(i)_sc$(scenarios[j])_unknown$(n_unknown[k])_time$(time_limit)"
-            #filename = "EVP_Solution"
-            #EVP_gen[i,j,k] = get_solution_deterministic(foldername,
-            #filename,HPC_folder)
-            #EVP_gen_fitted[i,j,k] = get_solution_deterministic(foldername,
-            #"Fitted_Solution",HPC_folder)
-            #foldername = "EVP_Bootstrap1_rep$(i)_sc$(scenarios[j])_unknown$(n_unknown[k])_time$(time_limit)"
-            #filename = "EVP_Solution"
-            #EVP_boot[i,j,k] = get_solution_deterministic(foldername,
-            #filename,HPC_folder)
-            #EVP_boot_fitted[i,j,k] = get_solution_deterministic(foldername,
-            #"Fitted_Solution",HPC_folder)
-            # Stochastic
-            foldername = "Stochastic_random_sampling_rep$(i)_sc$(scenarios[j])_unknown$(n_unknown[k])_time$(time_limit)"
-            filename = "Stochastic_Solution"
-            Stochastic_gen[i,j,k] = get_solution_stochastic(foldername,
-            filename,HPC_folder)
-            Stochastic_gen_fitted[i,j,k] = get_solution_deterministic(foldername,
-            "Fitted_Solution",HPC_folder)
-            foldername = "Stochastic_Bootstrap1_rep$(i)_sc$(scenarios[j])_unknown$(n_unknown[k])_time$(time_limit)"
-            filename = "Stochastic_Solution"
-            Stochastic_boot[i,j,k] = get_solution_stochastic(foldername,
-            filename,HPC_folder)
-            Stochastic_boot_fitted[i,j,k] = get_solution_deterministic(foldername,
-            "Fitted_Solution",HPC_folder)
+
+    # Change if not Finlandia problem
+    problemname1, problemname2, problemname3 = "finlandia", test_instance, "hazardous"
+    Deterministic_problem = load_data(problemname1, problemname2, problemname3)
+    Deterministic_Solution = Array{Any}(undef,length(HPC_folders))
+    get_solution_deterministic("Finlandia_deterministic",
+        "Deterministic_Solution", HPC_folder)
+    # soluton arrays
+    #EVP_gen = Array{Any}(undef, repetitions, sc,n)
+    #EVP_gen_fitted = Array{Any}(undef, repetitions, sc,n)
+    Stochastic_gen = Array{Any}(undef, repetitions, sc, n,length(HPC_folders))
+    Stochastic_gen_fitted = Array{Any}(undef, repetitions, sc, n, length(HPC_folders))
+    #EVP_boot = Array{Any}(undef, repetitions, sc,n)
+    #EVP_boot_fitted = Array{Any}(undef, repetitions, sc,n)
+    Stochastic_boot = Array{Any}(undef, repetitions, sc, n,length(HPC_folders))
+    Stochastic_boot_fitted = Array{Any}(undef, repetitions, sc, n,length(HPC_folders))
+
+for l in 1:length(HPC_folders)
+        test_instance = Finlandia_test[l]
+        HPC_folder = HPC_folders[l]
+        repetitions, scenarios, n_unknown, time_limit, note = get_HPC_data(HPC_folder)
+        println("Extra info about test: ", note)
+        #repetitions = 1 # didn't finish running
+        #sc = length(scenarios)
+        n = length(n_unknown)
+        Deterministic_Solution[l] = get_solution_deterministic("Finlandia_deterministic",
+            "Deterministic_Solution", HPC_folder)
+    for i in 1:repetitions
+        for j in 1:sc
+            for k in 1:n
+                # Solutions
+                # EVP
+                #foldername = "EVP_random_sampling_rep$(i)_sc$(scenarios[j])_unknown$(n_unknown[k])_time$(time_limit)"
+                #filename = "EVP_Solution"
+                #EVP_gen[i,j,k] = get_solution_deterministic(foldername,
+                #filename,HPC_folder)
+                #EVP_gen_fitted[i,j,k] = get_solution_deterministic(foldername,
+                #"Fitted_Solution",HPC_folder)
+                #foldername = "EVP_Bootstrap1_rep$(i)_sc$(scenarios[j])_unknown$(n_unknown[k])_time$(time_limit)"
+                #filename = "EVP_Solution"
+                #EVP_boot[i,j,k] = get_solution_deterministic(foldername,
+                #filename,HPC_folder)
+                #EVP_boot_fitted[i,j,k] = get_solution_deterministic(foldername,
+                #"Fitted_Solution",HPC_folder)
+                # Stochastic
+                foldername = "Stochastic_random_sampling_rep$(i)_sc$(scenarios[j])_unknown$(n_unknown[k])_time$(time_limit)"
+                filename = "Stochastic_Solution"
+                Stochastic_gen[i, j, k,l] = get_solution_stochastic(foldername,
+                    filename, HPC_folder)
+                Stochastic_gen_fitted[i, j, k,l] = get_solution_deterministic(foldername,
+                    "Fitted_Solution", HPC_folder)
+                foldername = "Stochastic_Bootstrap1_rep$(i)_sc$(scenarios[j])_unknown$(n_unknown[k])_time$(time_limit)"
+                filename = "Stochastic_Solution"
+                Stochastic_boot[i, j, k,l] = get_solution_stochastic(foldername,
+                    filename, HPC_folder)
+                Stochastic_boot_fitted[i, j, k,l] = get_solution_deterministic(foldername,
+                    "Fitted_Solution", HPC_folder)
+            end
         end
     end
 end
+gaps_boot = zeros(repetitions, sc,length(HPC_folders))
+gaps_gen = zeros(repetitions, sc,length(HPC_folders))
+cargo_loaded_boot = zeros(repetitions, sc,length(HPC_folders))
+cargo_loaded_gen = zeros(repetitions, sc,length(HPC_folders))
+for l in 1:length(HPC_folders)
+    for i in 1:repetitions
+        for j in 1:sc
+            gaps_boot[i, j,l] = round(Stochastic_boot[i, j, 1,l].gap*100,digits = 3)
+            gaps_gen[i, j,l] = round(Stochastic_gen[i, j, 1,l].gap*100,digits = 3)
+            cargo_loaded_boot[i, j,l] = Int(Stochastic_boot[i, j, 1,l].n_cargo_loaded)
+            cargo_loaded_gen[i, j,l] = Int(Stochastic_gen[i, j, 1,l].n_cargo_loaded)
+        end
+    end
+end
+for l in 1:length(HPC_folders)
+    println("#########################")
+    println("Problem:", Finlandia_test[l])
+    println("Problem idx: $(l)")
+    #println("Gaps - boot:")
+    pretty_table(gaps_boot[:,:,l], 
+    header = ["sc: $(scenarios[i])" for i in 1:sc], 
+    row_labels = ["rep: $(i)" for i in 1:repetitions],title = "Boot - Gaps")
+    #println("Gaps - gen:")
+    pretty_table(gaps_gen[:,:,l], 
+    header = ["sc: $(scenarios[i])" for i in 1:sc], 
+    row_labels = ["rep: $(i)" for i in 1:repetitions],title = "Gen - Gaps")
+    #println("Cargo loaded - boot:")
+    pretty_table(cargo_loaded_boot[:,:,l], 
+    header = ["sc: $(scenarios[i])" for i in 1:sc], 
+    row_labels = ["rep: $(i)" for i in 1:repetitions], title="Boot - Cargo loaded. Det_sol: $(Deterministic_Solution[l].n_cargo_loaded)/$(Deterministic_Solution[l].n_cargo_total)")
+    #println("Cargo loaded - gen:")
+    pretty_table(cargo_loaded_gen[:,:,l], 
+    header = ["sc: $(scenarios[i])" for i in 1:sc], 
+    row_labels = ["rep: $(i)" for i in 1:repetitions], title="Gen - Cargo loaded. Det_sol: $(Deterministic_Solution[l].n_cargo_loaded)/$(Deterministic_Solution[l].n_cargo_total)")
+end
+
+
 #=
 include("src/utils/SaveData.jl")
 test = get_stochastic_problem("Stochastic_Bootstrap1_rep$(1)_sc$(scenarios[1])_unknown$(n_unknown[1])_time$(time_limit)",
@@ -130,7 +139,6 @@ optimize!(test3)
 #test_Det = get_solution_deterministic("Finlandia_deterministic","Deterministic_Solution",HPC_folder)
 
 println("##########################")
-
 
 println("Cargo in problem: ", length(Deterministic_problem.cargo))
 println("Deterministic solution packs: ",Deterministic_Solution.n_cargo_loaded)
@@ -735,3 +743,5 @@ end
 for i in p
     display(i)
 end
+
+

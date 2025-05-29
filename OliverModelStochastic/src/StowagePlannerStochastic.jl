@@ -23,6 +23,12 @@ using HypothesisTests
 using StructTypes
 using Hungarian
 
+const GRB_ENV = Ref{Gurobi.Env}()
+function __init__()
+    const GRB_ENV[] = Gurobi.Env()
+    return
+end
+
 include("representation/cargo.jl")
 include("representation/deck.jl")
 include("representation/slot.jl")
