@@ -68,6 +68,7 @@ export load_data, create_model, solve_model, extract_solution, plot_solution
 export create_model_stochastic, extract_stochastic_solution, plot_stochastic_solution
 export create_stochastic_problem, create_stochastic_model, Monto_Carlo_sampling
 export compare_solutions_print, plot_ballast_weight_diff, plot_ballast_cargo_weight_diff
+export second_stage_model_slack
 # Struct for stowage problem and solution
 export StowageProblem, Solution
 export get_solution_second_stage_stochastic, get_solution_second_stage_deterministic, second_stage_model
