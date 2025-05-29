@@ -73,7 +73,8 @@ for i in 1:repetitions
     write_solution(fitted_sol,foldername,"Fitted_Solution",HPC_folder)
     # Check if second-stage problem was feasible
     #println(fitted_sol.status)
-    if fitted_sol.status == "INFEASIBLE"
+    #if fitted_sol.status == "INFEASIBLE"
+    if fitted_sol.status ∈ [MOI.INFEASIBLE, MOI.INFEASIBLE_OR_UNBOUNDED]
         second_stage_m_slacked = second_stage_model_slack(cs_sol, problem_det)
         set_silent(second_stage_m_slacked) # removes terminal output
         set_time_limit_sec(second_stage_m_slacked, time_limit) 
@@ -138,7 +139,8 @@ for i in 1:repetitions
     # Save fitted solution
     write_solution(fitted_sol,foldername,"Fitted_Solution",HPC_folder)
     # Check if second-stage problem was feasible
-    if fitted_sol.status == "INFEASIBLE"
+    #if fitted_sol.status == "INFEASIBLE"
+    if fitted_sol.status ∈ [MOI.INFEASIBLE, MOI.INFEASIBLE_OR_UNBOUNDED]
         second_stage_m_slacked = second_stage_model_slack(cs_sol, problem_det)
         set_silent(second_stage_m_slacked) # removes terminal output
         set_time_limit_sec(second_stage_m_slacked, time_limit) 

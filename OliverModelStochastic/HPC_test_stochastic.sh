@@ -4,7 +4,7 @@
 #BSUB -e HPC_Output/error_%J.err
 #BSUB -q hpc
 #BSUB -n 4
-#BSUB -R "rusage[mem=3GB]"
+#BSUB -R "rusage[mem=4GB]"
 #BSUB -R "span[hosts=1]"
 #BSUB -W 36:00
 #BSUB -u s194364@student.dtu.dk
@@ -18,4 +18,4 @@ module load gurobi/12.0.1
 
 julia -e 'using Pkg; Pkg.activate("."); Pkg.instantiate()'
 
-julia Main_Stochastic_finlandia_no_cars.jl $LSB_JOBINDEX
+julia Main_Stochastic_finlandia_no_cars.jl $LSB_JOBINDEX 
