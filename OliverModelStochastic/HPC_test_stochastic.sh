@@ -1,5 +1,5 @@
 #!/bin/sh
-#BSUB -J "Stochastic_Model_Tests[1-5]"
+#BSUB -J "Random_Stowage_plan_part"
 #BSUB -o HPC_Output/output_%J.out
 #BSUB -e HPC_Output/error_%J.err
 #BSUB -q hpc
@@ -18,4 +18,4 @@ module load gurobi/12.0.1
 
 julia -e 'using Pkg; Pkg.activate("."); Pkg.instantiate()'
 
-julia Main_Stochastic_finlandia_no_cars.jl $LSB_JOBINDEX 
+julia Main_Random_Stowage_plan.jl $LSB_JOBINDEX 

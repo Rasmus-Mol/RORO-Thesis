@@ -1,0 +1,15 @@
+[
+    {
+        "id": 8,
+        "cargo_type_id": 1,
+        "deck": 2,
+        "lcg": 57.99,
+        "tcg": -1.5,
+        "vcg": 9.5,
+        "weight": 20.73,
+        "length": 13.6,
+        "width": 2.5,
+        "height": 4.0,
+        "haz_class": 18
+    }
+]

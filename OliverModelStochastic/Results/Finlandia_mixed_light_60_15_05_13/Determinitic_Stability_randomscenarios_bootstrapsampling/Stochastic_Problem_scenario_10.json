@@ -2,7 +2,7 @@
     {
         "id": 1,
         "cargo_type_id": 1,
-        "weight": 33.5,
+        "weight": 7.58,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -14,7 +14,7 @@
     {
         "id": 2,
         "cargo_type_id": 1,
-        "weight": 37.0,
+        "weight": 10.64,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -26,7 +26,7 @@
     {
         "id": 3,
         "cargo_type_id": 1,
-        "weight": 6.0,
+        "weight": 7.22,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -38,7 +38,7 @@
     {
         "id": 4,
         "cargo_type_id": 1,
-        "weight": 15.5,
+        "weight": 8.16,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -50,7 +50,7 @@
     {
         "id": 5,
         "cargo_type_id": 1,
-        "weight": 15.5,
+        "weight": 11.9,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -62,7 +62,7 @@
     {
         "id": 6,
         "cargo_type_id": 1,
-        "weight": 21.5,
+        "weight": 9.379999999999999,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -74,7 +74,7 @@
     {
         "id": 7,
         "cargo_type_id": 1,
-        "weight": 7.5,
+        "weight": 14.37,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -86,7 +86,7 @@
     {
         "id": 8,
         "cargo_type_id": 1,
-        "weight": 6.0,
+        "weight": 10.63,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -98,7 +98,7 @@
     {
         "id": 9,
         "cargo_type_id": 1,
-        "weight": 23.0,
+        "weight": 11.05,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -110,7 +110,7 @@
     {
         "id": 10,
         "cargo_type_id": 1,
-        "weight": 11.0,
+        "weight": 6.09,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -122,7 +122,7 @@
     {
         "id": 11,
         "cargo_type_id": 1,
-        "weight": 25.5,
+        "weight": 11.2,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -134,7 +134,7 @@
     {
         "id": 12,
         "cargo_type_id": 1,
-        "weight": 17.5,
+        "weight": 16.03,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -146,7 +146,7 @@
     {
         "id": 13,
         "cargo_type_id": 1,
-        "weight": 8.5,
+        "weight": 11.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -158,7 +158,7 @@
     {
         "id": 14,
         "cargo_type_id": 1,
-        "weight": 32.5,
+        "weight": 9.21,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -170,7 +170,7 @@
     {
         "id": 15,
         "cargo_type_id": 1,
-        "weight": 16.5,
+        "weight": 11.63,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -182,7 +182,7 @@
     {
         "id": 16,
         "cargo_type_id": 1,
-        "weight": 32.5,
+        "weight": 16.12,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -194,7 +194,7 @@
     {
         "id": 17,
         "cargo_type_id": 1,
-        "weight": 35.5,
+        "weight": 13.52,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -206,7 +206,7 @@
     {
         "id": 18,
         "cargo_type_id": 1,
-        "weight": 25.5,
+        "weight": 16.33,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -218,7 +218,7 @@
     {
         "id": 19,
         "cargo_type_id": 1,
-        "weight": 12.0,
+        "weight": 11.88,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -230,7 +230,7 @@
     {
         "id": 20,
         "cargo_type_id": 1,
-        "weight": 22.5,
+        "weight": 8.010000000000002,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -242,7 +242,7 @@
     {
         "id": 21,
         "cargo_type_id": 1,
-        "weight": 12.5,
+        "weight": 12.3,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -254,7 +254,7 @@
     {
         "id": 22,
         "cargo_type_id": 1,
-        "weight": 35.5,
+        "weight": 13.27,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -266,7 +266,7 @@
     {
         "id": 23,
         "cargo_type_id": 1,
-        "weight": 8.5,
+        "weight": 10.05,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -278,7 +278,7 @@
     {
         "id": 24,
         "cargo_type_id": 1,
-        "weight": 23.5,
+        "weight": 9.43,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -290,7 +290,7 @@
     {
         "id": 25,
         "cargo_type_id": 1,
-        "weight": 7.5,
+        "weight": 7.96,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -302,7 +302,7 @@
     {
         "id": 26,
         "cargo_type_id": 1,
-        "weight": 32.5,
+        "weight": 10.2,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -314,7 +314,7 @@
     {
         "id": 27,
         "cargo_type_id": 1,
-        "weight": 8.5,
+        "weight": 16.82,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -326,7 +326,7 @@
     {
         "id": 28,
         "cargo_type_id": 1,
-        "weight": 6.0,
+        "weight": 6.199999999999999,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -338,7 +338,7 @@
     {
         "id": 29,
         "cargo_type_id": 1,
-        "weight": 38.0,
+        "weight": 9.35,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -350,7 +350,7 @@
     {
         "id": 30,
         "cargo_type_id": 1,
-        "weight": 22.5,
+        "weight": 28.78,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -362,7 +362,7 @@
     {
         "id": 31,
         "cargo_type_id": 1,
-        "weight": 5.5,
+        "weight": 9.78,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -374,7 +374,7 @@
     {
         "id": 32,
         "cargo_type_id": 1,
-        "weight": 34.5,
+        "weight": 14.61,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -386,7 +386,7 @@
     {
         "id": 33,
         "cargo_type_id": 1,
-        "weight": 5.5,
+        "weight": 26.15,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -398,7 +398,7 @@
     {
         "id": 34,
         "cargo_type_id": 1,
-        "weight": 13.0,
+        "weight": 6.630000000000001,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -410,7 +410,7 @@
     {
         "id": 35,
         "cargo_type_id": 2,
-        "weight": 2.5,
+        "weight": 1.7,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -422,7 +422,7 @@
     {
         "id": 36,
         "cargo_type_id": 2,
-        "weight": 1.7,
+        "weight": 2.4,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -434,7 +434,7 @@
     {
         "id": 37,
         "cargo_type_id": 2,
-        "weight": 2.7,
+        "weight": 2.3,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -446,7 +446,7 @@
     {
         "id": 38,
         "cargo_type_id": 2,
-        "weight": 1.9,
+        "weight": 1.5,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -458,7 +458,7 @@
     {
         "id": 39,
         "cargo_type_id": 2,
-        "weight": 1.9,
+        "weight": 1.5,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -470,7 +470,7 @@
     {
         "id": 40,
         "cargo_type_id": 2,
-        "weight": 2.0,
+        "weight": 2.3,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -482,7 +482,7 @@
     {
         "id": 41,
         "cargo_type_id": 2,
-        "weight": 1.6,
+        "weight": 2.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -494,7 +494,7 @@
     {
         "id": 42,
         "cargo_type_id": 2,
-        "weight": 2.2,
+        "weight": 2.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -506,7 +506,7 @@
     {
         "id": 43,
         "cargo_type_id": 2,
-        "weight": 2.3,
+        "weight": 2.7,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -518,7 +518,7 @@
     {
         "id": 44,
         "cargo_type_id": 2,
-        "weight": 1.6,
+        "weight": 2.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -530,7 +530,7 @@
     {
         "id": 45,
         "cargo_type_id": 2,
-        "weight": 2.6,
+        "weight": 2.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -542,7 +542,7 @@
     {
         "id": 46,
         "cargo_type_id": 2,
-        "weight": 3.0,
+        "weight": 2.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -554,7 +554,7 @@
     {
         "id": 47,
         "cargo_type_id": 2,
-        "weight": 3.0,
+        "weight": 2.4,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -566,7 +566,7 @@
     {
         "id": 48,
         "cargo_type_id": 2,
-        "weight": 1.5,
+        "weight": 2.2,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -578,7 +578,7 @@
     {
         "id": 49,
         "cargo_type_id": 2,
-        "weight": 3.0,
+        "weight": 1.8,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -590,7 +590,7 @@
     {
         "id": 50,
         "cargo_type_id": 2,
-        "weight": 2.4,
+        "weight": 3.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -602,7 +602,7 @@
     {
         "id": 51,
         "cargo_type_id": 2,
-        "weight": 2.5,
+        "weight": 3.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -614,7 +614,7 @@
     {
         "id": 52,
         "cargo_type_id": 2,
-        "weight": 1.8,
+        "weight": 2.2,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -626,7 +626,7 @@
     {
         "id": 53,
         "cargo_type_id": 2,
-        "weight": 2.3,
+        "weight": 2.4,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -638,7 +638,7 @@
     {
         "id": 54,
         "cargo_type_id": 2,
-        "weight": 1.8,
+        "weight": 2.4,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -650,7 +650,7 @@
     {
         "id": 55,
         "cargo_type_id": 2,
-        "weight": 1.9,
+        "weight": 2.1,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -662,7 +662,7 @@
     {
         "id": 56,
         "cargo_type_id": 2,
-        "weight": 3.0,
+        "weight": 2.4,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -674,7 +674,7 @@
     {
         "id": 57,
         "cargo_type_id": 2,
-        "weight": 1.7,
+        "weight": 3.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -698,7 +698,7 @@
     {
         "id": 59,
         "cargo_type_id": 2,
-        "weight": 2.1,
+        "weight": 1.8,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -710,7 +710,7 @@
     {
         "id": 60,
         "cargo_type_id": 2,
-        "weight": 2.5,
+        "weight": 2.8,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -722,7 +722,7 @@
     {
         "id": 61,
         "cargo_type_id": 2,
-        "weight": 2.5,
+        "weight": 1.5,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -734,7 +734,7 @@
     {
         "id": 62,
         "cargo_type_id": 2,
-        "weight": 2.7,
+        "weight": 1.9,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -746,7 +746,7 @@
     {
         "id": 63,
         "cargo_type_id": 2,
-        "weight": 2.0,
+        "weight": 2.7,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -758,7 +758,7 @@
     {
         "id": 64,
         "cargo_type_id": 2,
-        "weight": 1.9,
+        "weight": 2.1,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -782,7 +782,7 @@
     {
         "id": 66,
         "cargo_type_id": 2,
-        "weight": 1.8,
+        "weight": 2.7,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -794,7 +794,7 @@
     {
         "id": 67,
         "cargo_type_id": 2,
-        "weight": 2.9,
+        "weight": 2.4,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -806,7 +806,7 @@
     {
         "id": 68,
         "cargo_type_id": 2,
-        "weight": 2.0,
+        "weight": 1.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -818,7 +818,7 @@
     {
         "id": 69,
         "cargo_type_id": 2,
-        "weight": 2.8,
+        "weight": 2.2,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -830,7 +830,7 @@
     {
         "id": 70,
         "cargo_type_id": 2,
-        "weight": 1.9,
+        "weight": 3.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -842,7 +842,7 @@
     {
         "id": 71,
         "cargo_type_id": 2,
-        "weight": 2.8,
+        "weight": 2.5,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -854,7 +854,7 @@
     {
         "id": 72,
         "cargo_type_id": 2,
-        "weight": 3.0,
+        "weight": 1.9,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -866,7 +866,7 @@
     {
         "id": 73,
         "cargo_type_id": 2,
-        "weight": 1.5,
+        "weight": 2.7,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -890,7 +890,7 @@
     {
         "id": 75,
         "cargo_type_id": 2,
-        "weight": 1.5,
+        "weight": 2.3,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -902,7 +902,7 @@
     {
         "id": 76,
         "cargo_type_id": 2,
-        "weight": 2.1,
+        "weight": 2.5,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -914,7 +914,7 @@
     {
         "id": 77,
         "cargo_type_id": 2,
-        "weight": 3.0,
+        "weight": 2.8,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -926,7 +926,7 @@
     {
         "id": 78,
         "cargo_type_id": 2,
-        "weight": 2.4,
+        "weight": 2.5,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -950,7 +950,7 @@
     {
         "id": 80,
         "cargo_type_id": 2,
-        "weight": 2.2,
+        "weight": 2.9,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -962,7 +962,7 @@
     {
         "id": 81,
         "cargo_type_id": 2,
-        "weight": 2.0,
+        "weight": 2.3,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -974,7 +974,7 @@
     {
         "id": 82,
         "cargo_type_id": 2,
-        "weight": 2.5,
+        "weight": 2.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -986,7 +986,7 @@
     {
         "id": 83,
         "cargo_type_id": 2,
-        "weight": 3.0,
+        "weight": 2.9,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -998,7 +998,7 @@
     {
         "id": 84,
         "cargo_type_id": 2,
-        "weight": 3.0,
+        "weight": 1.7,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1010,7 +1010,7 @@
     {
         "id": 85,
         "cargo_type_id": 2,
-        "weight": 2.4,
+        "weight": 2.9,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1022,7 +1022,7 @@
     {
         "id": 86,
         "cargo_type_id": 2,
-        "weight": 1.6,
+        "weight": 2.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1034,7 +1034,7 @@
     {
         "id": 87,
         "cargo_type_id": 2,
-        "weight": 1.5,
+        "weight": 2.4,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1046,7 +1046,7 @@
     {
         "id": 88,
         "cargo_type_id": 2,
-        "weight": 2.2,
+        "weight": 1.9,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1058,7 +1058,7 @@
     {
         "id": 89,
         "cargo_type_id": 2,
-        "weight": 2.2,
+        "weight": 1.8,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1070,7 +1070,7 @@
     {
         "id": 90,
         "cargo_type_id": 2,
-        "weight": 2.1,
+        "weight": 2.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1094,7 +1094,7 @@
     {
         "id": 92,
         "cargo_type_id": 2,
-        "weight": 2.1,
+        "weight": 2.7,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1106,7 +1106,7 @@
     {
         "id": 93,
         "cargo_type_id": 2,
-        "weight": 2.2,
+        "weight": 1.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1118,7 +1118,7 @@
     {
         "id": 94,
         "cargo_type_id": 2,
-        "weight": 2.6,
+        "weight": 2.3,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1130,7 +1130,7 @@
     {
         "id": 95,
         "cargo_type_id": 2,
-        "weight": 2.8,
+        "weight": 2.7,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1142,7 +1142,7 @@
     {
         "id": 96,
         "cargo_type_id": 2,
-        "weight": 2.5,
+        "weight": 2.2,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1154,7 +1154,7 @@
     {
         "id": 97,
         "cargo_type_id": 2,
-        "weight": 2.0,
+        "weight": 2.9,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1178,7 +1178,7 @@
     {
         "id": 99,
         "cargo_type_id": 2,
-        "weight": 1.6,
+        "weight": 2.8,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1190,7 +1190,7 @@
     {
         "id": 100,
         "cargo_type_id": 2,
-        "weight": 2.9,
+        "weight": 1.8,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1202,7 +1202,7 @@
     {
         "id": 101,
         "cargo_type_id": 2,
-        "weight": 2.3,
+        "weight": 2.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1214,7 +1214,7 @@
     {
         "id": 102,
         "cargo_type_id": 2,
-        "weight": 2.1,
+        "weight": 2.4,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1226,7 +1226,7 @@
     {
         "id": 103,
         "cargo_type_id": 2,
-        "weight": 2.4,
+        "weight": 2.1,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1238,7 +1238,7 @@
     {
         "id": 104,
         "cargo_type_id": 2,
-        "weight": 3.0,
+        "weight": 2.1,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1250,7 +1250,7 @@
     {
         "id": 105,
         "cargo_type_id": 2,
-        "weight": 2.3,
+        "weight": 3.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1262,7 +1262,7 @@
     {
         "id": 106,
         "cargo_type_id": 2,
-        "weight": 2.6,
+        "weight": 2.9,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1274,7 +1274,7 @@
     {
         "id": 107,
         "cargo_type_id": 2,
-        "weight": 2.5,
+        "weight": 2.3,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1286,7 +1286,7 @@
     {
         "id": 108,
         "cargo_type_id": 2,
-        "weight": 3.0,
+        "weight": 2.7,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1298,7 +1298,7 @@
     {
         "id": 109,
         "cargo_type_id": 2,
-        "weight": 2.5,
+        "weight": 1.5,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1310,7 +1310,7 @@
     {
         "id": 110,
         "cargo_type_id": 2,
-        "weight": 2.8,
+        "weight": 2.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1322,7 +1322,7 @@
     {
         "id": 111,
         "cargo_type_id": 2,
-        "weight": 2.9,
+        "weight": 2.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1334,7 +1334,7 @@
     {
         "id": 112,
         "cargo_type_id": 2,
-        "weight": 3.0,
+        "weight": 1.7,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1346,7 +1346,7 @@
     {
         "id": 113,
         "cargo_type_id": 2,
-        "weight": 1.9,
+        "weight": 2.5,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1370,7 +1370,7 @@
     {
         "id": 115,
         "cargo_type_id": 2,
-        "weight": 2.6,
+        "weight": 2.3,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1382,7 +1382,7 @@
     {
         "id": 116,
         "cargo_type_id": 2,
-        "weight": 2.4,
+        "weight": 2.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1394,7 +1394,7 @@
     {
         "id": 117,
         "cargo_type_id": 2,
-        "weight": 1.6,
+        "weight": 3.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1406,7 +1406,7 @@
     {
         "id": 118,
         "cargo_type_id": 2,
-        "weight": 2.6,
+        "weight": 2.4,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1418,7 +1418,7 @@
     {
         "id": 119,
         "cargo_type_id": 2,
-        "weight": 1.8,
+        "weight": 3.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1430,7 +1430,7 @@
     {
         "id": 120,
         "cargo_type_id": 2,
-        "weight": 1.8,
+        "weight": 1.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1442,7 +1442,7 @@
     {
         "id": 121,
         "cargo_type_id": 2,
-        "weight": 2.4,
+        "weight": 2.2,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1454,7 +1454,7 @@
     {
         "id": 122,
         "cargo_type_id": 2,
-        "weight": 2.7,
+        "weight": 2.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1466,7 +1466,7 @@
     {
         "id": 123,
         "cargo_type_id": 2,
-        "weight": 1.5,
+        "weight": 2.9,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1478,7 +1478,7 @@
     {
         "id": 124,
         "cargo_type_id": 2,
-        "weight": 2.0,
+        "weight": 1.9,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1490,7 +1490,7 @@
     {
         "id": 125,
         "cargo_type_id": 2,
-        "weight": 2.3,
+        "weight": 2.7,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1502,7 +1502,7 @@
     {
         "id": 126,
         "cargo_type_id": 2,
-        "weight": 1.8,
+        "weight": 2.4,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1514,7 +1514,7 @@
     {
         "id": 127,
         "cargo_type_id": 2,
-        "weight": 2.4,
+        "weight": 1.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1526,7 +1526,7 @@
     {
         "id": 128,
         "cargo_type_id": 2,
-        "weight": 1.5,
+        "weight": 1.7,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1538,7 +1538,7 @@
     {
         "id": 129,
         "cargo_type_id": 2,
-        "weight": 2.0,
+        "weight": 1.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1550,7 +1550,7 @@
     {
         "id": 130,
         "cargo_type_id": 2,
-        "weight": 1.8,
+        "weight": 2.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1562,7 +1562,7 @@
     {
         "id": 131,
         "cargo_type_id": 2,
-        "weight": 1.6,
+        "weight": 2.8,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1574,7 +1574,7 @@
     {
         "id": 132,
         "cargo_type_id": 2,
-        "weight": 2.0,
+        "weight": 2.8,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1586,7 +1586,7 @@
     {
         "id": 133,
         "cargo_type_id": 2,
-        "weight": 2.3,
+        "weight": 2.2,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1598,7 +1598,7 @@
     {
         "id": 134,
         "cargo_type_id": 2,
-        "weight": 2.2,
+        "weight": 2.9,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1610,7 +1610,7 @@
     {
         "id": 135,
         "cargo_type_id": 2,
-        "weight": 1.8,
+        "weight": 1.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1622,7 +1622,7 @@
     {
         "id": 136,
         "cargo_type_id": 2,
-        "weight": 2.0,
+        "weight": 1.9,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1634,7 +1634,7 @@
     {
         "id": 137,
         "cargo_type_id": 2,
-        "weight": 2.8,
+        "weight": 1.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1646,7 +1646,7 @@
     {
         "id": 138,
         "cargo_type_id": 2,
-        "weight": 2.3,
+        "weight": 1.7,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1658,7 +1658,7 @@
     {
         "id": 139,
         "cargo_type_id": 2,
-        "weight": 2.9,
+        "weight": 2.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1670,7 +1670,7 @@
     {
         "id": 140,
         "cargo_type_id": 2,
-        "weight": 2.3,
+        "weight": 2.7,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1694,7 +1694,7 @@
     {
         "id": 142,
         "cargo_type_id": 2,
-        "weight": 2.4,
+        "weight": 1.8,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1706,7 +1706,7 @@
     {
         "id": 143,
         "cargo_type_id": 2,
-        "weight": 1.9,
+        "weight": 2.2,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1718,7 +1718,7 @@
     {
         "id": 144,
         "cargo_type_id": 2,
-        "weight": 2.4,
+        "weight": 1.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1730,7 +1730,7 @@
     {
         "id": 145,
         "cargo_type_id": 2,
-        "weight": 2.1,
+        "weight": 2.3,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1742,7 +1742,7 @@
     {
         "id": 146,
         "cargo_type_id": 2,
-        "weight": 2.6,
+        "weight": 2.4,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1754,7 +1754,7 @@
     {
         "id": 147,
         "cargo_type_id": 2,
-        "weight": 2.4,
+        "weight": 2.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1766,7 +1766,7 @@
     {
         "id": 148,
         "cargo_type_id": 2,
-        "weight": 1.8,
+        "weight": 2.4,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1778,7 +1778,7 @@
     {
         "id": 149,
         "cargo_type_id": 2,
-        "weight": 2.0,
+        "weight": 1.9,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1790,7 +1790,7 @@
     {
         "id": 150,
         "cargo_type_id": 2,
-        "weight": 2.7,
+        "weight": 2.4,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1802,7 +1802,7 @@
     {
         "id": 151,
         "cargo_type_id": 2,
-        "weight": 1.6,
+        "weight": 2.2,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1814,7 +1814,7 @@
     {
         "id": 152,
         "cargo_type_id": 2,
-        "weight": 1.7,
+        "weight": 3.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1826,7 +1826,7 @@
     {
         "id": 153,
         "cargo_type_id": 2,
-        "weight": 2.2,
+        "weight": 1.5,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1838,7 +1838,7 @@
     {
         "id": 154,
         "cargo_type_id": 2,
-        "weight": 2.4,
+        "weight": 2.3,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1850,7 +1850,7 @@
     {
         "id": 155,
         "cargo_type_id": 2,
-        "weight": 1.9,
+        "weight": 2.5,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1874,7 +1874,7 @@
     {
         "id": 157,
         "cargo_type_id": 2,
-        "weight": 2.3,
+        "weight": 2.5,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1886,7 +1886,7 @@
     {
         "id": 158,
         "cargo_type_id": 2,
-        "weight": 2.7,
+        "weight": 2.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1898,7 +1898,7 @@
     {
         "id": 159,
         "cargo_type_id": 2,
-        "weight": 2.0,
+        "weight": 3.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1910,7 +1910,7 @@
     {
         "id": 160,
         "cargo_type_id": 2,
-        "weight": 1.6,
+        "weight": 2.1,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1922,7 +1922,7 @@
     {
         "id": 161,
         "cargo_type_id": 2,
-        "weight": 2.7,
+        "weight": 2.1,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1934,7 +1934,7 @@
     {
         "id": 162,
         "cargo_type_id": 2,
-        "weight": 2.4,
+        "weight": 1.8,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1946,7 +1946,7 @@
     {
         "id": 163,
         "cargo_type_id": 2,
-        "weight": 1.6,
+        "weight": 2.8,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1958,7 +1958,7 @@
     {
         "id": 164,
         "cargo_type_id": 2,
-        "weight": 1.5,
+        "weight": 2.8,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1970,7 +1970,7 @@
     {
         "id": 165,
         "cargo_type_id": 2,
-        "weight": 2.5,
+        "weight": 2.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1982,7 +1982,7 @@
     {
         "id": 166,
         "cargo_type_id": 2,
-        "weight": 2.4,
+        "weight": 2.6,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -1994,7 +1994,7 @@
     {
         "id": 167,
         "cargo_type_id": 2,
-        "weight": 2.7,
+        "weight": 2.4,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2006,7 +2006,7 @@
     {
         "id": 168,
         "cargo_type_id": 2,
-        "weight": 2.1,
+        "weight": 1.8,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2018,7 +2018,7 @@
     {
         "id": 169,
         "cargo_type_id": 2,
-        "weight": 2.3,
+        "weight": 2.7,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2030,7 +2030,7 @@
     {
         "id": 170,
         "cargo_type_id": 2,
-        "weight": 2.8,
+        "weight": 1.7,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2042,7 +2042,7 @@
     {
         "id": 171,
         "cargo_type_id": 2,
-        "weight": 1.7,
+        "weight": 1.8,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2054,7 +2054,7 @@
     {
         "id": 172,
         "cargo_type_id": 2,
-        "weight": 2.4,
+        "weight": 3.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2066,7 +2066,7 @@
     {
         "id": 173,
         "cargo_type_id": 2,
-        "weight": 2.8,
+        "weight": 1.9,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2078,7 +2078,7 @@
     {
         "id": 174,
         "cargo_type_id": 2,
-        "weight": 2.4,
+        "weight": 1.7,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2090,7 +2090,7 @@
     {
         "id": 175,
         "cargo_type_id": 2,
-        "weight": 2.8,
+        "weight": 1.5,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2102,7 +2102,7 @@
     {
         "id": 176,
         "cargo_type_id": 2,
-        "weight": 2.9,
+        "weight": 2.2,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2114,7 +2114,7 @@
     {
         "id": 177,
         "cargo_type_id": 2,
-        "weight": 2.9,
+        "weight": 2.0,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2126,7 +2126,7 @@
     {
         "id": 178,
         "cargo_type_id": 2,
-        "weight": 2.5,
+        "weight": 1.5,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2138,7 +2138,7 @@
     {
         "id": 179,
         "cargo_type_id": 3,
-        "weight": 22.976999999999997,
+        "weight": 30.428999999999995,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2150,7 +2150,7 @@
     {
         "id": 180,
         "cargo_type_id": 3,
-        "weight": 16.146,
+        "weight": 15.524999999999999,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2162,7 +2162,7 @@
     {
         "id": 181,
         "cargo_type_id": 3,
-        "weight": 14.903999999999998,
+        "weight": 17.388,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2174,7 +2174,7 @@
     {
         "id": 182,
         "cargo_type_id": 3,
-        "weight": 29.186999999999994,
+        "weight": 19.250999999999998,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2186,7 +2186,7 @@
     {
         "id": 183,
         "cargo_type_id": 3,
-        "weight": 22.976999999999997,
+        "weight": 27.944999999999997,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2198,7 +2198,7 @@
     {
         "id": 184,
         "cargo_type_id": 3,
-        "weight": 27.944999999999997,
+        "weight": 16.146,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2210,7 +2210,7 @@
     {
         "id": 185,
         "cargo_type_id": 3,
-        "weight": 22.976999999999997,
+        "weight": 16.767,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2234,7 +2234,7 @@
     {
         "id": 187,
         "cargo_type_id": 3,
-        "weight": 24.84,
+        "weight": 12.42,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2246,7 +2246,7 @@
     {
         "id": 188,
         "cargo_type_id": 3,
-        "weight": 26.702999999999996,
+        "weight": 24.218999999999998,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2258,7 +2258,7 @@
     {
         "id": 189,
         "cargo_type_id": 3,
-        "weight": 17.388,
+        "weight": 12.42,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2270,7 +2270,7 @@
     {
         "id": 190,
         "cargo_type_id": 4,
-        "weight": 73.52640000000001,
+        "weight": 44.09,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2282,7 +2282,7 @@
     {
         "id": 191,
         "cargo_type_id": 4,
-        "weight": 93.39840000000001,
+        "weight": 39.74400000000001,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2294,7 +2294,7 @@
     {
         "id": 192,
         "cargo_type_id": 4,
-        "weight": 83.4624,
+        "weight": 58.56,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
@@ -2306,7 +2306,7 @@
     {
         "id": 193,
         "cargo_type_id": 4,
-        "weight": 77.50080000000001,
+        "weight": 40.47,
         "loading_port": 1,
         "discharge_port": 2,
         "priority": 1,
