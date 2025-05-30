@@ -43,6 +43,7 @@ for j in 1:length(HPC_folders)
     det_pro = load_data(problemname1, test_problem_name, problemname3)
     slots = det_pro.slots
     vessel = det_pro.vessel
+    #=
     sto_pro = create_stochastic_problem(det_pro, no_test, length(det_pro.cargo), [])
     # test
     HPC_folder_save = HPC_folder_load # save in same folder
@@ -66,8 +67,9 @@ for j in 1:length(HPC_folders)
             #infeasible_test1_gen[j,i] = 1 # infeasible
         end
     end
+    =#
     # Now using other method for generating scenarios
-    pro = create_stochastic_problem(det_pro, no_test, length(det_pro.cargo), [],Bootstrap_bookedweight_quantile) 
+    sto_pro = create_stochastic_problem(det_pro, no_test, length(det_pro.cargo), [],Bootstrap_bookedweight_quantile) 
     # test
     HPC_folder_save = HPC_folder_load # save in same folder
     foldername = "Determinitic_Stability_randomscenarios_bootstrapsampling"
@@ -90,7 +92,9 @@ for j in 1:length(HPC_folders)
             infeasible_test2_boot[j,i] = 1 # infeasible
         end
     end
+end
     #####################
+    #=
     # Test 2 - Random stowage plan
     cargoc = det_pro.cargo
     ntypes = [length(findall(x->x.cargo_type_id == i, cargoc)) for i in 1:4]
@@ -304,3 +308,4 @@ sol = get_solution_second_stage_deterministic(det_pro, model_empty_no_slack, tem
 # Save Solution for empty ship
 write_solution(sol,"Finlandia_deterministic","Empty_ship",HPC_folder_save)
 #############
+=#
