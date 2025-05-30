@@ -343,7 +343,7 @@ function write_slack(HPC_folder::String, foldername::String, filename::String, m
 end
 # Load slack variables
 function get_slack(foldername::String,filename::String,HPC_folder::String)
-    open(joinpath("Results",HPC_folder,foldername,filename,"slack.json"), "r") do file
+    open(joinpath("Results",HPC_folder,foldername,filename*"_slack.json"), "r") do file
         slack = JSON3.read(read(file, String),Vector{Any})
         slack_deck = slack[1]
         slack_Vmax = slack[2]
@@ -358,9 +358,13 @@ function get_slack(foldername::String,filename::String,HPC_folder::String)
         slack_shearMax = slack[9]
         slack_bending = slack[10]
         slack_ballast_tanks = slack[11]
-        return slack_deck, slack_Vmin, slack_Vmax, slack_Tmin, slack_Tmax,
-                slack_Lmin, slack_Lmax, slack_shear1, slack_shear2,
-                slack_shearMin, slack_shearMax, slack_bending, slack_ballast_tanks
+        slack_var = [slack_deck, slack_Vmin, slack_Vmax, slack_Tmin, slack_Tmax,
+                slack_Lmin, slack_Lmax, #slack_shear1, slack_shear2,
+                slack_shearMin, slack_shearMax, slack_bending, slack_ballast_tanks]
+        return slack_var
+        #slack_deck, slack_Vmin, slack_Vmax, slack_Tmin, slack_Tmax,
+         #       slack_Lmin, slack_Lmax, #slack_shear1, slack_shear2,
+         #       slack_shearMin, slack_shearMax, slack_bending, slack_ballast_tanks
     end
 end
 
