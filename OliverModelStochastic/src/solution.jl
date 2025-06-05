@@ -586,7 +586,7 @@ function get_solution_second_stage_deterministic(problem, model, sol::Solution)
                 lcg = slot.lcg,
                 tcg = slot.tcg,
                 vcg = slot.vcg,
-                weight = cargo.weight,
+                weight = cargo.weight, # This might be the wrong weight
                 length = get_length(cargo),
                 width = get_width(cargo),
                 height = get_height(cargo),

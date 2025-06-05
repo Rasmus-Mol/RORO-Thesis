@@ -24,6 +24,7 @@ using Distributions
 using StructTypes
 using Hungarian
 using PrettyTables
+using StatsPlots
 
 include("src/representation/cargo.jl")
 include("src/representation/deck.jl")

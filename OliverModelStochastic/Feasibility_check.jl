@@ -84,7 +84,7 @@ function feasibility_check(sol::Solution, problem::StowageProblem, CargoC::Cargo
     end
 end
 
-
+# No cargo, no ballast water
 function empty_ship_model(problem::StowageProblem)
 
         @unpack vessel, slots, cargo = problem
