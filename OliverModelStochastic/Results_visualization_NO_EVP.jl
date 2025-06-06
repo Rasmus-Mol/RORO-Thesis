@@ -191,7 +191,7 @@ end
 pretty_table(pvalues_gen)
 pretty_table(pvalues_boot)
 
-
+# One test is fucked - running same problem through HPC again to see if it happens again
 getfield.(Stochastic_boot[:,5,1,8], :n_cargo_loaded)
 
 for i in 1:length(HPC_folders)
@@ -212,15 +212,137 @@ for i in 1:length(HPC_folders)
     end
 end
 count(x-> x!= nothing, boot_fitted_slacked[:,5,1,8])
+# Finding ballast water for tests where some instances were infeasible
+println(ballast_water_boot[:,1,7])
+# instance 7 boot
+println(getfield.(Stochastic_boot_fitted[:,1,1,7],:status))
+round(mean(filter(x->x>0, ballast_water_boot[:,1,7])),digits=2)
+Stochastic_boot_fitted[5, 1, 1,7].status
+# instance 8 boot - 40 scenarios
+println(getfield.(Stochastic_boot_fitted[:,4,1,8],:status))
+println(ballast_water_boot[:,4,8])
+round(mean(filter(x->x>0, ballast_water_boot[:,4,8])),digits=2)
+# instance 8 boot - 50 scenarios
+println(getfield.(Stochastic_boot_fitted[:,5,1,8],:status))
+println(ballast_water_boot[:,5,8])
+round(mean(filter(x->x>0, ballast_water_boot[:,5,8])),digits=2)
 
-# One test is fucked åbenbart
-println(gaps_boot[:,end,end])
-Stochastic_boot[9,5,1,8].time
-foldername = "Stochastic_Bootstrap1_rep$(9)_sc$(scenarios[5])_unknown$(n_unknown[1])_time$(time_limit)"
-filename = "Stochastic_Problem"
-problemname1, problemname2, problemname3 = "finlandia", Finlandia_test[8], "hazardous"
-temp = get_stochastic_problem(foldername,
-                filename,HPC_folders[8],problemname1,problemname2,problemname3)
+
+Stochastic_boot[9,5,1,8].cargo
+Stochastic_problem_boot[9,5,1,8].cargo.items.total_weight
+println(getfield.(Stochastic_gen[:,5,1,8],:n_cargo_loaded))
+println(getfield.(Stochastic_boot[:,5,1,8],:n_cargo_loaded))
+
+
+
+
+
+# Sizes of the models
+n_var = []
+n_const = []
+m_size = []
+for i in 1:sc
+    push!(n_var, Stochastic_gen[1,i,1,2].n_variables)
+    push!(n_const, Stochastic_gen[1,i,1,2].n_constraints)
+    push!(m_size, Stochastic_gen[1,i,1,2].model_size)
+end
+p1= plot(scenarios,n_var, title = "Number of variables in instance 2",
+xlabel = "Scenarios", ylabel = "Number of variables", label = "")
+savefig(p1, "Plots/Data/"*"NumberOfVariables_Instance2.png")
+p2 = plot(scenarios,n_const, title = "Number of constraints in instance 2",
+xlabel = "Scenarios", ylabel = "Number of constraints", label = "")
+savefig(p2, "Plots/Data/"*"NumberOfConstraints_Instance2.png")
+p3= plot(scenarios,m_size, title = "Model size in instance 2",
+xlabel = "Scenarios", ylabel = "Model size (Bytes)", label = "")#,yscale=:log10)
+savefig(p3, "Plots/Data/"*"ModelSize_Instance2.png")
+
+# Infeasible models
+slack_string = ["deck", "Vmax", "Vmin", "Tmin", "Tmax", "Lmin", "Lmax",
+"shear1", "shear2",
+"shearMin", "shearMax", "bendingMax", "ballast_tanks"]
+slack_count_gen = zeros(length(slack_string))
+slack_count_boot = zeros(length(slack_string))
+deck_gen = zeros(3)
+deck_boot = zeros(3)
+deck_1_violations_gen = zeros(repetitions,sc,length(HPC_folders))
+deck_1_violations_boot = zeros(repetitions,sc,length(HPC_folders))
+for i in 1:repetitions
+    for j in 1:sc
+        for l in 1:length(HPC_folders)
+            if !isnothing(boot_fitted_slacked[i,j,1,l])
+                println("#####################")
+                println("Repetition: $(i), Scenarios: $(j), Instance: $(l), Boot fitted slacked is not nothing")
+                for k in 1:length(slack_boot[i,j,1,l])
+                    if sum(slack_boot[i,j,1,l][k]) > 0 
+                        println("slack variable different than 0: ", slack_string[k])
+                        println("Slack: ", slack_boot[i,j,1,l][k])
+                        slack_count_boot[k] += 1
+                        if k==1
+                            deck_boot[k] += 1
+                            deck_1_violations_boot[i,j,l] = sum(slack_boot[i,j,1,l][k])
+                        end
+                    end
+                end
+            end
+            if !isnothing(gen_fitted_slacked[i,j,1,l])
+                println("#####################")
+                println("Repetition: $(i), Scenarios: $(j), Instance: $(l), gen fitted slacked is not nothing")
+                for k in 1:length(slack_gen[i,j,1,l])
+                    if sum(slack_gen[i,j,1,l][k]) > 0 
+                        println("slack variable different than 0: ", slack_string[k])
+                        println("Slack: ", slack_gen[i,j,1,l][k])
+                        slack_count_gen[k] += 1
+                        if k==1
+                            deck_gen[k] += 1
+                            deck_1_violations_gen[i,j,l] = sum(slack_gen[i,j,1,l][k])
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+# slack variable order:
+# deck, Vmax, Vmin, Tmin, Tmax, Lmin, Lmax, shear1, shear2, 
+#shearMin, shearMax, bendingMax, ballast_tanks
+println(slack_count_gen)
+println(slack_count_boot)
+println(deck_gen)
+println(deck_boot)
+
+mean(deck_1_violations_gen[:,1,8])
+mean(deck_1_violations_boot[:,1,8])
+mean(deck_1_violations_gen[:,2,8])
+mean(deck_1_violations_boot[:,2,8])
+mean(deck_1_violations_gen[:,3,8])
+mean(deck_1_violations_boot[:,3,8])
+#for i in 1:repetitions
+
+println(getfield.(Stochastic_boot[:,5,1,8],:n_cargo_loaded))
+println(getfield.(Stochastic_boot_fitted[:,5,1,8],:status))
+Stochastic_boot_fitted[3,5,1,8].ballast_weight
+Stochastic_boot_fitted[9,5,1,8].ballast_weight
+Stochastic_boot_fitted[10,5,1,8].ballast_weight
+
+
+slots_for_trucks = filter(x->x.cargo_type_id == 1, Deterministic_problem[8].slots)
+slots_for_trucks_deck1 = filter(x->x.deck_id == 1, slots_for_trucks)
+length(slots_for_trucks)
+length(slots_for_trucks_deck1)
+trucks_placed = filter(x->x.cargo_type_id==1, Deterministic_Solution[8].cargo)
+trucks_placed_on_dekc1 = filter(x->x.deck==1, trucks_placed)
+println("Trucks placed: ", length(trucks_placed),"/",
+length(filter(x->x.cargo_type_id == 1, Deterministic_problem[8].cargo)))
+println("Trucks placed on deck 1: ", length(trucks_placed_on_dekc1),"/",
+length(slots_for_trucks_deck1))
+mean_weight_truck = mean(c.weight for c in filter(x->x.cargo_type_id == 1, Deterministic_problem[8].cargo))
+println("Mean weight of truck: ", mean_weight_truck)
+println("Mean weight trucks times slots for trucks on deck 1 / weight limit deck 1: ",
+mean_weight_truck*length(slots_for_trucks_deck1),"/", Deterministic_problem[8].vessel.decks[1].weight_limit)
+mean_weight_truck_weight_interval = (40-5)/2
+println("Mean weight trucks times slots for trucks on deck 1 / weight limit deck 1: ",
+mean_weight_truck_weight_interval*length(slots_for_trucks_deck1),"/", Deterministic_problem[8].vessel.decks[1].weight_limit)
+
 
 #=
 bplots_gen = []
@@ -997,5 +1119,4 @@ end
 for i in p
     display(i)
 end
-
 
