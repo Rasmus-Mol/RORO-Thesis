@@ -1,0 +1,14 @@
+Loaded module: julia/1.11.3
+Loaded module: gurobi/12.0.1
+  Activating project at `~/RORO-Thesis/OliverModelStochastic`
+ERROR: LoadError: UndefVarError: `StowageProblem` not defined in `Main`
+Suggestion: check for spelling errors or missing imports.
+Stacktrace:
+ [1] top-level scope
+   @ ~/RORO-Thesis/OliverModelStochastic/src/utils/SaveData.jl:5
+ [2] include(fname::String)
+   @ Main ./sysimg.jl:38
+ [3] top-level scope
+   @ ~/RORO-Thesis/OliverModelStochastic/main_small_test.jl:6
+in expression starting at /zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic/src/utils/SaveData.jl:5
+in expression starting at /zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic/main_small_test.jl:6
