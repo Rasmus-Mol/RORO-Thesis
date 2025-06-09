@@ -26,6 +26,7 @@ using Hungarian
 using PrettyTables
 using StatsPlots
 using Printf
+using Clustering
 
 include("src/representation/cargo.jl")
 include("src/representation/deck.jl")

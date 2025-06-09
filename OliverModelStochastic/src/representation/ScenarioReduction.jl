@@ -112,7 +112,7 @@ function Find_one_reduction_naive(CargoC::CargoCollectionScenarios, sc_old)
     @constraint(model, sum(x[i,j] for i ∈ 1:(sc_old-1), j ∈ (i+1):sc_old) == 1)
     # Cost of contraction of scenarios
     @expression(model, cost[i = 1:(sc_old-1),j = (i+1):sc_old],
-        sum(abs.(getfield.(cargo_scenarios.items[i],:weight) .- getfield.(cargo_scenarios.items[j],:weight)))
+        sum(abs.(getfield.(CargoC.items[i],:weight) .- getfield.(CargoC.items[j],:weight)))
         )
     # Objective function
     @objective(model, Min,
@@ -246,3 +246,31 @@ function contract_scenarios_heuristic(assignment, scenarios,
     new_probability = filter(x -> x!=0, new_prob)
     return CargoCollectionScenarios(cargo_scenarios), new_probability
 end 
+
+################################
+# Uses clustering and K-means to reduce scenarios
+function scenario_reduction_clustering(CargoC::CargoCollectionScenarios, probability, sc, timelimit)
+    # Find Cost matrix
+    sc_old = length(CargoC.items)
+    cost = zeros(sc, sc)
+    for i in 1:sc
+        for j in 1:sc
+            cost[i,j] = sum(abs.(getfield.(CargoC.items[i],:weight) .- getfield.(CargoC.items[j],:weight)))
+        end
+    end
+    # Perform hierarchical clustering
+    result = hclust(D, linkage = :average)  # or :single, :complete, :ward, etc.
+    # Cut the dendrogram into 10 clusters
+    labels = cutree(result, k = sc)
+    if sum([count(x->x == i, labels) for i in 1:10]) != sc_old
+        throw("Clustering did not produce the expected number of scenarios")
+    end
+    # Combine scenarios based on clustering labels
+    for i in 1:length(labels)
+        
+
+    end
+
+
+
+end

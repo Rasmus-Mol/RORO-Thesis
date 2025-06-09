@@ -287,7 +287,8 @@ end
 #TODO
 # How to choose which constraint should be slacked?
 # Constraint_number is the the constraint that should be slacked
-function create_model_stochastic_slack(problem::StochasticStowageProblem, slack_fraction::Float64, constraint_number::Int64) 
+# Slacking weight limit
+function create_model_stochastic_slack(problem::StochasticStowageProblem, slack_fraction::Vector{Float64}) 
 
 	@unpack vessel, slots, cargo, unknown_weights, known_weights, scenarios, probability = problem
 
@@ -384,9 +385,9 @@ function create_model_stochastic_slack(problem::StochasticStowageProblem, slack_
 		# Cargo weights using precalculated proportions
 		sum(weight[s,sc] * slots_to_frame[s, p] for s ∈ 1:n_slots)
 	)
-	# Deck weight limit. Constraint (29)
+	# Deck weight limit. Constraint (29) - Slacked
 	@constraint(model,[d = 1:n_deck, sc = 1:scenarios],
-		sum(weight[s,sc] for s in [x.id for x in filter(x -> x.deck_id == d, slots)]) <= vessel.decks[d].weight_limit)
+		sum(weight[s,sc] for s in [x.id for x in filter(x -> x.deck_id == d, slots)]) <= vessel.decks[d].weight_limit * slack_fraction[d])
 	# Rasmus: lcg, vcg, and tcg for cargo. Constraint (30), (31), (32)
 	@expression(model, lcg_cargo[sc = 1:scenarios], sum(weight[s,sc] * slots[s].lcg for s ∈ 1:n_slots))
 	@expression(model, tcg_cargo[sc = 1:scenarios], sum(weight[s,sc] * slots[s].tcg for s ∈ 1:n_slots))

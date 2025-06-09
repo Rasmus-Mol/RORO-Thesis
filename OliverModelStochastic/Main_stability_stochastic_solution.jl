@@ -137,32 +137,57 @@ for i in 1:length(HPC_folders)
     det_pro = Deterministic_problem[i]
     slots = det_pro.slots
     vessel = det_pro.vessel
-    for k in 1:repetitions
-        sto_sol = Stochastic_boot[k, 1, 1, i]
-        # 
-        sto_pro = create_stochastic_problem(det_pro, no_test, length(det_pro.cargo), [])
-        # test
-        #HPC_folder_save = HPC_folder_load # save in same folder
-        foldername = "Stochastic_Stability_randomscenarios_uniformsampling_instance_$(i)_repetition_$(k)"
-        # save scenario
-        filename = "Stochastic_Problem"
-        write_problem_stochastic(sto_pro, foldername, filename, HPC_folder_save)
-        for j in 1:no_test
-            new_c = sto_pro.cargo.items[i]
-            f, strs, mo = feasibility_check_stochastic(sto_sol, det_pro, new_c)
-            if f == true # found solution
-                sol = get_solution_second_stage_stochastic(det_pro, mo, sto_sol)
-                # save result
-                filename = "Solution_$(j)"
-                write_solution(sol, foldername, filename, HPC_folder_save)
-            else # Problem was infeasible
-                fitted_sol_slacked = get_solution_second_stage_stochastic(det_pro, mo, sto_sol)
-                #get_solution_second_stage_deterministic(det_pro, mo, det_sol)
-                write_solution(fitted_sol_slacked, foldername, "Solution_$(j)_slacked", HPC_folder_save)
-                write_slack(HPC_folder_save, foldername, "Fitted_Solution_slacked_$(j)", mo)
-                #infeasible_test1_gen[j,i] = 1 # infeasible
+    for l in 1:sc
+        #for k in 1:repetitions
+            sto_sol = Stochastic_boot[1, l, 1, i]
+            # 
+            sto_pro = create_stochastic_problem(det_pro, no_test, length(det_pro.cargo), [])
+            # test
+            HPC_folder_save_temp = HPC_folder_save*test_problem_name # testing all problems
+            foldername = "Stochastic_Stability_randomscenarios_uniformsampling_instance_$(i)_scenarios_$(scenarios[l])_repetition_$(1)"#repetition_$(k)"
+            # save scenario
+            filename = "Stochastic_Problem"
+            write_problem_stochastic(sto_pro, foldername, filename, HPC_folder_save_temp)
+            for j in 1:no_test
+                new_c = sto_pro.cargo.items[j]
+                f, strs, mo = feasibility_check_stochastic(sto_sol, det_pro, new_c)
+                if f == true # found solution
+                    sol = get_solution_second_stage_stochastic(det_pro, mo, sto_sol)
+                    # save result
+                    filename = "Solution_$(j)"
+                    write_solution(sol, foldername, filename, HPC_folder_save_temp)
+                else # Problem was infeasible
+                    fitted_sol_slacked = get_solution_second_stage_stochastic(det_pro, mo, sto_sol)
+                    #get_solution_second_stage_deterministic(det_pro, mo, det_sol)
+                    write_solution(fitted_sol_slacked, foldername, "Solution_$(j)_slacked", HPC_folder_save_temp)
+                    write_slack(HPC_folder_save_temp, foldername, "Fitted_Solution_slacked_$(j)", mo)
+                    #infeasible_test1_gen[j,i] = 1 # infeasible
+                end
             end
-            #println("Test $(j) done for problem $(i)")
-        end
+            # Other sceario method
+            sto_pro = create_stochastic_problem(det_pro, no_test, length(det_pro.cargo), [],Bootstrap_bookedweight_quantile) 
+            # test
+            #HPC_folder_save_temp = HPC_folder_save*test_problem_name # testing all problems
+            foldername = "Stochastic_Stability_randomscenarios_Bootstrap_instance_$(i)_scenarios_$(scenarios[l])_repetition_$(1)"#$(k)"
+            # save scenario
+            filename = "Stochastic_Problem"
+            write_problem_stochastic(sto_pro, foldername, filename, HPC_folder_save_temp)
+            for j in 1:no_test
+                new_c = sto_pro.cargo.items[j]
+                f, strs, mo = feasibility_check_stochastic(sto_sol, det_pro, new_c)
+                if f == true # found solution
+                    sol = get_solution_second_stage_stochastic(det_pro, mo, sto_sol)
+                    # save result
+                    filename = "Solution_$(j)"
+                    write_solution(sol, foldername, filename, HPC_folder_save_temp)
+                else # Problem was infeasible
+                    fitted_sol_slacked = get_solution_second_stage_stochastic(det_pro, mo, sto_sol)
+                    #get_solution_second_stage_deterministic(det_pro, mo, det_sol)
+                    write_solution(fitted_sol_slacked, foldername, "Solution_$(j)_slacked", HPC_folder_save_temp)
+                    write_slack(HPC_folder_save_temp, foldername, "Fitted_Solution_slacked_$(j)", mo)
+                    #infeasible_test1_gen[j,i] = 1 # infeasible
+                end
+            end   
+        #end
     end
 end
