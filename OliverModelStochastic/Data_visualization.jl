@@ -249,7 +249,7 @@ remove_outliers = false
 df_secu_quan, = seperate_data_into_quantiles(df_secu,n_quantiles,remove_outliers)
 df_trailer_quan, = seperate_data_into_quantiles(df_trailer,n_quantiles,remove_outliers)
 normal_var_secu = (df_secu_quan.Variance.-mean(df_secu_quan.Variance))./std(df_secu_quan.Variance)
-qqplot(normal_var_secu, Normal(0, 1), title="Trucks Q-Q Plot", xlabel="Theoretical Quantiles", ylabel="Truck Quantiles")
+qqplot(normal_var_secu, Normal(0, 1), title="Secu-boxes Q-Q Plot", xlabel="Theoretical Quantiles", ylabel="Truck Quantiles")
 savefig(plot_folder_historic*"QQPlot_secu.png")
 normal_var_truck = (df_trailer_quan.Variance.-mean(df_trailer_quan.Variance))./std(df_trailer_quan.Variance)
 qqplot(normal_var_truck, Normal(0, 1), title="Trucks Q-Q Plot", xlabel="Theoretical Quantiles", ylabel="Truck Quantiles")
@@ -260,10 +260,16 @@ df_secu_quan,a = seperate_data_into_quantiles(df_secu,n_quantiles,remove_outlier
 df_trailer_quan, b= seperate_data_into_quantiles(df_trailer,n_quantiles,remove_outliers)
 
 # Informed weight vs weight variance
-plot(df_secu_quan.CountBookedWeight./1000, df_secu_quan.Variance,
+plot(df_secu_quan.CountBookedWeight./1000, df_secu_quan.Variance./1000,
 xlabel = "Booked weight (t)", ylabel = "Weight variance (kg)",
-title = "Secu-boxes booked weight vs weight variance",
+title = "Secu-boxes weight difference as a function of booked weight",
 legend=false, formatter=:plain)
+cor(df_secu_quan.CountBookedWeight./1000, df_secu_quan.Variance./1000)
+plot(df_trailer_quan.CountBookedWeight./1000, df_trailer_quan.Variance./1000,
+xlabel = "Booked weight (t)", ylabel = "Weight variance (kg)",
+title = "Trucks weight difference as a function of booked weight",
+legend=false, formatter=:plain)
+cor(df_trailer_quan.CountBookedWeight./1000, df_trailer_quan.Variance./1000)
 
 
 # Booked weight

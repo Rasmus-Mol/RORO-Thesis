@@ -61,3 +61,8 @@ include("src/representation/VarianceOfWeight.jl")
 include("Feasibility_check.jl")
 include("src/model/second_stage_model_v2.jl")
 
+const GRB_ENV = Ref{Gurobi.Env}()
+function __init__()
+    const GRB_ENV[] = Gurobi.Env()
+    return
+end

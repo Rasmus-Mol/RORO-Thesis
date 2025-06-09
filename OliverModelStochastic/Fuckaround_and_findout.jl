@@ -21,7 +21,7 @@ length(slots_deck1_secu)
 
 pro_hol = create_stochastic_problem(Deterministic_problem_hol, 10, length(Deterministic_problem_hol.cargo), []) 
 pro_fin = create_stochastic_problem(Deterministic_problem_fin, 100, length(Deterministic_problem_fin.cargo), [])
-pro_fin_1 = create_stochastic_problem(Deterministic_problem_fin, 10, length(Deterministic_problem_fin.cargo), [], Bootstrap_bookedweight_quantile)
+pro_fin_1 = create_stochastic_problem(Deterministic_problem_fin, 100, length(Deterministic_problem_fin.cargo), [], Bootstrap_bookedweight_quantile)
 
 pro_fin_2 = create_stochastic_problem_scenarioreduction(Deterministic_problem_fin, 10,
 length(Deterministic_problem_fin.cargo), 100, [], Bootstrap_bookedweight_quantile, scenario_reduction_heuristic, 5*60)
@@ -65,6 +65,22 @@ println("Cluster assignments: ", labels)
 println([count(x->x == i, labels) for i in 1:10])
 sum([count(x->x == i, labels) for i in 1:10])
 
+CargoC = pro_fin.cargo
+probability = pro_fin.probability
+lab, CC, prob = scenario_reduction_clustering(CargoC, probability, 10, 5)
+sum(prob)
+println([count(x->x == i, lab) for i in 1:10])
+println(CC.items.total_weight)
+CargoC.items.total_weight
+idx = findall(t -> t == 2, lab)
+cargo_scenarios = Vector{CargoCollection}()
+prob_new = zeros(length(idx))
+
+test = scenario_reduced(pro_fin, 10, 
+scenario_reduction_clustering,60)
+test.probability
+
+println(lab)
 
 
 plot(cargoc.items.total_weight)

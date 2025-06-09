@@ -248,29 +248,54 @@ function contract_scenarios_heuristic(assignment, scenarios,
 end 
 
 ################################
-# Uses clustering and K-means to reduce scenarios
+# Works
+# Uses clustering and K-means to reduce scenarios 
 function scenario_reduction_clustering(CargoC::CargoCollectionScenarios, probability, sc, timelimit)
     # Find Cost matrix
     sc_old = length(CargoC.items)
-    cost = zeros(sc, sc)
-    for i in 1:sc
-        for j in 1:sc
+    cost = zeros(sc_old, sc_old)
+    for i in 1:sc_old
+        for j in 1:sc_old
             cost[i,j] = sum(abs.(getfield.(CargoC.items[i],:weight) .- getfield.(CargoC.items[j],:weight)))
         end
     end
     # Perform hierarchical clustering
-    result = hclust(D, linkage = :average)  # or :single, :complete, :ward, etc.
-    # Cut the dendrogram into 10 clusters
+    result = hclust(cost, linkage = :average)  # or :single, :complete, :ward, etc.
+    # Cut the dendrogram into sc clusters
     labels = cutree(result, k = sc)
     if sum([count(x->x == i, labels) for i in 1:10]) != sc_old
         throw("Clustering did not produce the expected number of scenarios")
     end
     # Combine scenarios based on clustering labels
-    for i in 1:length(labels)
-        
-
+    cargo_scenarios = Vector{CargoCollection}()
+    prob_new = zeros(sc) # array with probabilities
+    for i in 1:sc
+        idx = findall(t -> t == i, labels)
+        cargoes = Vector{Cargo}()
+        for k in 1:length(CargoC.items[1])
+            old_cargo = CargoC.items[1].items[k]
+            new_weight = 0
+            for j in idx
+                new_weight += CargoC.items[j].items[k].weight
+            end
+            new_weight = round(new_weight / length(idx),digits =2)  # Average weight across scenarios in the cluster
+            # create new cargo
+            new_cargo = Cargo(
+                id = old_cargo.id,
+                cargo_type_id = old_cargo.cargo_type_id,  # Use the id from type_info
+                weight = new_weight,
+                loading_port = old_cargo.loading_port,
+                discharge_port = old_cargo.discharge_port,
+                priority = old_cargo.priority,
+                requires_lashing = old_cargo.requires_lashing,
+                requires_ventilation = old_cargo.requires_ventilation,
+                hazardous = old_cargo.hazardous,
+                refers = old_cargo.refers
+            )
+            push!(cargoes,new_cargo)
+        end
+        push!(cargo_scenarios, CargoCollection(cargoes))
+        prob_new[i] = sum(probability[idx])  # Sum probabilities of scenarios in the cluster
     end
-
-
-
+    return CargoCollectionScenarios(cargo_scenarios), prob_new
 end

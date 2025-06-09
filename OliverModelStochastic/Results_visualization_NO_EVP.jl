@@ -233,9 +233,13 @@ Stochastic_problem_boot[9,5,1,8].cargo.items.total_weight
 println(getfield.(Stochastic_gen[:,5,1,8],:n_cargo_loaded))
 println(getfield.(Stochastic_boot[:,5,1,8],:n_cargo_loaded))
 
+temp = 0
+for i in 1:repetitions
+    temp += mean(Stochastic_problem_boot[i,1,1,4].cargo.items.total_weight)
+end
+temp/ repetitions
 
-
-
+Stochastic_boot[9,5,1,8].cargo
 
 # Sizes of the models
 n_var = []
@@ -368,8 +372,36 @@ display(bplots_boot[2])
 =#
 
 # Scenarios
-# Comparing instance 1 and 2 in SGM 1 and 2
 plot_folder_scenarios = "Plots/Data/Scenarios/"
+
+cur_path = @__DIR__
+file_path = joinpath(cur_path,"data","CargoWeights.csv")
+#joinpath(cur_path,"..","..","data","CargoWeights.csv")
+df = load_Weight_Variance_data(file_path)
+df_secu, df_trailer = weight_difference_info(df, false)
+sort_df_secu = sort(df_secu, :CountBookedWeight)
+
+p1 = plot(sort_df_secu.CountBookedWeight, sort_df_secu.Variance,
+title = "Weight difference for Secu-boxes",xlabel = "Booked weight (t.)", ylabel = "Weight difference (t.)",
+yformatter = :plain, xformatter = :plain)
+savefig(p1, "Plots/Data/BookedWeight_vs_WeightDiff_Secu_.png")
+sort_df_trailer = sort(df_trailer, :CountBookedWeight)
+p2 = plot(sort_df_trailer.CountBookedWeight, sort_df_trailer.Variance,
+title = "Weight difference for Trucks",xlabel = "Booked weight (t.)", ylabel = "Weight difference (t.)",
+yformatter = :plain, xformatter = :plain)
+savefig(p2, "Plots/Data/BookedWeight_vs_WeightDiff_Trailer_.png")
+
+n_quantiles = 4
+df_secu, q_arr_secu = seperate_data_into_quantiles(df_secu, n_quantiles, false)
+df_trailer, q_arr_trailer = seperate_data_into_quantiles(df_trailer, n_quantiles, false)
+q_arr_secu = q_arr_secu ./ 1000 # convert to tons
+q_arr_trailer = q_arr_trailer ./ 1000 # convert to tons
+secu_var = [collect(filter(x -> x.QuantileNumber == i, df_secu).Variance) for i in 1:n_quantiles]
+trailer_var = [collect(filter(x -> x.QuantileNumber == i, df_trailer).Variance) for i in 1:n_quantiles]
+
+
+# Comparing instance 1 and 2 in SGM 1 and 2
+
 foldername_boot = "Stochastic_Bootstrap1_rep$(1)_sc$(scenarios[5])_unknown$(70)_time$(time_limit)"
 foldername_gen = "Stochastic_random_sampling_rep$(1)_sc$(scenarios[5])_unknown$(70)_time$(time_limit)"
 filename = "Stochastic_Problem"

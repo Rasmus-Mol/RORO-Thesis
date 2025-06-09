@@ -284,11 +284,8 @@ function create_model_stochastic_cargo_fraction(problem::StochasticStowageProble
 	return model
 end
 
-#TODO
-# How to choose which constraint should be slacked?
-# Constraint_number is the the constraint that should be slacked
-# Slacking weight limit
-function create_model_stochastic_slack(problem::StochasticStowageProblem, slack_fraction::Vector{Float64}) 
+# Model where the deck weight limit is slacked.
+function create_model_stochastic_slack_deck(problem::StochasticStowageProblem, slack_fraction::Vector{Float64}) 
 
 	@unpack vessel, slots, cargo, unknown_weights, known_weights, scenarios, probability = problem
 
