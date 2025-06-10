@@ -1,9 +1,0 @@
-Loaded module: julia/1.11.3
-Loaded module: gurobi/12.0.1
-  Activating project at `~/RORO-Thesis/OliverModelStochastic`
-ERROR: LoadError: UndefVarError: `test_problem_name` not defined in `Main`
-Suggestion: check for spelling errors or missing imports.
-Stacktrace:
- [1] top-level scope
-   @ ~/RORO-Thesis/OliverModelStochastic/main_small_test.jl:16
-in expression starting at /zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic/main_small_test.jl:16
