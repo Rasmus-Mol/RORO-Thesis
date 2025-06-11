@@ -260,7 +260,7 @@ function scenario_reduction_clustering(CargoC::CargoCollectionScenarios, probabi
         end
     end
     # Perform hierarchical clustering
-    result = hclust(cost, linkage = :average)  # or :single, :complete, :ward, etc.
+    result = hclust(cost, linkage = :complete) #:average)  # or :single, :complete, :ward, etc.
     # Cut the dendrogram into sc clusters
     labels = cutree(result, k = sc)
     if sum([count(x->x == i, labels) for i in 1:10]) != sc_old

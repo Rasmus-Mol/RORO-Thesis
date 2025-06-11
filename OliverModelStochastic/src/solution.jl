@@ -213,7 +213,11 @@ function extract_stochastic_solution(problem, model)
     vcg = replace(value.(model[:vcg_total]) ./ total_weight, Inf => -100000)
 
     # Calculate area utilization
-    total_cargo_area = sum(p.length * p.width for p in placements)
+    if length(placements) > 0 
+        total_cargo_area = sum(p.length * p.width for p in placements)
+    else
+        total_cargo_area = 0
+    end
     total_vessel_area = sum(
         slot.length * slot.width
         for slot in problem.slots
@@ -354,7 +358,11 @@ function extract_solution(problem, model)
     vcg = value.(model[:vcg_total]) / total_weight
 
     # Calculate area utilization
-    total_cargo_area = sum(p.length * p.width for p in placements)
+    if length(placements) > 0 
+        total_cargo_area = sum(p.length * p.width for p in placements)
+    else
+        total_cargo_area = 0
+    end
     total_vessel_area = sum(
         slot.length * slot.width
         for slot in problem.slots
@@ -489,12 +497,17 @@ function get_solution_second_stage_stochastic(problem, model, stochastic_sol::So
     vcg = value.(model[:vcg_total]) / total_weight
 
     # Calculate area utilization
-    total_cargo_area = sum(p.length * p.width for p in placements)
-    total_vessel_area = sum(
+    if length(placements) > 0 
+        total_cargo_area = sum(p.length * p.width for p in placements)
+    else
+        total_cargo_area = 0
+    end
+        #total_cargo_area = sum(p.length * p.width for p in placements)
+        total_vessel_area = sum(
         slot.length * slot.width
         for slot in problem.slots
-    ) # Rasmus: Don't the slots have overlapping areas, so this is larger than the actual area?
-    area_utilization = total_cargo_area / total_vessel_area
+        ) # Rasmus: Don't the slots have overlapping areas, so this is larger than the actual area?
+        area_utilization = total_cargo_area / total_vessel_area
 
     # Shear and bending forces
     shear = value.(model[:shear])

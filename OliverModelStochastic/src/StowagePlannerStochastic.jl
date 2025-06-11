@@ -22,6 +22,7 @@ using Distributions
 using HypothesisTests 
 using StructTypes
 using Hungarian
+using Clustering
 
 const GRB_ENV = Ref{Gurobi.Env}()
 function __init__()
@@ -95,6 +96,7 @@ export create_random_stowageplan_model, random_cargocollection, random_stowage_p
 # Scenario reduction problem
 export create_stochastic_problem_scenarioreduction, generate_simple_cargo_scenarios
 export scenario_reduction_heuristic, scenario_reduction_naive
+export scenario_reduced, scenario_reduction_clustering
 
 # Noise
 export add_white_noise_to_test_instance

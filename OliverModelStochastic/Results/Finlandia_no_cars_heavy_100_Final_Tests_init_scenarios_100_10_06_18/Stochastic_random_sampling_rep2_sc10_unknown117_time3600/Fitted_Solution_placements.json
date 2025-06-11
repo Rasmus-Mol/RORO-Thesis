@@ -1,0 +1,28 @@
+[
+    {
+        "id": 54,
+        "cargo_type_id": 1,
+        "deck": 2,
+        "lcg": 100.3,
+        "tcg": 0.0,
+        "vcg": 9.5,
+        "weight": 25.43,
+        "length": 13.6,
+        "width": 2.5,
+        "height": 4.0,
+        "haz_class": 18
+    },
+    {
+        "id": 91,
+        "cargo_type_id": 3,
+        "deck": 1,
+        "lcg": 66.69,
+        "tcg": 0.0,
+        "vcg": 14.5,
+        "weight": 23.48,
+        "length": 4.6,
+        "width": 4.5,
+        "height": 3.0,
+        "haz_class": 18
+    }
+]
