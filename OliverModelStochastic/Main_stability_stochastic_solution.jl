@@ -122,7 +122,8 @@ for l in 1:length(HPC_folders)
 end
 
 # Generate random tests and see if the solutions are stable
-HPC_folder_save = "Finlandia_stability_tests_stochastic/"
+#HPC_folder_save = "Finlandia_stability_tests_stochastic/"
+HPC_folder_save = "Finlandia_stability_tests_stochastic_All_results/"
 if !isdir("Results/" * HPC_folder_save)
     mkdir("Results/" * HPC_folder_save)
 end
@@ -138,13 +139,13 @@ for i in 1:length(HPC_folders)
     slots = det_pro.slots
     vessel = det_pro.vessel
     for l in 1:sc
-        #for k in 1:repetitions
-            sto_sol = Stochastic_boot[1, l, 1, i]
+        for k in 1:repetitions
+            sto_sol = Stochastic_boot[k, l, 1, i]
             # 
             sto_pro = create_stochastic_problem(det_pro, no_test, length(det_pro.cargo), [])
             # test
             #HPC_folder_save_temp = HPC_folder_save*test_problem_name*"/" # testing all problems
-            foldername = "Stochastic_Stability_randomscenarios_uniformsampling_instance_$(i)_scenarios_$(scenarios[l])_repetition_$(1)"#repetition_$(k)"
+            foldername = "Stochastic_Stability_randomscenarios_uniformsampling_instance_$(i)_scenarios_$(scenarios[l])_repetition_$(k)"
             # save scenario
             filename = "Stochastic_Problem"
             write_problem_stochastic(sto_pro, foldername, filename, HPC_folder_save)
@@ -168,7 +169,7 @@ for i in 1:length(HPC_folders)
             sto_pro = create_stochastic_problem(det_pro, no_test, length(det_pro.cargo), [],Bootstrap_bookedweight_quantile) 
             # test
             #HPC_folder_save_temp = HPC_folder_save*test_problem_name # testing all problems
-            foldername = "Stochastic_Stability_randomscenarios_Bootstrap_instance_$(i)_scenarios_$(scenarios[l])_repetition_$(1)"#$(k)"
+            foldername = "Stochastic_Stability_randomscenarios_Bootstrap_instance_$(i)_scenarios_$(scenarios[l])_repetition_$(k)"
             # save scenario
             filename = "Stochastic_Problem"
             write_problem_stochastic(sto_pro, foldername, filename, HPC_folder_save)
@@ -188,6 +189,6 @@ for i in 1:length(HPC_folders)
                     #infeasible_test1_gen[j,i] = 1 # infeasible
                 end
             end   
-        #end
+        end
     end
 end
