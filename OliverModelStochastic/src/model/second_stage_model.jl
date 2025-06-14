@@ -304,7 +304,7 @@ function second_stage_model_deckslacked_slack(cs1, problem::StowageProblem,slack
 	return model
 end
 # Second stage model with only slack on decks
-function second_stage_model_deckslacked(cs1, problem::StowageProblem, slack_fraction::Float64)
+function second_stage_model_deckslacked(cs1, problem::StowageProblem, slack_fraction::Vector{Float64})
 
     @unpack vessel, slots, cargo = problem
 

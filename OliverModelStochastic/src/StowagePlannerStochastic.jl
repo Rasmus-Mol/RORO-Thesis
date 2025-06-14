@@ -101,6 +101,10 @@ export scenario_reduced, scenario_reduction_clustering
 # Noise
 export add_white_noise_to_test_instance
 
+# slack
+export create_model_slack_deck, create_model_stochastic_slack_deck, second_stage_model_deckslacked
+export second_stage_model_deckslacked_slack
+
 # Functions to connect to LoadMaster
 #export LoadMaster, getcurrentvessel, resetvessel, upload_solution, getresults, parse_result, uri, headers, struct_to_json
 

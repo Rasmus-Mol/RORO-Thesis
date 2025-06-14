@@ -368,4 +368,17 @@ function get_slack(foldername::String,filename::String,HPC_folder::String)
     end
 end
 
+# To save stability of solution tests
+function save_stability_of_solution(HPC_folder::String, foldername::String, filename::String, feasible)
+    if !isdir("Results/"*HPC_folder)
+        mkdir("Results/"*HPC_folder)
+    end
+    if !isdir("Results/"*HPC_folder*"/"*foldername)
+        mkdir("Results/"*HPC_folder*"/"*foldername)
+    end
+    m = [collect(feasible[i, :]) for i in 1:size(feasible, 1)]
+    open(joinpath("Results",HPC_folder,foldername,filename*".json"), "w") do file
+        JSON.print(file, m, 4)
+    end
+end 
 
