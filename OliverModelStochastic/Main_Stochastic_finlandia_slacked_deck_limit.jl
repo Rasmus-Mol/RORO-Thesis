@@ -9,21 +9,38 @@ using .StowagePlannerStochastic
 using JuMP
 
 parse_index = parse(Int, ARGS[1]) # Jobindex input - should be changed
-#parse_index = 1
+#parse_index = 5
 # Choose instance:
-test_problem_name = Finlandia_test[1]
+test_problem_name = Finlandia_test[parse_index]
 
 problem_det = load_data("finlandia", test_problem_name, "hazardous")
 
 # Folder name for results - date and hour
 HPC_folder = "Finlandia_" * test_problem_name * "_SlackDeck1_" * Dates.format(now(), "dd_mm_HH")
-# Describe tests if necessary
-extra_info = "Ship: Finlandia, Test problem: " * test_problem_name * " - Yes Scenario reduction, Yes noise, Yes EVP, Yes Slack deck limit on deck 1"
-
 slack_fraction = [[1.05, 1, 1], [1.1, 1, 1], [1.2, 1, 1]]
+# Describe tests if necessary
+extra_info = "Ship: Finlandia, Test problem: " * test_problem_name * " - Yes Scenario reduction, Yes noise, Yes EVP, Yes Slack deck limit on deck: $(slack_fraction)"
+
+slack_fraction = [[1.1, 1, 1], [1.2, 1, 1], [1.3, 1, 1]]
+# Scenarios we test - length has to fit to
+# TODO: Should change when I know how many is needed
+#scenarios = [10, 20, 30, 40, 50]
+scenarios = [10]#, 20]
+sc = scenarios[1]#scenarios[parse_index] # number scenarios for current job
+n_cargo_unknownweight = [length(problem_det.cargo)] # all cargo weights are unknown
+time_limit = 60 * 60 # 1 hour
+repetitions = 5#10 # number of repetitions of same inputs
+
+# Check if folder and file has been created, otherwise create
+file_check = "Results/" * HPC_folder * "HPC_data.json"
+if !isfile(file_check)
+    # Save scenario and number of unknown weights
+    write_HPC_data(repetitions, scenarios, n_cargo_unknownweight, time_limit, HPC_folder, extra_info)
+end
+
 
 # First job index - create problem 
-if parse_index == 1
+#if parse_index == 1
     for i in 1:length(slack_fraction)
         # Create model with slack deck limit
         model_det = create_model_slack_deck(problem_det, slack_fraction[i])
@@ -34,23 +51,7 @@ if parse_index == 1
         # Save Solution for deterministic problem
         write_solution(solution_det, "Finlandia_deterministic", "Deterministic_Solution_slack_$(i)", HPC_folder)
     end
-end
-
-# Scenarios we test - length has to fit to
-# TODO: Should change when I know how many is needed
-#scenarios = [10, 20, 30, 40, 50]
-scenarios = [10, 20]
-sc = scenarios[parse_index] # number scenarios for current job
-n_cargo_unknownweight = [length(problem_det.cargo)] # all cargo weights are unknown
-time_limit = 60 * 60 # 1 hour
-repetitions = 10 # number of repetitions of same inputs
-
-# Check if folder and file has been created, otherwise create
-file_check = "Results/" * HPC_folder * "HPC_data.json"
-if !isfile(file_check)
-    # Save scenario and number of unknown weights
-    write_HPC_data(repetitions, scenarios, n_cargo_unknownweight, time_limit, HPC_folder, extra_info)
-end
+#end
 
 # Run tests
 initial_scenarios = 100
@@ -58,7 +59,7 @@ for j in 1:length(slack_fraction)
     for i in 1:repetitions
         # uniform random sampling method
         # not necessary to do scenario reduction on this method
-        pro = create_stochastic_problem(problem_det, initial_scenarios, n_cargo_unknownweight[1], [])
+        pro = create_stochastic_problem(problem_det, sc, n_cargo_unknownweight[1], [])
         # Save problem
         foldername = "Stochastic_random_sampling_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)_slack_$(slack_fraction[j])"
         write_problem_stochastic(pro, foldername, "Stochastic_Problem", HPC_folder)
@@ -91,10 +92,14 @@ for j in 1:length(slack_fraction)
             optimize!(second_stage_m_slacked)
             fitted_sol_slacked = get_solution_second_stage_stochastic(problem_det, second_stage_m_slacked, sol)
             write_solution(fitted_sol_slacked, foldername, "Fitted_Solution_slacked", HPC_folder)
-            write_slack(HPC_folder, foldername, "Fitted_Solution", second_stage_m_slacked)
+            if primal_status(second_stage_m_slacked) == MOI.FEASIBLE_POINT || termination_status(second_stage_m_slacked) == MOI.OPTIMAL
+                write_slack(HPC_folder, foldername, "Fitted_Solution", second_stage_m_slacked)
+            end
         end
         # EVP method for uniform random sampling method 
-        foldername = "EVP_random_sampling_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)"
+        foldername = "EVP_random_sampling_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)_slack_$(slack_fraction[j])"
+        # Save stochastic problems scenarios
+        pro_sto = pro
         pro = expected_value_problem(pro)
         # Save problem
         write_problem(pro, foldername, "EVP_Problem", HPC_folder)
@@ -107,7 +112,25 @@ for j in 1:length(slack_fraction)
         # Save solution
         write_solution(sol, foldername, "EVP_Solution", HPC_folder)
         cs_sol = sol.cs
-        #second_stage_m = second_stage_model(cs_sol, problem_det)
+        # Finding solutions to each scenario for EVP
+        for l in 1:sc
+            # create problems
+            pro_temp = StowageProblem(
+                vessel = problem_det.vessel,
+                slots = problem_det.slots,
+                cargo = pro_sto.cargo.items[l],   
+                # Problem metadata
+                name = "EVP Random $(l)",
+                timestamp = now()
+            )
+            EVP_model = second_stage_model_deckslacked(cs_sol, pro_temp, slack_fraction[j])
+            set_silent(EVP_model) # removes terminal output
+            set_time_limit_sec(EVP_model, time_limit)
+            optimize!(EVP_model)
+            fitted_sol_EVP = get_solution_second_stage_deterministic(pro_temp, EVP_model, sol)
+            write_solution(fitted_sol_EVP, foldername, "Fitted_Solution_EVP_$(l)", HPC_folder)
+        end
+        # Second stage model with this solution and deterministic weights
         second_stage_m = second_stage_model_deckslacked(cs_sol, problem_det, slack_fraction[j])
         set_silent(second_stage_m) # removes terminal output
         set_time_limit_sec(second_stage_m, time_limit)
@@ -125,7 +148,9 @@ for j in 1:length(slack_fraction)
             optimize!(second_stage_m_slacked)
             fitted_sol_slacked = get_solution_second_stage_deterministic(problem_det, second_stage_m_slacked, sol)
             write_solution(fitted_sol_slacked, foldername, "Fitted_Solution_slacked", HPC_folder)
-            write_slack(HPC_folder, foldername, "Fitted_Solution", second_stage_m_slacked)
+            if primal_status(second_stage_m_slacked) == MOI.FEASIBLE_POINT || termination_status(second_stage_m_slacked) == MOI.OPTIMAL
+                write_slack(HPC_folder, foldername, "Fitted_Solution", second_stage_m_slacked)
+            end 
         end
         # Bootstrap method 1
         # TODO: scenario reduction
@@ -134,7 +159,7 @@ for j in 1:length(slack_fraction)
         # TODO: how many scenarios reduce to, i.e. sc
         pro = scenario_reduced(pro, sc, scenario_reduction_clustering, 60)
         # Save problem
-        foldername = "Stochastic_Bootstrap1_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)"
+        foldername = "Stochastic_Bootstrap1_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)_slack_$(slack_fraction[j])"
         write_problem_stochastic(pro, foldername, "Stochastic_Problem", HPC_folder)
         #mo = create_model_stochastic(pro)
         mo = create_model_stochastic_slack_deck(pro, slack_fraction[j]) 
@@ -164,10 +189,13 @@ for j in 1:length(slack_fraction)
             optimize!(second_stage_m_slacked)
             fitted_sol_slacked = get_solution_second_stage_stochastic(problem_det, second_stage_m_slacked, sol)
             write_solution(fitted_sol_slacked, foldername, "Fitted_Solution_slacked", HPC_folder)
-            write_slack(HPC_folder, foldername, "Fitted_Solution", second_stage_m_slacked)
+            if primal_status(second_stage_m_slacked) == MOI.FEASIBLE_POINT || termination_status(second_stage_m_slacked) == MOI.OPTIMAL
+                write_slack(HPC_folder, foldername, "Fitted_Solution", second_stage_m_slacked)
+            end
         end
         # EVP method for Bootstrap method 1
-        foldername = "EVP_Bootstrap1_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)"
+        foldername = "EVP_Bootstrap1_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)_slack_$(slack_fraction[j])"
+        pro_sto = pro
         pro = expected_value_problem(pro)
         # Save problem
         write_problem(pro, foldername, "EVP_Problem", HPC_folder)
@@ -180,7 +208,24 @@ for j in 1:length(slack_fraction)
         # Save solution
         write_solution(sol, foldername, "EVP_Solution", HPC_folder)
         cs_sol = sol.cs
-        #second_stage_m = second_stage_model(cs_sol, problem_det)
+        # Finding solutions to each scenario for EVP
+        for l in 1:sc
+            # create problems
+            pro_temp = StowageProblem(
+                vessel = problem_det.vessel,
+                slots = problem_det.slots,
+                cargo = pro_sto.cargo.items[l],    
+                # Problem metadata
+                name = "EVP Bootstrap $(l)",
+                timestamp = now()
+            )
+            EVP_model = second_stage_model_deckslacked(cs_sol, pro_temp, slack_fraction[j])
+            set_silent(EVP_model) # removes terminal output
+            set_time_limit_sec(EVP_model, time_limit)
+            optimize!(EVP_model)
+            fitted_sol_EVP = get_solution_second_stage_deterministic(pro_temp, EVP_model, sol)
+            write_solution(fitted_sol_EVP, foldername, "Fitted_Solution_EVP_$(l)", HPC_folder)
+        end
         second_stage_m = second_stage_model(cs_sol, problem_det)
         set_silent(second_stage_m) # removes terminal output
         set_time_limit_sec(second_stage_m, time_limit) # 5 minutes to solve model
@@ -198,7 +243,9 @@ for j in 1:length(slack_fraction)
             optimize!(second_stage_m_slacked)
             fitted_sol_slacked = get_solution_second_stage_deterministic(problem_det, second_stage_m_slacked, sol)
             write_solution(fitted_sol_slacked, foldername, "Fitted_Solution_slacked", HPC_folder)
-            write_slack(HPC_folder, foldername, "Fitted_Solution", second_stage_m_slacked)
+            if primal_status(second_stage_m_slacked) == MOI.FEASIBLE_POINT || termination_status(second_stage_m_slacked) == MOI.OPTIMAL
+                write_slack(HPC_folder, foldername, "Fitted_Solution", second_stage_m_slacked)
+            end
         end
     end
 end

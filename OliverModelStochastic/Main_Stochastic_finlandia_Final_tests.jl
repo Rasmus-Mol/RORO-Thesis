@@ -65,7 +65,7 @@ temp_pro_end = scenario_reduced(temp_pro, sc, scenario_reduction_clustering,60)
 for i in 1:repetitions
     # uniform random sampling method
     # not necessary to do scenario reduction on this method
-    pro = create_stochastic_problem(problem_det, initial_scenarios, n_cargo_unknownweight[1], []) 
+    pro = create_stochastic_problem(problem_det, sc, n_cargo_unknownweight[1], []) 
     # Save problem
     foldername = "Stochastic_random_sampling_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)"
     write_problem_stochastic(pro,foldername,"Stochastic_Problem",HPC_folder)
@@ -99,6 +99,7 @@ for i in 1:repetitions
     end
     # EVP method for uniform random sampling method 
     foldername = "EVP_random_sampling_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)"
+    pro_sto = pro
     pro = expected_value_problem(pro)
     # Save problem
     write_problem(pro,foldername,"EVP_Problem",HPC_folder)
@@ -110,6 +111,24 @@ for i in 1:repetitions
     # Save solution
     write_solution(sol,foldername,"EVP_Solution",HPC_folder)
     cs_sol = sol.cs
+    # Finding solutions to each scenario for EVP
+    for l in 1:sc
+        # create problems
+        pro_temp = StowageProblem(
+            vessel = problem_det.vessel,
+            slots = problem_det.slots,
+            cargo = pro_sto.cargo.items[l],   
+            # Problem metadata
+            name = "EVP Random sampling $(l)",
+            timestamp = now()
+            )
+        EVP_model = second_stage_model(cs_sol, pro_temp)
+        set_silent(EVP_model) # removes terminal output
+        set_time_limit_sec(EVP_model, time_limit)
+        optimize!(EVP_model)
+        fitted_sol_EVP = get_solution_second_stage_deterministic(pro_temp, EVP_model, sol)
+        write_solution(fitted_sol_EVP, foldername, "Fitted_Solution_EVP_$(l)", HPC_folder)
+    end
     second_stage_m = second_stage_model(cs_sol, problem_det)
     set_silent(second_stage_m) # removes terminal output
     set_time_limit_sec(second_stage_m, time_limit) 
@@ -132,7 +151,7 @@ for i in 1:repetitions
     # TODO: scenario reduction
     problem_det_noise = add_white_noise_to_test_instance(problem_det)
     pro = create_stochastic_problem(problem_det_noise, initial_scenarios, n_cargo_unknownweight[1], [],Bootstrap_bookedweight_quantile) 
-    # TODO: how many scenarios reduce to, i.e. sc
+    # Scenario reduction
     pro = scenario_reduced(pro, sc, scenario_reduction_clustering,60)
     # Save problem
     foldername = "Stochastic_Bootstrap1_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)"
@@ -166,6 +185,7 @@ for i in 1:repetitions
     end
     # EVP method for Bootstrap method 1
     foldername = "EVP_Bootstrap1_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)"
+    pro_sto = pro
     pro = expected_value_problem(pro)
     # Save problem
     write_problem(pro,foldername,"EVP_Problem",HPC_folder)
@@ -177,6 +197,24 @@ for i in 1:repetitions
     # Save solution
     write_solution(sol,foldername,"EVP_Solution",HPC_folder)
     cs_sol = sol.cs
+    # Finding solutions to each scenario for EVP
+    for l in 1:sc
+        # create problems
+        pro_temp = StowageProblem(
+            vessel = problem_det.vessel,
+            slots = problem_det.slots,
+            cargo = pro_sto.cargo.items[l],   
+            # Problem metadata
+            name = "EVP Bootstrap sampling $(l)",
+            timestamp = now()
+            )
+        EVP_model = second_stage_model(cs_sol, pro_temp)
+        set_silent(EVP_model) # removes terminal output
+        set_time_limit_sec(EVP_model, time_limit)
+        optimize!(EVP_model)
+        fitted_sol_EVP = get_solution_second_stage_deterministic(pro_temp, EVP_model, sol)
+        write_solution(fitted_sol_EVP, foldername, "Fitted_Solution_EVP_$(l)", HPC_folder)
+    end
     second_stage_m = second_stage_model(cs_sol, problem_det)
     set_silent(second_stage_m) # removes terminal output
     set_time_limit_sec(second_stage_m, time_limit) # 5 minutes to solve model
