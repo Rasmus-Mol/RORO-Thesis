@@ -249,7 +249,7 @@ end
 
 ################################
 # Works
-# Uses clustering and K-means to reduce scenarios 
+# Uses clustering to reduce scenarios 
 function scenario_reduction_clustering(CargoC::CargoCollectionScenarios, probability, sc, timelimit)
     # Find Cost matrix
     sc_old = length(CargoC.items)

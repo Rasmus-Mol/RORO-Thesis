@@ -113,3 +113,52 @@ function expected_value_problem(problem::StochasticStowageProblem)
         name = problem.name
     )
 end
+
+
+# Creates a stochastic problem where, if there are any, the cars are given a random constant weight
+function create_stochastic_problem_cars_known(problem::StowageProblem, s::Int64)
+    # find ids which are not cars
+    ids = [c.id for c in filter(x-> x.cargo_type_id != 2, problem.cargo)]
+    ids_cars = [c.id for c in filter(x-> x.cargo_type_id == 2, problem.cargo)]
+    # generate random weights for cars
+    if !isempty(ids_cars)
+        new_cargo = Vector{Cargo}()
+        for i in 1:length(problem.cargo)
+            if i in ids_cars
+                push!(new_cargo, Cargo(
+                    id = i,
+                    cargo_type_id = 2, # car
+                    weight = random_weight(2), # car
+                    loading_port = problem.cargo.items[i].loading_port,
+                    discharge_port = problem.cargo.items[i].discharge_port,
+                    priority = problem.cargo.items[i].priority,
+                    requires_lashing = problem.cargo.items[i].requires_lashing,
+                    requires_ventilation = problem.cargo.items[i].requires_ventilation,
+                    hazardous = problem.cargo.items[i].hazardous,
+                    refers = problem.cargo.items[i].refers
+                ))
+            else # copy cargo
+                push!(new_cargo, problem.cargo[i])
+            end
+        end
+        # New problem
+        problem = StowageProblem(
+            vessel = problem.vessel,
+            slots = problem.slots,
+            cargo = CargoCollection(new_cargo),
+            name = problem.name,
+            timestamp = problem.timestamp
+        )
+    end
+    cargo_scenarios, probability = Bootstrap_bookedweight_quantile(problem,s,ids)
+    new_problem = StochasticStowageProblem(
+        vessel = problem.vessel,
+        slots = problem.slots,
+        cargo = cargo_scenarios,
+        unknown_weights = sort(ids_cars),
+        known_weights = sort(ids),
+        scenarios = s,
+        probability = probability,
+        name = problem.name)
+    return new_problem
+end

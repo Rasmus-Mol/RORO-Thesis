@@ -258,3 +258,94 @@ for l in 1:length(HPC_folders)
         end
     end
 end
+
+
+
+# New tests, shows only how many times it were feasible
+#HPC_folder_load = "Finlandia_stability_tests_stochastic_All_results/"
+HPC_folder_load = "Finlandia_stability_tests_stochastic_All_results_with_slack_infeasibility/"
+
+feas_gen = Array{Any}(undef, 8)
+feas_boot = Array{Any}(undef, 8)
+sc = 5 # number of different scenario numbers
+repetitions = 10 # number of repetitions
+no_test = 10
+slack_gen = Array{Any}(nothing, 8, sc, repetitions, no_test)
+slack_boot = Array{Any}(nothing, 8, sc, repetitions, no_test)
+count_gen = 0
+count_boot = 0
+for i in 1:8
+    foldername = "Stochastic_Stability_randomscenarios_uniformsampling_instance_$(i)"
+    filename = "FeasibilityMatrix"
+    feas_gen[i] = get_stability_of_solution(foldername, filename, HPC_folder_load)
+    # Get all files in the folder
+    entries = readdir("Results/$(HPC_folder_load)/$(foldername)")
+    files = filter(name -> isfile(joinpath("Results/$(HPC_folder_load)/$(foldername)", name)), entries)
+    if length(files) > 1
+        # read slack
+        for j in 1:sc
+            for k in 1:repetitions
+                for l in 1:no_test
+                    if "Fitted_Solution_sc_$(j)_rep_$(k)_slacked_$(l)_slack.json" in files # if there is a slack solution
+                        slack_gen[i, j, k, l] = get_slack(foldername, "Fitted_Solution_sc_$(j)_rep_$(k)_slacked_$(l)", HPC_folder_load)
+                        #println("Got her - Gen")
+                        count_gen += 1
+                    end
+                end
+            end
+        end
+    end
+
+    foldername = "Stochastic_Stability_randomscenarios_Bootstrap_instance_$(i)"
+    feas_boot[i] = get_stability_of_solution(foldername, filename, HPC_folder_load)
+    # Get all files in the folder
+    entries = readdir("Results/$(HPC_folder_load)/$(foldername)")
+    files = filter(name -> isfile(joinpath("Results/$(HPC_folder_load)/$(foldername)", name)), entries)
+    if length(files) > 1
+        # read slack
+        for j in 1:sc
+            for k in 1:repetitions
+                for l in 1:no_test
+                    if "Fitted_Solution_sc_$(j)_rep_$(k)_slacked_$(l)_slack.json" in files # if there is a slack solution
+                        slack_boot[i, j, k, l] = get_slack(foldername, "Fitted_Solution_sc_$(j)_rep_$(k)_slacked_$(l)", HPC_folder_load)
+                        #println("Got her - boot")
+                        count_boot += 1
+                    end
+                end
+            end
+        end
+    end
+end
+# feas_boot[1]: matrix sc x repetitions
+feas_gen_instance = [sum.(feas_gen[i]) for i in 1:8]
+feas_boot_instance = [sum.(feas_boot[i]) for i in 1:8]
+
+feas_gen_instance
+feas_boot_instance
+
+
+slack_gen[end,1,end,end]
+# Check reason for infeasibility
+#slack_gen = Array{Any}(nothing, 8, sc, repetitions, no_test)
+slack_idx_not_deck = []
+slack_idex_not_deck = []
+for i in 1:8
+    for j in 1:sc
+        for k in 1:repetitions
+            for l in 1:no_test
+                if !isnothing(slack_gen[i, j, k, l]) # if there is a slack solution
+                    if slack_gen[i, j, k, l][1][1] == 0 # if there is a slack
+                        println("Not deck 1 weight limit that is the issue: ", slack_gen[i, j, k, l])
+                        push!(slack_idx_not_deck, (i,j,k,l))
+                    end
+                end
+                if !isnothing(slack_boot[i, j, k, l]) # if there is a slack solution
+                    if slack_boot[i, j, k, l][1][1] == 0 # if there is a slack elsewhere
+                        println("Not deck 1 weight limit that is the issue: ", slack_boot[i, j, k, l])
+                        push!(slack_idex_not_deck, (i,j,k,l))
+                    end
+                end
+            end
+        end
+    end
+end

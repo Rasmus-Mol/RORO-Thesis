@@ -27,6 +27,7 @@ using PrettyTables
 using StatsPlots
 using Printf
 using Clustering
+using MultivariateStats
 
 include("src/representation/cargo.jl")
 include("src/representation/deck.jl")
@@ -60,6 +61,7 @@ include("src/model/random_stowage_plan.jl")
 include("src/representation/VarianceOfWeight.jl")
 include("Feasibility_check.jl")
 include("src/model/second_stage_model_v2.jl")
+include("src/utils/addnoise.jl")
 
 const GRB_ENV = Ref{Gurobi.Env}()
 function __init__()

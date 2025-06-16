@@ -255,7 +255,7 @@ normal_var_truck = (df_trailer_quan.Variance.-mean(df_trailer_quan.Variance))./s
 qqplot(normal_var_truck, Normal(0, 1), title="Trucks Q-Q Plot", xlabel="Theoretical Quantiles", ylabel="Truck Quantiles")
 savefig(plot_folder_historic*"QQPlot_truck.png")
 # Removing outliers
-remove_outliers = true
+remove_outliers = false#true
 df_secu_quan,a = seperate_data_into_quantiles(df_secu,n_quantiles,remove_outliers)
 df_trailer_quan, b= seperate_data_into_quantiles(df_trailer,n_quantiles,remove_outliers)
 
@@ -290,14 +290,15 @@ nbins = 30
 test = fit(Histogram, df_trailer_quan.CountBookedWeight./1000, nbins=nbins)
 binedges = test.edges[1]
 histogram(df_trailer_quan.CountBookedWeight, bins=nbins, xlabel="Weight (t.)",
-ylabel="Frequency", title="Trailer booked weight distribution", legend=false)
+ylabel="Frequency", title="Trucks booked weight distribution", legend=false)
 xticks!(binedges)
 plot!(xtickfontsize=4,formatter=:plain)
 savefig(plot_folder_historic*"Weight_booked_trailer.png")
 # Er den her bedre?
 histogram(df_trailer_quan.CountBookedWeight./1000, xlabel="Weight (t.)",
-ylabel="Frequency", title="Trailer booked weight distribution", legend=false)
+ylabel="Frequency", title="Trucks booked weight distribution", legend=false)
 plot!(formatter=:plain)
+savefig(plot_folder_historic*"Weight_booked_trailer.png")
 
 # Weight variance
 nbins = 20

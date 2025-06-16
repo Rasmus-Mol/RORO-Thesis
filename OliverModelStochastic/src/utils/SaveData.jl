@@ -382,3 +382,9 @@ function save_stability_of_solution(HPC_folder::String, foldername::String, file
     end
 end 
 
+function get_stability_of_solution(foldername::String, filename::String, HPC_folder::String)
+    open(joinpath("Results",HPC_folder,foldername,filename*".json"), "r") do file
+        feasible = JSON3.read(read(file, String), Vector{Vector{Float64}})
+        return feasible
+    end
+end
