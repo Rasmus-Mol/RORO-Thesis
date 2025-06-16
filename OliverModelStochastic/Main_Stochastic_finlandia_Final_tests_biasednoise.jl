@@ -21,7 +21,7 @@ initial_scenarios = 100
 # Folder name for results - date and hour
 HPC_folder = "Finlandia_" * test_problem_name * "_sc_$(initial_scenarios)_biasednoise_" * Dates.format(now(), "dd_mm_HH")
 # Describe tests if necessary
-extra_info = "Ship: Finlandia, Test problem: " * test_problem_name * " - Yes Scenario reduction, Yes noise, Yes EVP"
+extra_info = "Ship: Finlandia, Test problem: " * test_problem_name * " - Yes Scenario reduction, Yes Biased noise, Yes EVP"
 
 # First job index - create problem 
 #=
@@ -71,6 +71,7 @@ for i in 1:repetitions
     pro = scenario_reduced(pro, sc, scenario_reduction_clustering, 60)
     # Save problem
     foldername = "Stochastic_Bootstrap1_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)"
+    # To save space do not save 
     #write_problem_stochastic(pro,foldername,"Stochastic_Problem",HPC_folder)
     mo = create_model_stochastic(pro)
     set_silent(mo) # removes terminal output
@@ -97,7 +98,8 @@ for i in 1:repetitions
         optimize!(second_stage_m_slacked)
         fitted_sol_slacked = get_solution_second_stage_stochastic(problem_det, second_stage_m_slacked, sol)
         write_solution(fitted_sol_slacked, foldername, "Fitted_Solution_slacked", HPC_folder)
-        if primal_status(second_stage_m_slacked) == MOI.FEASIBLE_POINT
+        # check if a solution exists
+        if primal_status(second_stage_m_slacked) == MOI.FEASIBLE_POINT || termination_status(second_stage_m_slacked) == MOI.OPTIMAL
             write_slack(HPC_folder, foldername, "Fitted_Solution", second_stage_m_slacked)
         end
     end
@@ -105,8 +107,8 @@ for i in 1:repetitions
     foldername = "EVP_Bootstrap1_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)"
     sto_pro = pro
     pro = expected_value_problem(pro)
-    # Save problem
-    write_problem(pro, foldername, "EVP_Problem", HPC_folder)
+    # Save problem - do not do in order to save space 
+    #write_problem(pro, foldername, "EVP_Problem", HPC_folder)
     mo = create_model(pro)
     set_silent(mo) # removes terminal output
     set_time_limit_sec(mo, time_limit)
@@ -119,12 +121,12 @@ for i in 1:repetitions
     for h in 1:sc
         # create problems
         pro_temp = StowageProblem(
-            vessel=problem_det.vessel,
-            slots=problem_det.slots,
-            cargo=sto_pro.cargo.items[h],
+            vessel = problem_det.vessel,
+            slots = problem_det.slots,
+            cargo = sto_pro.cargo.items[h],
             # Problem metadata
-            name="EVP Random $(h)",
-            timestamp=now()
+            name = "EVP Random $(h)",
+            timestamp = now()
         )
         # Just using slack model initially
         EVP_model = second_stage_model_slack(cs_sol, pro_temp)
@@ -141,8 +143,12 @@ for i in 1:repetitions
              value.(EVP_model[:slack_ballast_tanks])
             ] 
         # Check if slack is used
-        if sum(slack) > 0.001
-            inf_index_EVP[i,h] = 1
+        if sum(sum(slack)) > 0.001
+            if sum(slack[1]) > 0.001
+                inf_index_EVP[i,h] = 1
+            else
+                inf_index_EVP[i,h] = 2
+            end
         end
         obj_val_EVP[i,h] = fitted_sol_EVP.objective
         cargo_load_EVP[i,h] = fitted_sol_EVP.n_cargo_loaded
@@ -153,12 +159,6 @@ for i in 1:repetitions
         #end
     end
 end
-# Save results
-Save_EVP_results(HPC_folder, "Objective_values", obj_val_EVP)
-Save_EVP_results(HPC_folder, "Cargo_loaded", cargo_load_EVP)
-Save_EVP_results(HPC_folder, "Ballast_used", ballast_used_EVP)
-Save_EVP_results(HPC_folder, "Inf_index", inf_index_EVP)
-
 # Function should be copied to savedata.jl
 function Save_EVP_results_2D(HPC_folder::String,filename::String ,matrix)
     if !isdir("Results/"*HPC_folder)
@@ -181,3 +181,9 @@ function Get_EVP_results_2D(HPC_folder::String, filename::String)
     end
     return mat
 end
+
+# Save results
+Save_EVP_results(HPC_folder, "Objective_values", obj_val_EVP)
+Save_EVP_results(HPC_folder, "Cargo_loaded", cargo_load_EVP)
+Save_EVP_results(HPC_folder, "Ballast_used", ballast_used_EVP)
+Save_EVP_results(HPC_folder, "Inf_index", inf_index_EVP)

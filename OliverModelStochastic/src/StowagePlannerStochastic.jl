@@ -99,7 +99,7 @@ export scenario_reduction_heuristic, scenario_reduction_naive
 export scenario_reduced, scenario_reduction_clustering
 
 # Noise
-export add_white_noise_to_test_instance
+export add_white_noise_to_test_instance, add_biased_noise_to_test_instance
 
 # slack
 export create_model_slack_deck, create_model_stochastic_slack_deck, second_stage_model_deckslacked

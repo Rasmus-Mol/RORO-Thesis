@@ -1,0 +1,16 @@
+Loaded module: julia/1.11.3
+Loaded module: gurobi/12.0.1
+  Activating project at `~/RORO-Thesis/OliverModelStochastic`
+ERROR: LoadError: UndefVarError: `JSON` not defined in `Main`
+Suggestion: check for spelling errors or missing imports.
+Hint: JSON is loaded but not imported in the active module Main.
+Stacktrace:
+ [1] (::var"#5#6")(file::IOStream)
+   @ Main ~/RORO-Thesis/OliverModelStochastic/main_small_test.jl:16
+ [2] open(::var"#5#6", ::String, ::Vararg{String}; kwargs::@Kwargs{})
+   @ Base ./io.jl:410
+ [3] open(::Function, ::String, ::String)
+   @ Base ./io.jl:407
+ [4] top-level scope
+   @ ~/RORO-Thesis/OliverModelStochastic/main_small_test.jl:15
+in expression starting at /zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic/main_small_test.jl:15

@@ -31,7 +31,13 @@ n = length(n_unknown)
 Deterministic_Solution = get_solution_deterministic("Finlandia_deterministic",
     "Deterministic_Solution", HPC_folder)
 problem_det = load_data(problemname1, test_instance, problemname3)
+
+# TODO: FIX this so i save these values
 sol_evp = Array{Any}(nothing, repetitions,sc,n,scenarios[end])
+obj_val_EVP = Array{Any}(nothing, repetitions,sc)
+cargo_load_EVP = Array{Any}(nothing, repetitions,sc)
+ballast_used_EVP = Array{Any}(nothing, repetitions,sc)
+inf_index_EVP = zeros(repetitions, sc)
 for i in 1:repetitions
     for j in 1:sc
         for k in 1:n

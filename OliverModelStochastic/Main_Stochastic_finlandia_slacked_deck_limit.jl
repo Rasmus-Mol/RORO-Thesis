@@ -17,11 +17,11 @@ problem_det = load_data("finlandia", test_problem_name, "hazardous")
 
 # Folder name for results - date and hour
 HPC_folder = "Finlandia_" * test_problem_name * "_SlackDeck1_" * Dates.format(now(), "dd_mm_HH")
-slack_fraction = [[1.05, 1, 1], [1.1, 1, 1], [1.2, 1, 1]]
+slack_fraction = [[1.05, 1, 1], [1.1, 1, 1]]#, [1.2, 1, 1]]
 # Describe tests if necessary
 extra_info = "Ship: Finlandia, Test problem: " * test_problem_name * " - Yes Scenario reduction, Yes noise, Yes EVP, Yes Slack deck limit on deck: $(slack_fraction)"
 
-slack_fraction = [[1.1, 1, 1], [1.2, 1, 1], [1.3, 1, 1]]
+slack_fraction = [[1.1, 1, 1], [1.2, 1, 1]]#, [1.3, 1, 1]]
 # Scenarios we test - length has to fit to
 # TODO: Should change when I know how many is needed
 #scenarios = [10, 20, 30, 40, 50]
@@ -29,7 +29,7 @@ scenarios = [10]#, 20]
 sc = scenarios[1]#scenarios[parse_index] # number scenarios for current job
 n_cargo_unknownweight = [length(problem_det.cargo)] # all cargo weights are unknown
 time_limit = 60 * 60 # 1 hour
-repetitions = 5#10 # number of repetitions of same inputs
+repetitions = 5 #10 # number of repetitions of same inputs
 
 # Check if folder and file has been created, otherwise create
 file_check = "Results/" * HPC_folder * "HPC_data.json"
@@ -62,7 +62,8 @@ for j in 1:length(slack_fraction)
         pro = create_stochastic_problem(problem_det, sc, n_cargo_unknownweight[1], [])
         # Save problem
         foldername = "Stochastic_random_sampling_rep$(i)_sc$(sc)_unknown$(n_cargo_unknownweight[1])_time$(time_limit)_slack_$(slack_fraction[j])"
-        write_problem_stochastic(pro, foldername, "Stochastic_Problem", HPC_folder)
+        # To save space
+        #write_problem_stochastic(pro, foldername, "Stochastic_Problem", HPC_folder)
         #mo = create_model_stochastic(pro)
         mo = create_model_stochastic_slack_deck(pro, slack_fraction[j]) 
         set_silent(mo) # removes terminal output
