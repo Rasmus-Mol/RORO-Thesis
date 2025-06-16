@@ -388,3 +388,26 @@ function get_stability_of_solution(foldername::String, filename::String, HPC_fol
         return feasible
     end
 end
+
+function save_EVP_objective(HPC_folder::String, filename::String, obj)
+    if !isdir("Results/"*HPC_folder)
+        mkdir("Results/"*HPC_folder)
+    end
+    if !isdir("Results/"*HPC_folder*"/"*foldername)
+        mkdir("Results/"*HPC_folder*"/"*foldername)
+    end
+    m = [[[ [obj[i,j,k,l] for l in 1:size(obj,4)]
+    for k in 1:size(obj,3)]
+    for j in 1:size(obj,2)]
+    for i in 1:size(obj,1)]
+    open(joinpath("Results",HPC_folder,foldername,filename*".json"), "w") do file
+        JSON.print(file, m, 4)
+    end
+end 
+
+function get_obj_of_evp(foldername::String, filename::String, HPC_folder::String)
+    open(joinpath("Results",HPC_folder,foldername,filename*".json"), "r") do file
+        obj = JSON3.read(read(file, String), Vector{Vector{Vector{Vector{Float64}}}})
+        return obj
+    end
+end

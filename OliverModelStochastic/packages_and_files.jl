@@ -27,7 +27,7 @@ using PrettyTables
 using StatsPlots
 using Printf
 using Clustering
-using MultivariateStats
+#using MultivariateStats
 
 include("src/representation/cargo.jl")
 include("src/representation/deck.jl")
