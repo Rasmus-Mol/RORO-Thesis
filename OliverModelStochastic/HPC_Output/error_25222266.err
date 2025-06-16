@@ -1,0 +1,12 @@
+Loaded module: julia/1.11.3
+Loaded module: gurobi/12.0.1
+  Activating project at `~/RORO-Thesis/OliverModelStochastic`
+ERROR: LoadError: BoundsError: attempt to access 0-element Vector{String} at index [1]
+Stacktrace:
+ [1] throw_boundserror(A::Vector{String}, I::Tuple{Int64})
+   @ Base ./essentials.jl:14
+ [2] getindex(A::Vector{String}, i::Int64)
+   @ Base ./essentials.jl:916
+ [3] top-level scope
+   @ ~/RORO-Thesis/OliverModelStochastic/Main_Stochastic_finlandia_slacked_deck_limit.jl:11
+in expression starting at /zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic/Main_Stochastic_finlandia_slacked_deck_limit.jl:11

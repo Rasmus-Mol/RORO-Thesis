@@ -1,0 +1,33 @@
+Loaded module: julia/1.11.3
+Loaded module: gurobi/12.0.1
+  Activating project at `~/RORO-Thesis/OliverModelStochastic`
+
+[1995300] signal 11 (1): Segmentation fault
+in expression starting at none:0
+Allocations: 12695653813 (Pool: 12695650734; Big: 3079); GC: 5729
+[ Info: Creating vessel object for 'finlandia'
+[ Info: All required files found, loading vessel data...
+┌ Info: Successfully created vessel object
+│   name = "FINLANDIA"
+└   IMO = 9198721
+[ Info: Simplifying vessel with target points: 50
+ERROR: LoadError: InterruptException:
+Stacktrace:
+ [1] GRBoptimize
+   @ ~/.julia/packages/Gurobi/Br0Mc/src/gen120/libgrb_api.jl:1196 [inlined]
+ [2] optimize!(model::Gurobi.Optimizer)
+   @ Gurobi ~/.julia/packages/Gurobi/Br0Mc/src/MOI_wrapper/MOI_wrapper.jl:2797
+ [3] optimize!
+   @ ~/.julia/packages/MathOptInterface/JdLrc/src/Bridges/bridge_optimizer.jl:367 [inlined]
+ [4] optimize!
+   @ ~/.julia/packages/MathOptInterface/JdLrc/src/MathOptInterface.jl:122 [inlined]
+ [5] optimize!(m::MathOptInterface.Utilities.CachingOptimizer{MathOptInterface.Bridges.LazyBridgeOptimizer{Gurobi.Optimizer}, MathOptInterface.Utilities.UniversalFallback{MathOptInterface.Utilities.Model{Float64}}})
+   @ MathOptInterface.Utilities ~/.julia/packages/MathOptInterface/JdLrc/src/Utilities/cachingoptimizer.jl:370
+ [6] optimize!(model::Model; ignore_optimize_hook::Bool, _differentiation_backend::MathOptInterface.Nonlinear.SparseReverseMode, kwargs::@Kwargs{})
+   @ JuMP ~/.julia/packages/JuMP/xlp0s/src/optimizer_interface.jl:595
+ [7] optimize!
+   @ ~/.julia/packages/JuMP/xlp0s/src/optimizer_interface.jl:546 [inlined]
+ [8] top-level scope
+   @ ~/RORO-Thesis/OliverModelStochastic/Main_Stochastic_finlandia_slacked_deck_limit.jl:70
+in expression starting at /zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic/Main_Stochastic_finlandia_slacked_deck_limit.jl:58
+/zhome/e3/5/146953/.lsbatch/1749805794.25226743.shell: line 21: 1995300 Segmentation fault      julia Main_Stochastic_finlandia_slacked_deck_limit.jl

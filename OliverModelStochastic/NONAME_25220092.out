@@ -1,0 +1,42 @@
+JOBID      USER    QUEUE      JOB_NAME   NALLOC STAT  START_TIME      ELAPSED
+25220054   s194364 hpc        *_Tests[6]      4 RUN   Jun 12 17:23    0:02:52
+25220054   s194364 hpc        *_Tests[7]      4 RUN   Jun 12 17:23    0:02:52
+25216443   s194364 hpc        *lity_test      4 RUN   Jun 12 13:24    4:01:33
+25220092   s194364 hpc        NONAME          0 PEND       -          0:00:00
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@hpc.dtu.dk>
+Subject: Job 25220092: <NONAME> in cluster <dcc> Done
+
+Job <NONAME> was submitted from host <n-62-30-3> by user <s194364> in cluster <dcc> at Thu Jun 12 17:26:23 2025
+Job was executed on host(s) <n-62-31-23>, in queue <hpc>, as user <s194364> in cluster <dcc> at Thu Jun 12 17:26:24 2025
+</zhome/e3/5/146953> was used as the home directory.
+</zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic> was used as the working directory.
+Started at Thu Jun 12 17:26:24 2025
+Terminated at Thu Jun 12 17:26:25 2025
+Results reported at Thu Jun 12 17:26:25 2025
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+bstat
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   0.47 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     1024.00 MB
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   99 sec.
+    Turnaround time :                            2 sec.
+
+The output (if any) is above this job summary.
+

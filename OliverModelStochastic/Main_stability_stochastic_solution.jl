@@ -123,7 +123,7 @@ end
 
 # Generate random tests and see if the solutions are stable
 #HPC_folder_save = "Finlandia_stability_tests_stochastic/"
-HPC_folder_save = "Finlandia_stability_tests_stochastic_All_results/"
+HPC_folder_save = "Finlandia_stability_tests_stochastic_All_results_with_slack_infeasibility/"
 if !isdir("Results/" * HPC_folder_save)
     mkdir("Results/" * HPC_folder_save)
 end
@@ -147,7 +147,7 @@ for i in 1:length(HPC_folders)
             sto_pro = create_stochastic_problem(det_pro, no_test, length(det_pro.cargo), [])
             # test
             #HPC_folder_save_temp = HPC_folder_save*test_problem_name*"/" # testing all problems
-            foldername = "Stochastic_Stability_randomscenarios_uniformsampling_instance_$(i)_scenarios_$(scenarios[l])_repetition_$(k)"
+            #foldername = "Stochastic_Stability_randomscenarios_uniformsampling_instance_$(i)_scenarios_$(scenarios[l])_repetition_$(k)"
             # save scenario
             filename = "Stochastic_Problem"
             #write_problem_stochastic(sto_pro, foldername, filename, HPC_folder_save)
@@ -160,11 +160,12 @@ for i in 1:length(HPC_folders)
                     # save result
                     #filename = "Solution_$(j)"
                     #write_solution(sol, foldername, filename, HPC_folder_save)
-                else # Problem was infeasible
+                else # Problem was infeasible - save slack variables
                     #fitted_sol_slacked = get_solution_second_stage_stochastic(det_pro, mo, sto_sol)
                     #get_solution_second_stage_deterministic(det_pro, mo, det_sol)
                     #write_solution(fitted_sol_slacked, foldername, "Solution_$(j)_slacked", HPC_folder_save)
-                    #write_slack(HPC_folder_save, foldername, "Fitted_Solution_slacked_$(j)", mo)
+                    foldername_gen = "Stochastic_Stability_randomscenarios_uniformsampling_instance_$(i)"
+                    write_slack(HPC_folder_save, foldername_gen, "Fitted_Solution_sc_$(l)_rep_$(k)_slacked_$(j)", mo)
                     #infeasible_test1_gen[j,i] = 1 # infeasible
                 end
             end
@@ -172,7 +173,7 @@ for i in 1:length(HPC_folders)
             sto_pro = create_stochastic_problem(det_pro, no_test, length(det_pro.cargo), [],Bootstrap_bookedweight_quantile) 
             # test
             #HPC_folder_save_temp = HPC_folder_save*test_problem_name # testing all problems
-            foldername = "Stochastic_Stability_randomscenarios_Bootstrap_instance_$(i)_scenarios_$(scenarios[l])_repetition_$(k)"
+            #foldername = "Stochastic_Stability_randomscenarios_Bootstrap_instance_$(i)_scenarios_$(scenarios[l])_repetition_$(k)"
             # save scenario
             filename = "Stochastic_Problem"
             #write_problem_stochastic(sto_pro, foldername, filename, HPC_folder_save)
@@ -189,7 +190,8 @@ for i in 1:length(HPC_folders)
                     #fitted_sol_slacked = get_solution_second_stage_stochastic(det_pro, mo, sto_sol)
                     #get_solution_second_stage_deterministic(det_pro, mo, det_sol)
                     #write_solution(fitted_sol_slacked, foldername, "Solution_$(j)_slacked", HPC_folder_save)
-                    #write_slack(HPC_folder_save, foldername, "Fitted_Solution_slacked_$(j)", mo)
+                    foldername_boot = "Stochastic_Stability_randomscenarios_Bootstrap_instance_$(i)"
+                    write_slack(HPC_folder_save, foldername_boot, "Fitted_Solution_sc_$(l)_rep_$(k)_slacked_$(j)", mo)
                     #infeasible_test1_gen[j,i] = 1 # infeasible
                 end
             end   
