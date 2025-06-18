@@ -1,0 +1,65 @@
+Loaded module: julia/1.11.3
+Loaded module: gurobi/12.0.1
+  Activating project at `~/RORO-Thesis/OliverModelStochastic`
+Precompiling project...
+           ✗ StowagePlanner
+  0 dependencies successfully precompiled in 28 seconds. 433 already precompiled.
+
+The following 1 direct dependency failed to precompile:
+
+StowagePlanner 
+
+Failed to precompile StowagePlanner [bb2147e5-aedd-47d3-9089-d85b5e66cae4] to "/zhome/e3/5/146953/.julia/compiled/v1.11/StowagePlanner/jl_T5vpGc".
+ERROR: LoadError: At /zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic/src/model/base_model.jl:653: `@constraint(model, [i in 1:length(vcg_slope)], vcg_ballast[i] = sum((vcg_slope[t] * ballast_volume[t] for t = 1:n_ballast_tanks)))`: Invalid keyword argument detected. If you are trying to construct an equality constraint, use `==` instead of `=`.
+Stacktrace:
+  [1] error(::String, ::String)
+    @ Base ./error.jl:44
+  [2] (::JuMP.Containers.var"#error_fn#98"{String})(str::String)
+    @ JuMP.Containers ~/.julia/packages/JuMP/xlp0s/src/Containers/macro.jl:336
+  [3] parse_macro_arguments(error_fn::JuMP.Containers.var"#error_fn#98"{String}, args::Tuple{Symbol, Expr, Expr}; valid_kwargs::Nothing, num_positional_args::Nothing)
+    @ JuMP.Containers ~/.julia/packages/JuMP/xlp0s/src/Containers/macro.jl:58
+  [4] parse_macro_arguments(error_fn::Function, args::Tuple{Symbol, Expr, Expr})
+    @ JuMP.Containers ~/.julia/packages/JuMP/xlp0s/src/Containers/macro.jl:41
+  [5] var"@constraint"(__source__::LineNumberNode, __module__::Module, input_args::Vararg{Any})
+    @ JuMP ~/.julia/packages/JuMP/xlp0s/src/macros/@constraint.jl:103
+  [6] include(mod::Module, _path::String)
+    @ Base ./Base.jl:557
+  [7] include(x::String)
+    @ StowagePlanner ~/RORO-Thesis/OliverModelStochastic/src/StowagePlanner.jl:1
+  [8] top-level scope
+    @ ~/RORO-Thesis/OliverModelStochastic/src/StowagePlanner.jl:27
+  [9] include
+    @ ./Base.jl:557 [inlined]
+ [10] include_package_for_output(pkg::Base.PkgId, input::String, depot_path::Vector{String}, dl_load_path::Vector{String}, load_path::Vector{String}, concrete_deps::Vector{Pair{Base.PkgId, UInt128}}, source::Nothing)
+    @ Base ./loading.jl:2881
+ [11] top-level scope
+    @ stdin:6
+in expression starting at /zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic/src/model/base_model.jl:653
+in expression starting at /zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic/src/model/base_model.jl:474
+in expression starting at /zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic/src/StowagePlanner.jl:1
+in expression starting at stdin:ERROR: LoadError: At /zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic/src/model/base_model.jl:653: `@constraint(model, [i in 1:length(vcg_slope)], vcg_ballast[i] = sum((vcg_slope[t] * ballast_volume[t] for t = 1:n_ballast_tanks)))`: Invalid keyword argument detected. If you are trying to construct an equality constraint, use `==` instead of `=`.
+Stacktrace:
+  [1] error(::String, ::String)
+    @ Base ./error.jl:44
+  [2] (::JuMP.Containers.var"#error_fn#98"{String})(str::String)
+    @ JuMP.Containers ~/.julia/packages/JuMP/xlp0s/src/Containers/macro.jl:336
+  [3] parse_macro_arguments(error_fn::JuMP.Containers.var"#error_fn#98"{String}, args::Tuple{Symbol, Expr, Expr}; valid_kwargs::Nothing, num_positional_args::Nothing)
+    @ JuMP.Containers ~/.julia/packages/JuMP/xlp0s/src/Containers/macro.jl:58
+  [4] parse_macro_arguments(error_fn::Function, args::Tuple{Symbol, Expr, Expr})
+    @ JuMP.Containers ~/.julia/packages/JuMP/xlp0s/src/Containers/macro.jl:41
+  [5] var"@constraint"(__source__::LineNumberNode, __module__::Module, input_args::Vararg{Any})
+    @ JuMP ~/.julia/packages/JuMP/xlp0s/src/macros/@constraint.jl:103
+  [6] include(mod::Module, _path::String)
+    @ Base ./Base.jl:557
+  [7] include(x::String)
+    @ Main.StowagePlannerStochastic ~/RORO-Thesis/OliverModelStochastic/src/StowagePlannerStochastic.jl:1
+  [8] top-level scope
+    @ ~/RORO-Thesis/OliverModelStochastic/src/StowagePlannerStochastic.jl:40
+  [9] include(fname::String)
+    @ Main ./sysimg.jl:38
+ [10] top-level scope
+    @ ~/RORO-Thesis/OliverModelStochastic/Panic_Model_test.jl:3
+in expression starting at /zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic/src/model/base_model.jl:653
+in expression starting at /zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic/src/model/base_model.jl:474
+in expression starting at /zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic/src/StowagePlannerStochastic.jl:1
+in expression starting at /zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic/Panic_Model_test.jl:3

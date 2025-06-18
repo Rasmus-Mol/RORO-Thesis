@@ -1,0 +1,41 @@
+Loaded module: julia/1.11.3
+Loaded module: gurobi/12.0.1
+  Activating project at `~/RORO-Thesis/OliverModelStochastic`
+[ Info: Creating vessel object for 'finlandia'
+[ Info: All required files found, loading vessel data...
+┌ Info: Successfully created vessel object
+│   name = "FINLANDIA"
+└   IMO = 9198721
+[ Info: Simplifying vessel with target points: 50
+┌ Warning: Assignment to `sol_evp` in soft scope is ambiguous because a global variable by the same name exists: `sol_evp` will be treated as a new local. Disambiguate by using `local sol_evp` to suppress this warning or `global sol_evp` to assign to the existing global variable.
+└ @ ~/RORO-Thesis/OliverModelStochastic/Main_EVP_boot.jl:68
+[ Info: Creating vessel object for 'finlandia'
+[ Info: All required files found, loading vessel data...
+┌ Info: Successfully created vessel object
+│   name = "FINLANDIA"
+└   IMO = 9198721
+[ Info: Simplifying vessel with target points: 50
+[ Info: Creating vessel object for 'finlandia'
+[ Info: All required files found, loading vessel data...
+┌ Info: Successfully created vessel object
+│   name = "FINLANDIA"
+└   IMO = 9198721
+[ Info: Simplifying vessel with target points: 50
+[ Info: Creating vessel object for 'finlandia'
+[ Info: All required files found, loading vessel data...
+┌ Info: Successfully created vessel object
+│   name = "FINLANDIA"
+└   IMO = 9198721
+[ Info: Simplifying vessel with target points: 50
+[ Info: Creating vessel object for 'finlandia'
+[ Info: All required files found, loading vessel data...
+┌ Info: Successfully created vessel object
+│   name = "FINLANDIA"
+└   IMO = 9198721
+[ Info: Simplifying vessel with target points: 50
+[ Info: Creating vessel object for 'finlandia'
+[ Info: All required files found, loading vessel data...
+┌ Info: Successfully created vessel object
+│   name = "FINLANDIA"
+└   IMO = 9198721
+[ Info: Simplifying vessel with target points: 50

@@ -105,6 +105,10 @@ export add_white_noise_to_test_instance, add_biased_noise_to_test_instance
 export create_model_slack_deck, create_model_stochastic_slack_deck, second_stage_model_deckslacked
 export second_stage_model_deckslacked_slack
 
+# panic model tests
+export create_model_temp, calculate_vcg_slopes_temp, calculate_vcg_slopes, create_model_test
+export calculate_vcg_slopes_1
+
 # Functions to connect to LoadMaster
 #export LoadMaster, getcurrentvessel, resetvessel, upload_solution, getresults, parse_result, uri, headers, struct_to_json
 

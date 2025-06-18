@@ -8,8 +8,8 @@ include("src/utils/test_instances.jl")
 using .StowagePlannerStochastic
 using JuMP
 
-parse_index = parse(Int, ARGS[1]) # Jobindex input - should be changed
-#parse_index = 1
+#parse_index = parse(Int, ARGS[1]) # Jobindex input - should be changed
+parse_index = 6
 # Choose instance:
 #test_problem_name = Finlandia_test[1]
 test_problem_name = Finlandia_test[parse_index]
@@ -134,21 +134,25 @@ for i in 1:repetitions
         set_time_limit_sec(EVP_model, time_limit)
         optimize!(EVP_model)
         fitted_sol_EVP = get_solution_second_stage_deterministic(pro_temp, EVP_model, sol)
-        slack = [value.(EVP_model[:slack_deck]), value.(EVP_model[:slack_Vmax]),value.(EVP_model[:slack_Vmin]),
-            value.(EVP_model[:slack_Tmin]), value.(EVP_model[:slack_Tmax]), 
-            value.(EVP_model[:slack_Lmin]), value.(EVP_model[:slack_Lmax]),
-            #value.(model[:slack_shear1]), value.(model[:slack_shear2]), 
-            value.(EVP_model[:slack_shearMin]),
-            value.(EVP_model[:slack_shearMax]), value.(EVP_model[:slack_bendingMax]),
-             value.(EVP_model[:slack_ballast_tanks])
-            ] 
-        # Check if slack is used
-        if sum(sum(slack)) > 0.001
-            if sum(slack[1]) > 0.001
-                inf_index_EVP[i,h] = 1
-            else
-                inf_index_EVP[i,h] = 2
+        if primal_status(EVP_model) == MOI.FEASIBLE_POINT || termination_status(EVP_model) == MOI.OPTIMAL
+            slack = [value.(EVP_model[:slack_deck]), value.(EVP_model[:slack_Vmax]),value.(EVP_model[:slack_Vmin]),
+                value.(EVP_model[:slack_Tmin]), value.(EVP_model[:slack_Tmax]), 
+                value.(EVP_model[:slack_Lmin]), value.(EVP_model[:slack_Lmax]),
+                #value.(model[:slack_shear1]), value.(model[:slack_shear2]), 
+                value.(EVP_model[:slack_shearMin]),
+                value.(EVP_model[:slack_shearMax]), value.(EVP_model[:slack_bendingMax]),
+                value.(EVP_model[:slack_ballast_tanks])
+                ] 
+            # Check if slack is used
+            if all(x->x > 0.001,vcat(slack...))
+                if sum(slack[1]) > 0.001
+                    inf_index_EVP[i,h] = 1
+                else
+                    inf_index_EVP[i,h] = 2
+                end
             end
+        else
+            inf_index_EVP[i,h] = -1
         end
         obj_val_EVP[i,h] = fitted_sol_EVP.objective
         cargo_load_EVP[i,h] = fitted_sol_EVP.n_cargo_loaded
@@ -159,6 +163,7 @@ for i in 1:repetitions
         #end
     end
 end
+using JSON3, JSON
 # Function should be copied to savedata.jl
 function Save_EVP_results_2D(HPC_folder::String,filename::String ,matrix)
     if !isdir("Results/"*HPC_folder)
@@ -183,7 +188,9 @@ function Get_EVP_results_2D(HPC_folder::String, filename::String)
 end
 
 # Save results
-Save_EVP_results(HPC_folder, "Objective_values", obj_val_EVP)
-Save_EVP_results(HPC_folder, "Cargo_loaded", cargo_load_EVP)
-Save_EVP_results(HPC_folder, "Ballast_used", ballast_used_EVP)
-Save_EVP_results(HPC_folder, "Inf_index", inf_index_EVP)
+Save_EVP_results_2D(HPC_folder, "Objective_values", obj_val_EVP)
+Save_EVP_results_2D(HPC_folder, "Cargo_loaded", cargo_load_EVP)
+Save_EVP_results_2D(HPC_folder, "Ballast_used", ballast_used_EVP)
+Save_EVP_results_2D(HPC_folder, "Inf_index", inf_index_EVP)
+
+println("Done with instance: ",test_problem_name)

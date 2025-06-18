@@ -22,8 +22,13 @@ HPC_folders = [
 problemname1, problemname3 = "finlandia", "hazardous"
 
 parse_index = parse(Int, ARGS[1])
-test_instance = Finlandia_test[parse_index]
-HPC_folder = HPC_folders[parse_index]
+#parse_index = 9
+################
+# Change manually to which problem we are running
+idx = 4
+################
+test_instance = Finlandia_test[idx]
+HPC_folder = HPC_folders[idx]
 repetitions, scenarios, n_unknown, time_limit, note = get_HPC_data(HPC_folder)
 println("Extra info about test: ", note)
 sc = length(scenarios)
@@ -31,9 +36,40 @@ n = length(n_unknown)
 Deterministic_Solution = get_solution_deterministic("Finlandia_deterministic",
     "Deterministic_Solution", HPC_folder)
 problem_det = load_data(problemname1, test_instance, problemname3)
+
+
+# write matrix with objective values
+using JSON, JSON3
+function save_EVP_objective_1D(HPC_folder::String,foldername::String,filename::String, matrix)
+    if !isdir("Results/"*HPC_folder)
+        mkdir("Results/"*HPC_folder)
+    end
+    if !isdir("Results/"*HPC_folder*"/"*foldername)
+        mkdir("Results/"*HPC_folder*"/"*foldername)
+    end
+    # M is 1D
+    open(joinpath("Results",HPC_folder,foldername,filename*".json"), "w") do file
+        JSON.print(file, matrix, 4)
+    end
+end 
+# For later to get results
+function get_obj_of_evp(foldername::String, filename::String, HPC_folder::String)
+    temp = open(joinpath("Results",HPC_folder,foldername,filename*".json"), "r") do file
+        JSON3.read(read(file, String))#, Vector{Vector{Float64}})
+    end
+    return collect(temp)
+end
+
 sol_evp = Array{Any}(nothing, repetitions,sc,n,scenarios[end])
-for i in 1:repetitions
+#for i in 1:repetitions
+i = parse_index
     for j in 1:sc
+        # TODO: FIX this so i save these values - See biased noise script
+        sol_evp = Array{Any}(nothing,scenarios[j])
+        obj_val_EVP = Array{Any}(nothing,scenarios[j])
+        cargo_load_EVP = Array{Any}(nothing,scenarios[j])
+        ballast_used_EVP = Array{Any}(nothing,scenarios[j])
+        inf_index_EVP = zeros(scenarios[j])
         for k in 1:n
             #=
             # Stochastic problem - gen
@@ -138,12 +174,40 @@ for i in 1:repetitions
                 set_time_limit_sec(EVP_model, time_limit)
                 optimize!(EVP_model)
                 fitted_sol_EVP = get_solution_second_stage_deterministic(pro_temp, EVP_model, sol)
-                sol_evp[i,j,k,h] = fitted_sol_EVP.objective
+                if primal_status(EVP_model) == MOI.FEASIBLE_POINT || termination_status(EVP_model) == MOI.OPTIMAL
+                    slack = [value.(EVP_model[:slack_deck]), value.(EVP_model[:slack_Vmax]),value.(EVP_model[:slack_Vmin]),
+                        value.(EVP_model[:slack_Tmin]), value.(EVP_model[:slack_Tmax]), 
+                        value.(EVP_model[:slack_Lmin]), value.(EVP_model[:slack_Lmax]),
+                        #value.(model[:slack_shear1]), value.(model[:slack_shear2]), 
+                        value.(EVP_model[:slack_shearMin]),
+                        value.(EVP_model[:slack_shearMax]), value.(EVP_model[:slack_bendingMax]),
+                        value.(EVP_model[:slack_ballast_tanks])
+                        ] 
+                    # Check if slack is used
+                    if all(x->x > 0.001,vcat(slack...))
+                        if sum(slack[1]) > 0.001
+                            inf_index_EVP[h] = 1
+                        else
+                            inf_index_EVP[h] = 2
+                        end
+                    end
+                else
+                    inf_index_EVP[h] = -1
+                end
+                obj_val_EVP[h] = fitted_sol_EVP.objective
+                cargo_load_EVP[h] = fitted_sol_EVP.n_cargo_loaded
+                ballast_used_EVP[h] = fitted_sol_EVP.ballast_weight
                 #write_solution(fitted_sol_EVP, foldername, "Fitted_Solution_EVP_$(h)", HPC_folder)
                 #if primal_status(EVP_model) == MOI.FEASIBLE_POINT || termination_status(EVP_model) == MOI.OPTIMAL
                 #    write_slack(HPC_folder, foldername, "Fitted_Solution_$(h)", EVP_model)
                 #end
             end
+            # Save results
+            save_EVP_objective_1D(HPC_folder,foldername, "Objective_values", obj_val_EVP)
+            save_EVP_objective_1D(HPC_folder,foldername, "Cargo_loaded", cargo_load_EVP)
+            save_EVP_objective_1D(HPC_folder,foldername, "Ballast_used", ballast_used_EVP)
+            save_EVP_objective_1D(HPC_folder,foldername, "inf_index", inf_index_EVP)
+
             #=
             # Using EVP solution with deterministic weights
             second_stage_m = second_stage_model(cs_sol, problem_det)
@@ -167,5 +231,5 @@ for i in 1:repetitions
             =#
         end
     end
-end
+#end
 

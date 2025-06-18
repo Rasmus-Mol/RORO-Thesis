@@ -639,8 +639,7 @@ function add_stability_no_ballast!(vessel::Vessel, model, pos_weight_cargo, lcg_
 
 	return model
 end
-
-
+	
 # Add stability constraints with slack variables to the model
 # No water allowed in tanks
 function add_stability_slack_no_water!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo, tcg_cargo, vcg_cargo,

@@ -25,7 +25,7 @@ parse_index = parse(Int, ARGS[1])
 #parse_index = 6
 ################
 # Change manually to which problem we are running
-idx = 8
+idx = 4
 ################
 test_instance = Finlandia_test[idx]
 HPC_folder = HPC_folders[idx]

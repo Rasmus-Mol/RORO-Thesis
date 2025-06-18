@@ -1,0 +1,22 @@
+Loaded module: julia/1.11.3
+Loaded module: gurobi/12.0.1
+  Activating project at `~/RORO-Thesis/OliverModelStochastic`
+[ Info: Creating vessel object for 'finlandia'
+[ Info: All required files found, loading vessel data...
+┌ Info: Successfully created vessel object
+│   name = "FINLANDIA"
+└   IMO = 9198721
+[ Info: Simplifying vessel with target points: 50
+ERROR: LoadError: UndefVarError: `JSON` not defined in `Main`
+Suggestion: check for spelling errors or missing imports.
+Hint: JSON is loaded but not imported in the active module Main.
+Stacktrace:
+ [1] (::var"#1#2")(file::IOStream)
+   @ Main ~/RORO-Thesis/OliverModelStochastic/Panic_Model_test.jl:41
+ [2] open(::var"#1#2", ::String, ::Vararg{String}; kwargs::@Kwargs{})
+   @ Base ./io.jl:410
+ [3] open(::Function, ::String, ::String)
+   @ Base ./io.jl:407
+ [4] top-level scope
+   @ ~/RORO-Thesis/OliverModelStochastic/Panic_Model_test.jl:40
+in expression starting at /zhome/e3/5/146953/RORO-Thesis/OliverModelStochastic/Panic_Model_test.jl:40

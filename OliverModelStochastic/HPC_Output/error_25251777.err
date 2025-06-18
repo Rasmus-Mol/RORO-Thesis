@@ -1,0 +1,8 @@
+Loaded module: julia/1.11.3
+Loaded module: gurobi/12.0.1
+  Activating project at `~/RORO-Thesis/OliverModelStochastic`
+
+[3394176] signal 11 (1): Segmentation fault
+in expression starting at none:0
+Allocations: 95053799 (Pool: 95051606; Big: 2193); GC: 64
+/zhome/e3/5/146953/.lsbatch/1750105266.25251777.shell: line 21: 3394176 Segmentation fault      julia Main_Stochastic_finlandia_Final_tests_biasednoise.jl

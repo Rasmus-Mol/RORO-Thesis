@@ -1,12 +1,12 @@
 #!/bin/sh
-#BSUB -J "Stochastic_Model_Tests_BiasedNoise[1-8]"
+#BSUB -J "Stochastic_Model_EVP_boot_instance_4[1-10]"
 #BSUB -o HPC_Output/output_%J.out
 #BSUB -e HPC_Output/error_%J.err
 #BSUB -q hpc
 #BSUB -n 4
 #BSUB -R "rusage[mem=6GB]"
 #BSUB -R "span[hosts=1]"
-#BSUB -W 35:00
+#BSUB -W 20:00
 #BSUB -u s194364@student.dtu.dk
 #BSUB -N 
 # end of BSUB options
@@ -18,4 +18,4 @@ module load gurobi/12.0.1
 
 julia -e 'using Pkg; Pkg.activate("."); Pkg.instantiate()'
 
-julia Main_Stochastic_finlandia_Final_tests_biasednoise.jl $LSB_JOBINDEX 
+julia Main_EVP_boot.jl $LSB_JOBINDEX
