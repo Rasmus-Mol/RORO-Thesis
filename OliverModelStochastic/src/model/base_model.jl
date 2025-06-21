@@ -658,7 +658,9 @@ function add_stability_temp!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo,
         for t in 1:length(vessel.deadweight_tanks))
 	)
 	# Changed 07/04 
-	@expression(model, vcg_total,
+	@variable(model, vcg_total>=0)
+	#@expression(model, vcg_total,
+	@constraint(model,vcg_total == 
 		vcg_cargo + vcg_ballast + vcg_deadweight + 
 		vessel.lightship_vcg * vessel.lighship_weight #vessel.lightship_vcg
 	)
@@ -1024,7 +1026,7 @@ function add_stability_test!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo,
 	#@expression(model, vcg_ballast,
 	#	sum(vcg_slope[t] * ballast_volume[t] for t in 1:n_ballast_tanks)
 	#)
-	@variable(model, vcg_ballast >= 0)
+	@variable(model, vcg_ballast)
 	@constraint(model, vcg_ballast == 
 		sum(vcg_slope[t] * ballast_volume[t] for t in 1:n_ballast_tanks)
 	)
@@ -1033,7 +1035,9 @@ function add_stability_test!(vessel::Vessel, model, pos_weight_cargo, lcg_cargo,
         for t in 1:length(vessel.deadweight_tanks))
 	)
 	# Changed 07/04 
-	@expression(model, vcg_total,
+	@variable(model, vcg_total)
+	#@expression(model, vcg_total,
+	@constraint(model,vcg_total == 
 		vcg_cargo + vcg_ballast + vcg_deadweight + 
 		vessel.lightship_vcg * vessel.lighship_weight #vessel.lightship_vcg
 	)

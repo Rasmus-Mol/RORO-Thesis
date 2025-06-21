@@ -1,5 +1,5 @@
 #!/bin/sh
-#BSUB -J "Stochastic_model_slackdeck_test[1-8]"
+#BSUB -J "Stochastic_model_slackdeck_instance_8[1-5]"
 #BSUB -o HPC_Output/output_%J.out
 #BSUB -e HPC_Output/error_%J.err
 #BSUB -q hpc

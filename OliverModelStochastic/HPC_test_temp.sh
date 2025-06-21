@@ -6,7 +6,7 @@
 #BSUB -n 4
 #BSUB -R "rusage[mem=6GB]"
 #BSUB -R "span[hosts=1]"
-#BSUB -W 10:00
+#BSUB -W 5:00
 #BSUB -u s194364@student.dtu.dk
 #BSUB -N 
 # end of BSUB options

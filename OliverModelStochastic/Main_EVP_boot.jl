@@ -60,7 +60,7 @@ function get_obj_of_evp(foldername::String, filename::String, HPC_folder::String
     return collect(temp)
 end
 
-sol_evp = Array{Any}(nothing, repetitions,sc,n,scenarios[end])
+#sol_evp = Array{Any}(nothing, repetitions,sc,n,scenarios[end])
 #for i in 1:repetitions
 i = parse_index
     for j in 1:sc
@@ -184,7 +184,7 @@ i = parse_index
                         value.(EVP_model[:slack_ballast_tanks])
                         ] 
                     # Check if slack is used
-                    if all(x->x > 0.001,vcat(slack...))
+                    if any(x->x > 0.001,vcat(slack...))
                         if sum(slack[1]) > 0.001
                             inf_index_EVP[h] = 1
                         else
