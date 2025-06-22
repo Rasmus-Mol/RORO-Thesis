@@ -8,8 +8,9 @@ include("src/utils/test_instances.jl")
 using .StowagePlannerStochastic
 using JuMP
 
-parse_index = parse(Int, ARGS[1]) # slack-fraction input
-instance_index = 8 # Which instance to test
+#parse_index = parse(Int, ARGS[1]) # slack-fraction input
+parse_index = 1
+instance_index = 7 # Which instance to test
 # Choose instance:
 test_problem_name = Finlandia_test[instance_index]
 
@@ -19,6 +20,7 @@ problem_det = load_data("finlandia", test_problem_name, "hazardous")
 HPC_folder = "Finlandia_" * test_problem_name * "_SlackDeck1_" * Dates.format(now(), "dd_mm_HH")
 #slack_fraction = [[1.1, 1, 1], [1.3, 1, 1], [1.5, 1, 1]]
 slack_fraction = [[1.1, 1, 1], [1.2,1,1], [1.3, 1, 1], [1.4,1,1], [1.5, 1, 1]]
+
 # Describe tests if necessary
 extra_info = "Ship: Finlandia, Test problem: " * test_problem_name * " - Yes Scenario reduction, Yes noise, Yes EVP, Yes Slack deck limit on deck: $(slack_fraction[parse_index])"
 

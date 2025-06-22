@@ -1,5 +1,5 @@
 #!/bin/sh
-#BSUB -J "Stochastic_model_slackdeck_instance_8[1-5]"
+#BSUB -J "Stochastic_model_slackdeck_instance_7"
 #BSUB -o HPC_Output/output_%J.out
 #BSUB -e HPC_Output/error_%J.err
 #BSUB -q hpc
@@ -18,4 +18,4 @@ module load gurobi/12.0.1
 
 julia -e 'using Pkg; Pkg.activate("."); Pkg.instantiate()'
 
-julia Main_Stochastic_finlandia_slacked_deck_limit.jl $LSB_JOBINDEX 
+julia Main_Stochastic_finlandia_slacked_deck_limit.jl
