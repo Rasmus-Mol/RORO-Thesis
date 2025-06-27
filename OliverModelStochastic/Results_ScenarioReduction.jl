@@ -11,6 +11,58 @@ problemname1, problemname3 = "finlandia", "hazardous"
 for i in 1:8
     Deterministic_problem[i] = load_data(problemname1, Finlandia_test[i], problemname3)
 end
+################################
+vessel = Deterministic_problem[1].vessel
+for i in 1:length(vessel.ballast_tanks)
+    println("Max vcg: ", vessel.ballast_tanks[i].max_vcg)
+    println("My slope: ", round((vessel.ballast_tanks[i].max_vcg - vessel.ballast_tanks[i].min_vcg) / vessel.ballast_tanks[i].max_vol,digits = 2)
+    )
+end
+vessel.ballast_tanks[1].lcg
+vessel.ballast_tanks[1].tcg
+vessel.ballast_tanks[2].min_vcg
+vessel.ballast_tanks[2].max_vcg
+vessel.ballast_tanks[6].max_vol
+length(vessel.ballast_tanks)
+(vessel.ballast_tanks[2].max_vcg-vessel.ballast_tanks[2].min_vcg)/vessel.ballast_tanks[6].max_vol
+HPC_folder = "Finlandia_mixed_light_60_28_05_13/"
+Deterministic_Solution = get_solution_deterministic("Finlandia_deterministic",
+"Deterministic_Solution",HPC_folder)
+#####################
+# What issues does an empty ship have.
+test_problem_name = Finlandia_test[1]
+HPC_folder_load = HPC_folders[1]
+HPC_folder_save = HPC_folder_load
+# Load solution
+det_sol = get_solution_deterministic("Finlandia_deterministic",
+        "Deterministic_Solution", HPC_folder_load)
+det_pro = load_data(problemname1, test_problem_name, problemname3)
+cs_empty = zeros(length(det_pro.cargo),length(det_pro.slots))
+model_empty_no_slack = second_stage_model(cs_empty, det_pro)
+set_time_limit_sec(model_empty_no_slack, 60 * 60) # 60 minutes
+set_silent(model_empty_no_slack)
+optimize!(model_empty_no_slack)
+termination_status(model_empty_no_slack)
+sum(value.(model_empty_no_slack[:ballast_volume]))
+sum(getfield.(det_pro.vessel.ballast_tanks, :max_vol))
+# Different slope
+model_empty_no_slack_old_slope = second_stage_model_different_slope(cs_empty, det_pro)
+set_time_limit_sec(model_empty_no_slack_old_slope, 60 * 60) # 60 minutes
+set_silent(model_empty_no_slack_old_slope)
+optimize!(model_empty_no_slack_old_slope)
+termination_status(model_empty_no_slack_old_slope)
+sum(value.(model_empty_no_slack_old_slope[:ballast_volume]))
+# same ballast water
+println(value.(model_empty_no_slack_old_slope[:ballast_volume]))
+println(value.(model_empty_no_slack[:ballast_volume]))
+# vcg_ballast
+my_slop = calculate_vcg_slopes(det_pro.vessel)
+println(value.(model_empty_no_slack_old_slope[:vcg_ballast]))
+bal = collect(value.(model_empty_no_slack[:ballast_volume]))
+println(sum(my_slop .* bal))
+#################################
+
+# Scenario reduction
 scenarios = [10]
 sc = scenarios[1]
 scenario_reduction = [100,300,500]
@@ -150,37 +202,22 @@ scores
 
 
 ###############
-sol_evp = Array{Any}(nothing, 5,6,7,8)
-nested = [[[ [sol_evp[1,j,k,l] for l in 1:size(sol_evp,4)]
-for k in 1:size(sol_evp,3)]
-for j in 1:size(sol_evp,2)] for i in 1:size(sol_evp,1)]
-
-open("test_EVP.json", "w") do file
-    JSON.print(file, nested, 4)
+test_problem_name = Finlandia_test[1]
+problem_det = load_data("finlandia", test_problem_name, "hazardous")
+problem_det_noise = add_biased_noise_to_test_instance(problem_det)
+pro = create_stochastic_problem(problem_det_noise, 100, length(problem_det.cargo), [], Bootstrap_bookedweight_quantile)
+pro = scenario_reduced(pro, 10, scenario_reduction_clustering, 60)
+mo = create_model_stochastic(pro)
+    set_silent(mo) # removes terminal output
+    set_time_limit_sec(mo, 5*60)
+    optimize!(mo)
+pro = create_stochastic_problem_cars_known(problem_det_noise, 10)
+pro.cargo.items[1].items[50].weight
+pro.cargo.items[2].items[50].weight
+for i in 1:10
+    println(pro.cargo.items[i].items[50].weight)
 end
-function get_obj_of_evp(filename::String)
-    open(filename*".json", "r") do file
-        obj = JSON3.read(read(file, String))#, Vector{Vector{Vector{Vector{Float64}}}})
-        return obj
-    end
-end
-as = get_obj_of_evp("test_EVP")
-ass = to_4d_array(as)
-
-length(as)
-function to_4d_array(nested)
-    dims = (
-        length(nested),
-        length(nested[1]),
-        length(nested[1][1]),
-        length(nested[1][1][1])
-    )
-    A = Array{Any, 4}(undef, dims...)
-    for i in 1:dims[1], j in 1:dims[2], k in 1:dims[3], l in 1:dims[4]
-        A[i, j, k, l] = nested[i][j][k][l]
-    end
-    return A
-end
+problem_det.cargo.items[50].weight
 ###############
 
 function distance_from_original_problem(sto_pro::StochasticStowageProblem, det_pro::StowageProblem)
@@ -297,4 +334,324 @@ function plot_silhouette2(scores::Vector{Float64}, labels::Vector{Int})
         title="Silhouette Scores by Cluster",
         xticks=(tick_positions, tick_labels),
         xrotation=45)  # << Rotate x-axis labels by 45 degrees
+end
+
+########################################################################
+# Load results
+########################################################################
+HPC_folders_det = [
+    "Finlandia_mixed_light_60_28_05_13",
+    "Finlandia_mixed_light_100_28_05_13",
+    "Finlandia_mixed_heavy_60_28_05_14",
+    "Finlandia_mixed_heavy_100_28_05_15",
+    "Finlandia_no_cars_light_60_28_05_16",
+    "Finlandia_no_cars_light_100_28_05_16",
+    "Finlandia_no_cars_heavy_60_28_05_19",
+    "Finlandia_no_cars_heavy_100_28_05_19",
+]
+# load deterministic results
+problemname1, problemname3 = "finlandia", "hazardous"
+Deterministic_Solution = Array{Any}(undef, length(HPC_folders_det))
+Deterministic_problem = Array{Any}(undef, length(HPC_folders_det))
+for i in 1:length(HPC_folders_det)
+    HPC_folder = HPC_folders_det[i]
+    Deterministic_Solution[i] = get_solution_deterministic("Finlandia_deterministic",
+    "Deterministic_Solution", HPC_folder)
+    test_instance = Finlandia_test[i]
+    Deterministic_problem[i] = load_data(problemname1, test_instance, problemname3)
+end
+# load stochastic solutions
+function Get_EVP_results_2D(HPC_folder::String, filename::String)
+    temp = open(joinpath("Results",HPC_folder,filename*".json"), "r") do file
+        JSON3.read(read(file, String))#, Vector{Vector{Float64}})
+    end
+    rows = length(temp)
+    cols = length(temp[1])
+    mat = Array{Any}(undef, rows, cols)
+    for i in 1:rows, j in 1:cols
+        mat[i, j] = temp[i][j]
+    end
+    return mat
+end
+HPC_folders = [
+    "Finlandia_mixed_light_60_sc_100_biasednoise_16_06_22",
+    "Finlandia_mixed_light_100_sc_100_biasednoise_16_06_22",
+    "Finlandia_mixed_heavy_60_sc_100_biasednoise_16_06_22",
+    "Finlandia_mixed_heavy_100_sc_100_biasednoise_16_06_22",
+    "Finlandia_no_cars_light_60_sc_100_biasednoise_16_06_22",
+    "Finlandia_no_cars_light_100_sc_100_biasednoise_17_06_09",
+    "Finlandia_no_cars_heavy_60_sc_100_biasednoise_16_06_22",
+    "Finlandia_no_cars_heavy_100_sc_100_biasednoise_16_06_22",
+]
+
+scenarios = [10]
+repetitions = 5 
+EVP_boot = Array{Any}(undef, length(HPC_folders),repetitions,)
+EVP_boot_matrix = Array{Any}(undef, length(HPC_folders), 4)
+Stochastic_boot = Array{Any}(undef, length(HPC_folders), repetitions)
+Stochastic_boot_fitted = Array{Any}(undef, length(HPC_folders), repetitions)
+
+boot_fitted_slacked = Array{Any}(nothing, length(HPC_folders), repetitions)
+slack_boot = Array{Any}(nothing, length(HPC_folders), repetitions)
+
+for i in 1:length(HPC_folders)
+    test_instance = Finlandia_test[i]
+    HPC_folder = HPC_folders[i]
+    EVP_boot_matrix[i,1] = Get_EVP_results_2D(HPC_folders[i], "Objective_values")
+    EVP_boot_matrix[i,2] = Get_EVP_results_2D(HPC_folders[i], "Ballast_used")
+    EVP_boot_matrix[i,3] = Get_EVP_results_2D(HPC_folders[i], "Cargo_loaded")
+    EVP_boot_matrix[i,4] = Get_EVP_results_2D(HPC_folders[i], "Inf_index")
+    for j in 1:repetitions
+        foldername = "EVP_Bootstrap1_rep$(j)_sc10_unknown$(Deterministic_Solution[i].n_cargo_total)_time3600"
+        filename = "EVP_Solution"
+        EVP_boot[i,j] = get_solution_deterministic(foldername,filename,HPC_folder)
+        foldername = "Stochastic_Bootstrap1_rep$(j)_sc$(10)_unknown$(Deterministic_Solution[i].n_cargo_total)_time3600"
+        filename = "Stochastic_Solution"
+        Stochastic_boot[i,j] = get_solution_stochastic(foldername,
+        filename, HPC_folder)
+        Stochastic_boot_fitted[i,j] = get_solution_deterministic(foldername,
+                    "Fitted_Solution", HPC_folder)
+        # Load slacked
+        if Stochastic_boot_fitted[i,j].status != "OPTIMAL"
+            boot_fitted_slacked[i,j] = get_solution_deterministic(foldername,
+            "Fitted_Solution_slacked", HPC_folder)
+            slack_boot[i,j] = get_slack(foldername, "Fitted_Solution",HPC_folder)
+        end
+    end
+end
+# EVP_matrix: obj,ballast, cargo, infeasibility
+# no infeasibility - all objective values are correct
+corrected_obj = zeros(length(HPC_folders), repetitions, 10)
+base_line_obj = [-500000,-900000,-500000,-900000,-200000,-300000,-200000,-300000 ]
+EVP_inf_count = zeros(length(HPC_folders),repetitions)
+# Some test were maybe infeasible, finding objective value for all tests
+# If test were feasible, objective value is the same
+for i in 1:length(HPC_folders)
+    for j in 1:repetitions
+        for l in 1:10
+            corrected_obj[i,j,l] = get_obj_val(Float64(EVP_boot_matrix[i,3][j,l]), 
+            Deterministic_problem[i], EVP_boot_matrix[i,2][j,l])
+            if abs(corrected_obj[i,j,l] - EVP_boot_matrix[i,1][j,l]) > 0.01
+                EVP_inf_count[i,j] += 1
+            end
+            ## test was infeasible
+            #if EVP_boot_matrix[i,1][j,l] > base_line_obj[i]
+            #    corrected_obj
+            #else
+            #end
+        end
+    end
+end
+EVP_boot_matrix[1,3]
+isnothing(idx_inf[1,1])
+println(EVP_boot_matrix[8,1])
+EVP_boot_matrix[8,1]
+corrected_obj[8,:,:]
+EVP_inf_count
+# EEV
+EEV = dropdims(mean(corrected_obj, dims = 3); dims = 3)
+#EEV_ballast_water = [dropdims(mean(EVP_boot_matrix[i,2], dims = 2);dims=2) for i in 1:length(HPC_folders)]
+sto_obj = zeros(length(HPC_folders), repetitions)
+sto_fitted_obj = zeros(length(HPC_folders), repetitions)
+#sto_ballast_water
+for i in 1:length(HPC_folders)
+    for j in 1:repetitions
+        sto_obj[i,j] = Stochastic_boot[i,j].objective
+        if Stochastic_boot_fitted[i,j].objective == Inf # infeasible
+            println("INF: ", i, j)
+            sto_fitted_obj[i,j] = get_obj_val(
+                Float64(boot_fitted_slacked[i,j].n_cargo_loaded),
+                Deterministic_problem[i],
+                boot_fitted_slacked[i,j].ballast_weight
+            )
+        else # feasible
+            sto_fitted_obj[i,j] = Stochastic_boot_fitted[i,j].objective
+        end
+    end
+end
+(Stochastic_boot_fitted[4,2].ballast_weight+Stochastic_boot_fitted[4,3].ballast_weight+
+Stochastic_boot_fitted[4,4].ballast_weight+Stochastic_boot_fitted[4,5].ballast_weight)/4
+Stochastic_boot_fitted[8,5].objective 
+# Checking unique solutions
+for i in 1:length(HPC_folders)
+    println(length(unique(getfield.(Stochastic_boot[i,:],:cs))))
+end
+
+# comparing ballast water used to deterministic
+ballast_w = Array{Any}(undef, length(HPC_folders))
+for i in 1:length(HPC_folders)
+    temp = getfield.(Stochastic_boot_fitted[i,:], :ballast_weight)
+    temp = filter(x -> x != 0.0, temp) # remove zero ballast water
+    if length(temp)>0
+        ballast_w[i] = mean(temp) - Deterministic_Solution[i].ballast_weight
+    else
+        ballast_w[i] = [0.0]
+    end
+    #for j in 1:repetitions
+    #    if Stochastic_boot_fitted[i,j].ballast_weight == 0.0
+    #        deleteat!(ballast_w[i], j)
+    #        j -= 1
+    #    end
+    #end
+end
+x = [i for i in 1:length(HPC_folders) if ballast_w[i] != [0.0]]
+p = plot(x,round.(filter(x-> x!= [0.0], ballast_w),digits = 3), label = "", 
+    title = "Mean ballast water difference between \n
+    stochastic and deterministic solution",
+    xlabel = "Instance", ylabel = "Difference in ballast water")
+savefig(p, plot_folder*"/Ballast_water_difference.png")
+# VVS
+VSS = EEV .- sto_obj
+#VSS_2 = EEV .- sto_fitted_obj
+getfield.(Stochastic_boot_fitted[7,:],:ballast_weight)
+getfield.(Stochastic_boot[2,:],:gap)
+getfield.(Stochastic_boot[4,:],:gap)
+Stochastic_boot[8,1].n_cargo_loaded
+Stochastic_boot[8,3].n_cargo_loaded
+VSS_ballast_water = 
+EVP_boot_matrix[8,1]
+EEV[8,1]
+VSS
+sto_obj
+# EVPI
+# If value is above zero -> it is because sto_sol was infeasible
+# and infeasible placement was used and constraint was slacked and 
+# solution found was better
+# Dropping the infeasible solutions
+# (4,1) & (8,:)
+EVPI = sto_fitted_obj .- getfield.(Deterministic_Solution[:], :objective)
+EVPI
+EVPI_2 = sto_obj .- getfield.(Deterministic_Solution[:], :objective)
+EVPI_2
+# Plot EVPI
+p1 = boxplot([EVPI[1,:], EVPI[3,:], EVPI[5,:], EVPI[6,:],EVPI[7,:]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["1", "3", "5", "6", "7"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information")
+savefig(p1,plot_folder*"/EVPI_1_3_5_6_7.png")
+p2 = boxplot([EVPI[8,:]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:1, ["8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information")
+savefig(p2,plot_folder*"/EVPI_8.png")
+p3 = boxplot([EVPI[8,2:5]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:1, ["8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information")
+savefig(p3,plot_folder*"/EVPI_8_partly.png")
+p4 = boxplot([EVPI[2,:], EVPI[4,2:5]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2", "4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information")
+savefig(p4,plot_folder*"/EVPI_2_4.png")
+
+######################################################
+# plots VVS
+
+# Create a basic boxplot for the three groups
+p1 = boxplot([VSS[1,:], VSS[3,:], VSS[5,:], VSS[6,:],VSS[7,:]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["1", "3", "5", "6", "7"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution")
+savefig(p1,plot_folder*"/VSS_1_3_5_6_7.png")
+p2 = boxplot([VSS[8,:]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1, ["8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution")
+savefig(p2,plot_folder*"/VSS_8.png")
+p3 = boxplot([VSS[8,2:5]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1, ["8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution")
+savefig(p3,plot_folder*"/VSS_8_partly.png")
+p4 = boxplot([VSS[2,:], VSS[4,:]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2", "4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution")
+savefig(p4,plot_folder*"/VSS_2_4.png")
+
+# results for table
+for i in 1:length(HPC_folders)
+    temp = zeros(repetitions)
+    feasibilit_count = 0
+    inf_reason = zeros(repetitions)
+    for j in 1:repetitions
+        #temp[j] = Stochastic_boot[i,j].gap
+        #temp[j] = Stochastic_boot[i,j].n_cargo_loaded
+        if isnothing(slack_boot[i,j])
+            feasibilit_count +=1
+            temp[j] = Stochastic_boot_fitted[i,j].ballast_weight
+        else
+            temp[j] = boot_fitted_slacked[i,j].ballast_weight
+            if sum(slack_boot[i,j][1])>0
+                inf_reason[j] = 1
+            else
+                inf_reason[j] = 2
+            end
+        end
+    end
+    println("################")
+    #println("Instance $(i) - mean gap: ", round(mean(temp),digits = 4))
+    #println("Instance $(i) - gap std: ", round(std(temp),digits = 2))
+    #println("Instance $(i) - mean cargo loaded: ", round(mean(temp),digits = 4))
+    #if feasibilit_count > 0
+        temp2 = filter(x -> x != 0, temp)
+        println("mean ballast water: ", round(mean(temp2),digits = 2))
+    #end
+    println("Instance $(i) - inf reasons: ", inf_reason)
+end
+
+
+
+# Finds objective value
+base_line_obj = [-500000,-900000,-500000,-900000,-200000,-300000,-200000,-300000 ]
+function get_obj_val(cargo_loaded::Float64, det_pro::StowageProblem, ballast_used::Float64)
+    vessel = det_pro.vessel
+    n_ballast_tanks = length(vessel.ballast_tanks)
+    CSC = sum(vessel.ballast_tanks[t].max_vol for t in 1:n_ballast_tanks)
+	#haz_cargo = [c.hazardous for c in cargo] .!= 18 # Rasmus: Boolean array, why 18?
+	#cost = [CSC for c in cargo]
+	#cost = cost .+ haz_cargo * CSC # Rasmus: Pretty sure this is the pseudo-revenue for the objective function
+	#area = [get_length(cargo[c]) * get_width(cargo[c]) for c in 1:n_cargo]
+    return ballast_used - CSC*cargo_loaded
 end

@@ -118,7 +118,7 @@ i = parse_index
                         value.(EVP_model[:slack_shearMax]), value.(EVP_model[:slack_bendingMax]),
                         value.(EVP_model[:slack_ballast_tanks])
                         ] 
-                    # Check if slack is used
+                    # Check if slack is used - wrong
                     if all(x->x > 0.001,vcat(slack...))
                         if sum(slack[1]) > 0.001
                             inf_index_EVP[h] = 1

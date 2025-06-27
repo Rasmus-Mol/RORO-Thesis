@@ -1,6 +1,29 @@
 include("packages_and_files.jl")
 
 problemname1, problemname3 = "finlandia", "hazardous"
+
+# new results - old results are on USB
+HPC_folders = [
+    "Finlandia_mixed_light_60_28_05_13",
+    "Finlandia_mixed_light_100_28_05_13",
+    "Finlandia_mixed_heavy_60_28_05_14",
+    "Finlandia_mixed_heavy_100_28_05_15",
+    "Finlandia_no_cars_light_60_28_05_16",
+    "Finlandia_no_cars_light_100_28_05_16",
+    "Finlandia_no_cars_heavy_60_28_05_19",
+    "Finlandia_no_cars_heavy_100_28_05_19",
+]
+Det_sol = Array{Any}(undef, length(HPC_folders))
+Det_pro = Array{Any}(undef, length(HPC_folders))
+for l in 1:length(HPC_folders)
+    test_instance = Finlandia_test[l]
+    Det_sol[l] = get_solution_deterministic("Finlandia_deterministic",
+        "Deterministic_Solution", HPC_folders[l])
+    Det_pro[l] = load_data(problemname1, test_instance, problemname3)
+    
+end
+
+
 HPC_folders = [
     "Finlandia_mixed_light_60_15_05_13",
     "Finlandia_mixed_light_100_15_05_15",
@@ -11,6 +34,7 @@ HPC_folders = [
     "Finlandia_no_cars_heavy_60_15_05_10",
     "Finlandia_no_cars_heavy_100_15_05_09",
 ]
+
 no_test1 = 10
 no_test2 = 10
 plot_folder = "Plots/Results/Random_plans/"
@@ -238,12 +262,13 @@ plot!(p2,ones(no_test1)*Det_pro[1].vessel.decks[1].weight_limit, label = "Deck 1
 savefig(p2, plot_folder*"Weight_Deck1_SGM2.png")
 display(p2)
 det_sol_weight_deck1 = []
+no_folders = length(HPC_folders)
 for i in 1:no_folders
     push!(det_sol_weight_deck1, sum([c.weight for c in filter(x -> x.deck==1,Det_sol[i].cargo)]))
 end
 p3 = plot(det_sol_weight_deck1,xlabel = "Instance", ylabel = "Weight (t.)",
     title = "Weight on deck 1 - Deterministic solution", label = "Deterministic solution")
-plot!(p3, ones(no_test1)*Det_pro[1].vessel.decks[1].weight_limit, label = "Deck 1 limit", color = :red, linestyle = :dash)
+plot!(p3, ones(8)*Det_pro[1].vessel.decks[1].weight_limit, label = "Deck 1 limit", color = :red, linestyle = :dash)
 savefig(p3, plot_folder*"Weight_Deck1_Deterministic.png")
 # deck 2 plots
 p1 = plot(weight_deck_2_gen[1,:],label = "Instance 1",xlabel = "Test", ylabel = "Weight (t.)",
@@ -268,7 +293,7 @@ for i in 1:no_folders
 end
 p3 = plot(det_sol_weight_deck2,xlabel = "Instance", ylabel = "Weight (t.)",
     title = "Weight on deck 2 - Deterministic solution", label = "Deterministic solution")
-plot!(p3, ones(no_test1)*Det_pro[1].vessel.decks[2].weight_limit, label = "Deck 2 limit", color = :red, linestyle = :dash)
+plot!(p3, ones(8)*Det_pro[1].vessel.decks[2].weight_limit, label = "Deck 2 limit", color = :red, linestyle = :dash)
 savefig(p3, plot_folder*"Weight_Deck2_Deterministic.png")
 display(p3)
 # deck 3 plots
@@ -277,7 +302,7 @@ p1 = plot(weight_deck_3_gen[1,:],label = "Instance 1",xlabel = "Test", ylabel = 
 for i in 2:no_folders
     plot!(p1,weight_deck_3_gen[i,:],label = "Instance $(i)")
 end
-plot!(ones(no_test1)*Det_pro[1].vessel.decks[3].weight_limit, label = "Deck 3 limit", color = :red, linestyle = :dash)
+plot!(ones(8)*Det_pro[1].vessel.decks[3].weight_limit, label = "Deck 3 limit", color = :red, linestyle = :dash)
 display(p1)
 savefig(p1, plot_folder*"Weight_Deck3_SGM1.png")
 p2 = plot(weight_deck_3_boot[1,:],label = "Instance 1",xlabel = "Test", ylabel = "Weight (t.)",
@@ -285,7 +310,7 @@ p2 = plot(weight_deck_3_boot[1,:],label = "Instance 1",xlabel = "Test", ylabel =
 for i in 2:no_folders
     plot!(p2,weight_deck_3_boot[i,:],label = "Instance $(i)")
 end
-plot!(p2,ones(no_test1)*Det_pro[1].vessel.decks[3].weight_limit, label = "Deck 3 limit", color = :red, linestyle = :dash)
+plot!(p2,ones(8)*Det_pro[1].vessel.decks[3].weight_limit, label = "Deck 3 limit", color = :red, linestyle = :dash)
 savefig(p2, plot_folder*"Weight_Deck3_SGM2.png")
 display(p2)
 det_sol_weight_deck3 = []
@@ -294,7 +319,7 @@ for i in 1:no_folders
 end
 p3 = plot(det_sol_weight_deck3,xlabel = "Instance", ylabel = "Weight (t.)",
     title = "Weight on deck 3 - Deterministic solution", label = "Deterministic solution")
-plot!(p3, ones(no_test1)*Det_pro[1].vessel.decks[3].weight_limit, label = "Deck 3 limit", color = :red, linestyle = :dash)
+plot!(p3, ones(8)*Det_pro[1].vessel.decks[3].weight_limit, label = "Deck 3 limit", color = :red, linestyle = :dash)
 savefig(p3, plot_folder*"Weight_Deck3_Deterministic.png")
 det_sol_weight_deck1[4]
 Det_pro[1].vessel.decks[1].weight_limit

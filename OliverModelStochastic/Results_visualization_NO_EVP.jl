@@ -57,11 +57,27 @@ Stochastic_boot_fitted = Array{Any}(undef, repetitions, sc, n, length(HPC_folder
 
 boot_fitted_slacked = Array{Any}(nothing, repetitions, sc, n, length(HPC_folders))
 gen_fitted_slacked = Array{Any}(nothing, repetitions, sc, n, length(HPC_folders))
-slack_boot= Array{Any}(nothing, repetitions, sc, n, length(HPC_folders))
+slack_boot = Array{Any}(nothing, repetitions, sc, n, length(HPC_folders))
 slack_gen = Array{Any}(nothing, repetitions, sc, n, length(HPC_folders))
 
 Stochastic_problem_gen = Array{Any}(undef, repetitions, sc, n, length(HPC_folders))
 Stochastic_problem_boot = Array{Any}(undef, repetitions, sc, n, length(HPC_folders))
+
+# To get EVP results
+
+function get_obj_of_evp(foldername::String, filename::String, HPC_folder::String)
+    temp = open(joinpath("Results",HPC_folder,foldername,filename*".json"), "r") do file
+        JSON3.read(read(file, String))#, Vector{Vector{Float64}})
+    end
+    return collect(temp)
+end
+# EVP solutions
+EVP_gen = Array{Any}(undef, repetitions, sc, length(HPC_folders))
+EVP_gen_pro = Array{Any}(undef, repetitions, sc, length(HPC_folders))
+EVP_gen_matrix = Array{Any}(undef, repetitions, sc, length(HPC_folders),4)
+EVP_boot = Array{Any}(undef, repetitions, sc, length(HPC_folders))
+EVP_boot_pro = Array{Any}(undef, repetitions, sc, length(HPC_folders))
+EVP_boot_matrix = Array{Any}(undef, repetitions, sc, length(HPC_folders),4)
 
 for l in 1:length(HPC_folders)
         test_instance = Finlandia_test[l]
@@ -78,20 +94,44 @@ for l in 1:length(HPC_folders)
         for j in 1:sc
             for k in 1:n
                 # Solutions
-                # EVP
-                #foldername = "EVP_random_sampling_rep$(i)_sc$(scenarios[j])_unknown$(n_unknown[k])_time$(time_limit)"
-                #filename = "EVP_Solution"
-                #EVP_gen[i,j,k] = get_solution_deterministic(foldername,
-                #filename,HPC_folder)
-                #EVP_gen_fitted[i,j,k] = get_solution_deterministic(foldername,
-                #"Fitted_Solution",HPC_folder)
-                #foldername = "EVP_Bootstrap1_rep$(i)_sc$(scenarios[j])_unknown$(n_unknown[k])_time$(time_limit)"
-                #filename = "EVP_Solution"
-                #EVP_boot[i,j,k] = get_solution_deterministic(foldername,
-                #filename,HPC_folder)
-                #EVP_boot_fitted[i,j,k] = get_solution_deterministic(foldername,
-                #"Fitted_Solution",HPC_folder)
-                # Stochastic
+                # EVP - Gen
+                foldername = "EVP_random_sampling_rep$(i)_sc$(scenarios[j])_unknown$(n_unknown[k])_time$(time_limit)"
+                filename = "EVP_Solution"
+                EVP_gen[i,j,l] = get_solution_deterministic(foldername,
+                filename,HPC_folder)
+                # EVP_matrix: obj,ballast, cargo, infeasibility
+                EVP_gen_matrix[i,j,l,1] = get_obj_of_evp(foldername, 
+                        "Objective_values", HPC_folder)
+                EVP_gen_matrix[i,j,l,2] = get_obj_of_evp(foldername, 
+                        "Ballast_used", HPC_folder)
+                EVP_gen_matrix[i,j,l,3] = get_obj_of_evp(foldername, 
+                        "Cargo_loaded", HPC_folder)
+                # is wrong 
+                EVP_gen_matrix[i,j,l,4] = get_obj_of_evp(foldername, 
+                        "inf_index", HPC_folder)
+                filename = "EVP_Problem"
+                EVP_gen_pro[i,j,l] = (foldername,filename,HPC_folder
+                ,problemname1,test_instance,problemname3)
+                # EVP - Boot
+                foldername = "EVP_Bootstrap1_rep$(i)_sc$(scenarios[j])_unknown$(n_unknown[k])_time$(time_limit)"
+                filename = "EVP_Solution"
+                EVP_boot[i,j,l] = get_solution_deterministic(foldername,
+                filename,HPC_folder)
+                # EVP_matrix: obj,ballast, cargo, infeasibility
+                EVP_boot_matrix[i,j,l,1] = get_obj_of_evp(foldername, 
+                        "Objective_values", HPC_folder)
+                EVP_boot_matrix[i,j,l,2] = get_obj_of_evp(foldername, 
+                        "Ballast_used", HPC_folder)
+                EVP_boot_matrix[i,j,l,3] = get_obj_of_evp(foldername, 
+                        "Cargo_loaded", HPC_folder)
+                # is wrong 
+                EVP_boot_matrix[i,j,l,4] = get_obj_of_evp(foldername, 
+                        "inf_index", HPC_folder)
+                filename = "EVP_Problem"
+                EVP_boot_pro[i,j,l] = (foldername,filename,HPC_folder
+                ,problemname1,test_instance,problemname3)
+
+                # Stochastic - gen
                 foldername = "Stochastic_random_sampling_rep$(i)_sc$(scenarios[j])_unknown$(n_unknown[k])_time$(time_limit)"
                 filename = "Stochastic_Problem"
                 # problem
@@ -132,6 +172,1120 @@ for l in 1:length(HPC_folders)
         end
     end
 end
+plot_folder = "Plots/Results/Finlandia_plots/"
+###############################################
+# EVP solutions, VSS, EVPI
+function get_obj_val(cargo_loaded::Float64, det_pro::StowageProblem, ballast_used::Float64)
+    vessel = det_pro.vessel
+    n_ballast_tanks = length(vessel.ballast_tanks)
+    CSC = sum(vessel.ballast_tanks[t].max_vol for t in 1:n_ballast_tanks)
+	#haz_cargo = [c.hazardous for c in cargo] .!= 18 # Rasmus: Boolean array, why 18?
+	#cost = [CSC for c in cargo]
+	#cost = cost .+ haz_cargo * CSC # Rasmus: Pretty sure this is the pseudo-revenue for the objective function
+	#area = [get_length(cargo[c]) * get_width(cargo[c]) for c in 1:n_cargo]
+    return ballast_used - CSC*cargo_loaded
+end
+corrected_obj_gen = Array{Any}(nothing,repetitions,sc,length(HPC_folders))
+corrected_obj_boot = Array{Any}(nothing,repetitions,sc,length(HPC_folders))
+EEV_gen = zeros(repetitions,sc,length(HPC_folders))
+EEV_boot = zeros(repetitions,sc,length(HPC_folders))
+sto_obj_gen = zeros(repetitions,sc,length(HPC_folders))
+sto_obj_boot = zeros(repetitions,sc,length(HPC_folders))
+sto_obj_fitted_gen = zeros(repetitions,sc,length(HPC_folders))
+sto_obj_fitted_boot = zeros(repetitions,sc,length(HPC_folders))
+VSS_gen = zeros(repetitions,sc,length(HPC_folders))
+VSS_boot = zeros(repetitions,sc,length(HPC_folders))
+EVPI_gen = zeros(repetitions,sc,length(HPC_folders))
+EVPI_boot = zeros(repetitions,sc,length(HPC_folders))
+inf_ind_gen = zeros(sc,length(HPC_folders))
+inf_ind_boot = zeros(sc,length(HPC_folders))
+# EVP_matrix: obj, ballast, cargo, infeasibility
+for i in 1:length(HPC_folders)
+    for j in 1:repetitions
+        for k in 1:sc
+            # fix objective value
+            temp_gen = zeros(scenarios[k])
+            temp_boot = zeros(scenarios[k])
+            for l in 1:scenarios[k]
+                temp_gen[l] = get_obj_val(Float64(EVP_gen_matrix[j,k,i,3][l]), 
+                Deterministic_problem[i], Float64(EVP_gen_matrix[j,k,i,2][l]))
+                temp_boot[l] = get_obj_val(Float64(EVP_boot_matrix[j,k,i,3][l]), 
+                Deterministic_problem[i], Float64(EVP_boot_matrix[j,k,i,2][l]))
+            end
+            corrected_obj_gen[j,k,i] = temp_gen
+            corrected_obj_boot[j,k,i] = temp_boot
+            # Finding EEV
+            EEV_gen[j,k,i] = mean(temp_gen)
+            EEV_boot[j,k,i] = mean(temp_boot)
+            # Saving stochastic solution
+            sto_obj_gen[j,k,i] = Stochastic_gen[j,k,1,i].objective
+            sto_obj_boot[j,k,i] = Stochastic_boot[j,k,1,i].objective
+            if Stochastic_gen_fitted[j,k,1,i].objective == Inf # infeasible
+                #sto_obj_fitted_gen[j,k,i] = get_obj_val(
+                #    Float64(Stochastic_gen_fitted[j,k,1,i].n_cargo_loaded),
+                #    Deterministic_problem[i],
+                #    Float64(Stochastic_gen_fitted[j,k,1,i].ballast_weight)
+                #)
+                sto_obj_fitted_gen[j,k,i] = 0.0
+                inf_ind_gen[k,i] += 1
+            else # feasible
+                #sto_obj_fitted_gen[j,k,i] = Stochastic_gen[j,k,1,i].objective
+                sto_obj_fitted_gen[j,k,i] = Stochastic_gen_fitted[j,k,1,i].objective
+            end
+            if Stochastic_boot_fitted[j,k,1,i].objective == Inf # infeasible
+                #sto_obj_fitted_boot[j,k,i] = get_obj_val(
+                #    Float64(Stochastic_boot_fitted[j,k,1,i].n_cargo_loaded),
+                #    Deterministic_problem[i],
+                #    Float64(Stochastic_boot_fitted[j,k,1,i].ballast_weight)
+                #)
+                sto_obj_fitted_boot[j,k,i] = 0.0
+                inf_ind_boot[k,i] += 1
+            else # feasible
+                #sto_obj_fitted_boot[j,k,i]= Stochastic_boot[j,k,1,i].objective
+                sto_obj_fitted_boot[j,k,i]= Stochastic_boot_fitted[j,k,1,i].objective
+            end
+            # VSS - using original stochastic solution
+            VSS_gen[j,k,i] = EEV_gen[j,k,i] - sto_obj_gen[j,k,i]
+            VSS_boot[j,k,i] = EEV_boot[j,k,i] - sto_obj_boot[j,k,i]
+            # EVPI - using fitted stochastic solution
+            if Stochastic_gen_fitted[j,k,1,i].objective != Inf
+                EVPI_gen[j,k,i] = sto_obj_fitted_gen[j,k,i] - Deterministic_Solution[i].objective
+            end
+            if Stochastic_boot_fitted[j,k,1,i].objective != Inf
+                EVPI_boot[j,k,i] = sto_obj_fitted_boot[j,k,i] - Deterministic_Solution[i].objective
+            end
+        end
+    end
+end
+Stochastic_boot_fitted[1,2,1,1].objective
+
+# plotting VSS
+VSS_boot[:,:,2]
+sto_obj_boot[:,3,2]
+EEV_boot[:,3,2]
+EVP_boot[5,3,2].n_cargo_loaded
+EVP_boot_matrix[5,3,2,2] 
+inf_ind_boot
+
+
+p1 = boxplot([VSS_boot[:,1,1], VSS_boot[:,2,1],VSS_boot[:,3,1],
+        VSS_boot[:,4,1], VSS_boot[:,5,1]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["10", "20", "30", "40", "50"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2 \n Instance 1")
+savefig(p1,plot_folder*"/VSS_boot_i1.png")
+# This one have one weird point, because one of the problem 
+# didn't reach a feasible solution, so that is removed
+temp = vcat(VSS_boot[1:4,3,2], VSS_boot[6:10,3,2])
+p2 = boxplot([VSS_boot[:,1,2], VSS_boot[:,2,2],temp,
+        VSS_boot[:,4,2], VSS_boot[:,5,2]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["10", "20", "30", "40", "50"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2 \n Instance 2")
+savefig(p2,plot_folder*"/VSS_boot_i2.png")
+p3 = boxplot([VSS_boot[:,1,3], VSS_boot[:,2,3],VSS_boot[:,2,3],
+        VSS_boot[:,4,3], VSS_boot[:,5,3]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["10", "20", "30", "40", "50"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2 \n Instance 3")
+savefig(p3,plot_folder*"/VSS_boot_i3.png")
+p4 = boxplot([VSS_boot[:,1,4], VSS_boot[:,2,4],VSS_boot[:,2,4],
+        VSS_boot[:,4,4], VSS_boot[:,5,4]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["10", "20", "30", "40", "50"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2 \n Instance 4")
+savefig(p4,plot_folder*"/VSS_boot_i4.png")
+p5 = boxplot([VSS_boot[:,1,5], VSS_boot[:,2,5],VSS_boot[:,2,5],
+        VSS_boot[:,4,5], VSS_boot[:,5,5]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["10", "20", "30", "40", "50"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2 \n Instance 5")
+savefig(p5,plot_folder*"/VSS_boot_i5.png")
+# Last point again had no solution
+p6 = boxplot([VSS_boot[1:9,1,6], VSS_boot[:,2,6],VSS_boot[:,2,6],
+        VSS_boot[:,4,6], VSS_boot[:,5,6]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["10", "20", "30", "40", "50"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2 \n Instance 6")
+savefig(p6,plot_folder*"/VSS_boot_i6.png")
+p6_2  = boxplot([VSS_boot[1:9,1,6]]; 
+#labels = ["Instance 1", "Instance 3", "Instance 5 C",
+#"Instance 6", "Instance 7"],    # custom labels for each box
+labels = "",
+xticks = (1:1, ["10"]),
+#color = [:teal, :orange, :purple],            # fill colors for the boxes
+xlabel = "Number of scenarios", 
+ylabel = "VSS",           # axis labels
+title = "Value of Stochastic Solution - SGM 2 \n Instance 6, only 10 scenarios")
+savefig(p6_2,plot_folder*"/VSS_boot_i6_2.png")
+
+p7 = boxplot([VSS_boot[:,1,7], VSS_boot[:,2,7],VSS_boot[:,2,7],
+        VSS_boot[:,4,7], VSS_boot[:,5,7]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["10", "20", "30", "40", "50"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2 \n Instance 7")
+savefig(p7,plot_folder*"/VSS_boot_i7.png")
+p7_2 = boxplot([VSS_boot[:,1,7]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:1, ["10"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2 \n Instance 7, only 10 scenarios")
+savefig(p7_2,plot_folder*"/VSS_boot_i7_2.png")
+p8 = boxplot([VSS_boot[:,1,8], VSS_boot[:,2,8],VSS_boot[:,2,8],
+        VSS_boot[:,4,8], VSS_boot[:,5,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["10", "20", "30", "40", "50"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2 \n Instance 8")
+savefig(p8,plot_folder*"/VSS_boot_i8.png")
+p8_2 = boxplot([VSS_boot[:,1,8], VSS_boot[:,2,8],VSS_boot[:,2,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:3, ["10", "20", "30"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2 \n Instance 8, only 10, 20, 30 scenarios")
+savefig(p8_2,plot_folder*"/VSS_boot_i8_2.png")
+# VSS gen
+VSS_gen[:,:,1]
+p1 = boxplot([VSS_gen[:,1,1], VSS_gen[:,2,1],VSS_gen[:,3,1],
+VSS_gen[:,4,1], VSS_gen[:,5,1]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["10", "20", "30", "40", "50"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1 \n Instance 1")
+savefig(p1,plot_folder*"/VSS_gen_i1.png")
+p1_2 = boxplot([VSS_gen[:,1,1], VSS_gen[:,2,1]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["10", "20"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1 \n Instance 1, only 10, 20 scenarios")
+savefig(p1_2,plot_folder*"/VSS_gen_i1_2.png")
+p2 = boxplot([VSS_gen[:,1,2], VSS_gen[:,2,2],VSS_gen[:,3,2],
+VSS_gen[:,4,2], VSS_gen[:,5,2]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["10", "20", "30", "40", "50"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1 \n Instance 2")
+savefig(p2,plot_folder*"/VSS_gen_i2.png")
+p3 = boxplot([VSS_gen[:,1,3], VSS_gen[:,2,3],VSS_gen[:,3,3],
+VSS_gen[:,4,3], VSS_gen[:,5,3]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["10", "20", "30", "40", "50"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1 \n Instance 3")
+savefig(p3,plot_folder*"/VSS_gen_i3.png")
+p3_2 = boxplot([VSS_gen[:,1,3], VSS_gen[:,2,3],VSS_gen[:,3,3],
+VSS_gen[:,4,3]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["10", "20", "30", "40", "50"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1 \n Instance 3, only 10,20,30,40 scenarios")
+savefig(p3_2,plot_folder*"/VSS_gen_i3_2.png")
+# One was infeasible
+temp = vcat(VSS_gen[1:3,5,4], VSS_gen[5:10,5,4])
+p4 = boxplot([VSS_gen[:,1,4], VSS_gen[:,2,4],VSS_gen[:,3,4],
+VSS_gen[:,4,4], temp]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["10", "20", "30", "40", "50"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1 \n Instance 4")
+savefig(p4,plot_folder*"/VSS_gen_i4.png")
+p5 = boxplot([VSS_gen[:,1,5], VSS_gen[:,2,5],VSS_gen[:,3,5],
+VSS_gen[:,4,5], VSS_gen[:,5,5]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["10", "20", "30", "40", "50"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1 \n Instance 5")
+savefig(p5,plot_folder*"/VSS_gen_i5.png")
+p5_2 = boxplot([VSS_gen[:,1,5]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:1, ["10"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1 \n Instance 5, only 10 scenarios")
+savefig(p5_2,plot_folder*"/VSS_gen_i5_2.png")
+p6 = boxplot([VSS_gen[:,1,6], VSS_gen[:,2,6],VSS_gen[:,3,6],
+VSS_gen[:,4,6], VSS_gen[:,5,6]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["10", "20", "30", "40", "50"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1 \n Instance 6")
+savefig(p6,plot_folder*"/VSS_gen_i6.png")
+p6_2 = boxplot([VSS_gen[:,1,6], VSS_gen[:,2,6]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["10", "20"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1 \n Instance 6, only 10,20 scenarios")
+savefig(p6_2,plot_folder*"/VSS_gen_i6_2.png")
+p7 = boxplot([VSS_gen[:,1,7], VSS_gen[:,2,7],VSS_gen[:,3,7],
+VSS_gen[:,4,7], VSS_gen[:,5,7]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["10", "20", "30", "40", "50"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1 \n Instance 7")
+savefig(p7,plot_folder*"/VSS_gen_i7.png")
+p7_2 = boxplot([VSS_gen[:,1,7]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:1, ["10"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1 \n Instance 7, only 10 scenarios")
+savefig(p7_2,plot_folder*"/VSS_gen_i7_2.png")
+p8 = boxplot([VSS_gen[:,1,8], VSS_gen[:,2,8],VSS_gen[:,3,8],
+VSS_gen[:,4,8], VSS_gen[:,5,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["10", "20", "30", "40", "50"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1 \n Instance 8")
+savefig(p8,plot_folder*"/VSS_gen_i8.png")
+p8_2 = boxplot([VSS_gen[:,1,8], VSS_gen[:,2,8],VSS_gen[:,3,8],
+VSS_gen[:,4,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:4, ["10", "20", "30", "40"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Number of scenarios", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1 \n Instance 8, only 10,20,30,40 scenarios")
+savefig(p8_2,plot_folder*"/VSS_gen_i8_2.png")
+#########################################################################
+#########################################################################
+# VSS only 10 scenarios - gen
+p_10 = boxplot([VSS_gen[:,1,1],VSS_gen[:,1,3], VSS_gen[:,1,5], #VSS_gen[:,1,6],
+VSS_gen[:,1,7]];#, VSS_gen[:,1,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:4, ["1","3","5","7"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1")
+savefig(p_10,plot_folder*"/VSS_gen_10scenarios_1.png")
+p_10_2 = boxplot([VSS_gen[:,1,6],VSS_gen[:,1,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["6","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1")
+savefig(p_10_2,plot_folder*"/VSS_gen_10scenarios_2.png")
+p_10_3 = boxplot([VSS_gen[:,1,2],VSS_gen[:,1,4]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2","4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1")
+savefig(p_10_3,plot_folder*"/VSS_gen_10scenarios_3.png")
+#########################################################################
+#########################################################################
+plot_folder_extra = plot_folder*"extra_plots/"
+if !isdir(plot_folder_extra)
+    mkpath(plot_folder_extra)
+end
+# VSS only 20 scenarios - gen
+p = boxplot([VSS_gen[:,2,1],VSS_gen[:,2,2],VSS_gen[:,2,3],VSS_gen[:,2,4], VSS_gen[:,2,5], VSS_gen[:,2,6],
+VSS_gen[:,2,7], VSS_gen[:,2,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:8, ["1","2","3","4","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1")
+p_20_1 = boxplot([VSS_gen[:,2,1],VSS_gen[:,2,3], VSS_gen[:,2,5], VSS_gen[:,2,6],
+VSS_gen[:,2,7], VSS_gen[:,2,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:6, ["1","3","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1")
+savefig(p_20_1,plot_folder_extra*"/VSS_gen_20scenarios_1.png")
+p_20_2 = boxplot([VSS_gen[:,2,2],VSS_gen[:,2,4]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2","4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1")
+savefig(p_20_2,plot_folder_extra*"/VSS_gen_20scenarios_2.png")
+# VSS only 30 scenarios - gen
+p = boxplot([VSS_gen[:,3,1],VSS_gen[:,3,2],VSS_gen[:,3,3],VSS_gen[:,3,4], VSS_gen[:,3,5], VSS_gen[:,3,6],
+VSS_gen[:,3,7], VSS_gen[:,3,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:8, ["1","2","3","4","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1")
+p_30_1 = boxplot([VSS_gen[:,3,1],VSS_gen[:,3,3], VSS_gen[:,3,5], VSS_gen[:,3,6],
+VSS_gen[:,3,7], VSS_gen[:,3,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:6, ["1","3","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1")
+savefig(p_30_1,plot_folder_extra*"/VSS_gen_30scenarios_1.png")
+p_30_2 = boxplot([VSS_gen[:,3,2],VSS_gen[:,3,4]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2","4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1")
+savefig(p_30_2,plot_folder_extra*"/VSS_gen_30scenarios_2.png")
+# VSS only 40 scenarios - gen
+p = boxplot([VSS_gen[:,4,1],VSS_gen[:,4,2],VSS_gen[:,4,3],VSS_gen[:,4,4], VSS_gen[:,4,5], VSS_gen[:,4,6],
+VSS_gen[:,4,7], VSS_gen[:,4,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:8, ["1","2","3","4","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1")
+p_40_1 = boxplot([VSS_gen[:,4,1],VSS_gen[:,4,3], VSS_gen[:,4,5], VSS_gen[:,4,6],
+VSS_gen[:,4,7], VSS_gen[:,4,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:6, ["1","3","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1")
+savefig(p_40_1,plot_folder_extra*"/VSS_gen_40scenarios_1.png")
+p_40_2 = boxplot([VSS_gen[:,4,2],VSS_gen[:,4,4]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2","4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1")
+savefig(p_40_2,plot_folder_extra*"/VSS_gen_40scenarios_2.png")
+# VSS only 50 scenarios - gen
+p = boxplot([VSS_gen[:,5,1],VSS_gen[:,5,2],VSS_gen[:,5,3],VSS_gen[:,5,4], VSS_gen[:,5,5], VSS_gen[:,5,6],
+VSS_gen[:,5,7], VSS_gen[:,5,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:8, ["1","2","3","4","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1")
+p_50_1 = boxplot([VSS_gen[:,5,1],VSS_gen[:,5,3], VSS_gen[:,5,5], VSS_gen[:,5,6],
+VSS_gen[:,5,7], VSS_gen[:,5,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:6, ["1","3","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1")
+savefig(p_50_1,plot_folder_extra*"/VSS_gen_50scenarios_1.png")
+println(VSS_gen[:,5,4])
+temp = vcat(VSS_gen[1:3,5,4],VSS_gen[5:10,5,4])
+p_50_2 = boxplot([VSS_gen[:,5,2],temp]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2","4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 1")
+savefig(p_50_2,plot_folder_extra*"/VSS_gen_50scenarios_2.png")
+#########################################################################
+#########################################################################
+# VSS only 10 scenarios - boot
+temp = VSS_boot[1:9,1,6]
+p_10 = boxplot([VSS_boot[:,1,1],VSS_boot[:,1,3], VSS_boot[:,1,5], temp, #VSS_gen[:,1,6],
+VSS_boot[:,1,7]];#, VSS_gen[:,1,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["1","3","5","6","7"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2")
+savefig(p_10,plot_folder*"/VSS_boot_10scenarios_1.png")
+# one was infeasible
+println(VSS_boot[:,1,6])
+temp = VSS_boot[1:9,1,6]
+p_10_2 = boxplot([VSS_boot[:,1,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:1, ["8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2")
+savefig(p_10_2,plot_folder*"/VSS_boot_10scenarios_2.png")
+p_10_3 = boxplot([VSS_boot[:,1,2],VSS_boot[:,1,4]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2","4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2")
+savefig(p_10_3,plot_folder*"/VSS_boot_10scenarios_3.png")
+# VSS only 20 scenarios - boot
+p = boxplot([VSS_boot[:,2,1],VSS_boot[:,2,2],VSS_boot[:,2,3],VSS_boot[:,2,4], VSS_boot[:,2,5], 
+VSS_boot[:,2,6],VSS_boot[:,2,7], VSS_boot[:,2,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:8, ["1","2","3","4","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2")
+p_20_1 = boxplot([VSS_boot[:,2,1],VSS_boot[:,2,3], VSS_boot[:,2,5], VSS_boot[:,2,6],
+VSS_boot[:,2,7], VSS_boot[:,2,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:6, ["1","3","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2")
+savefig(p_20_1,plot_folder_extra*"/VSS_boot_20scenarios_1.png")
+p_20_2 = boxplot([VSS_boot[:,2,2],VSS_boot[:,2,4]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2","4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2")
+savefig(p_20_2,plot_folder_extra*"/VSS_boot_20scenarios_2.png")
+# VSS only 30 scenarios - boot
+p = boxplot([VSS_boot[:,3,1],VSS_boot[:,3,2],VSS_boot[:,3,3],VSS_boot[:,3,4], VSS_boot[:,3,5], 
+VSS_boot[:,3,6],VSS_boot[:,3,7], VSS_boot[:,3,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:8, ["1","2","3","4","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2")
+p_30_1 = boxplot([VSS_boot[:,3,1],VSS_boot[:,3,3], VSS_boot[:,3,5], VSS_boot[:,3,6],
+VSS_boot[:,3,7], VSS_boot[:,3,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:6, ["1","3","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2")
+savefig(p_30_1,plot_folder_extra*"/VSS_boot_30scenarios_1.png")
+println(VSS_boot[:,3,2])
+temp = vcat(VSS_boot[1:4,3,2], VSS_boot[6:10,3,2])
+p_30_2 = boxplot([temp,VSS_boot[:,3,4]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2","4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2")
+savefig(p_30_2,plot_folder_extra*"/VSS_boot_30scenarios_2.png")
+# VSS only 40 scenarios - boot
+p = boxplot([VSS_boot[:,4,1],VSS_boot[:,4,2],VSS_boot[:,4,3],VSS_boot[:,4,4], VSS_boot[:,4,5], 
+VSS_boot[:,4,6],VSS_boot[:,4,7], VSS_boot[:,4,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:8, ["1","2","3","4","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2")
+p_40_1 = boxplot([VSS_boot[:,4,1],VSS_boot[:,4,3], VSS_boot[:,4,5], VSS_boot[:,4,6],
+VSS_boot[:,4,7], VSS_boot[:,4,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:6, ["1","3","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2")
+savefig(p_40_1,plot_folder_extra*"/VSS_boot_40scenarios_1.png")
+println(VSS_boot[:,3,2])
+temp = vcat(VSS_boot[1:4,3,2], VSS_boot[6:10,3,2])
+p_40_2 = boxplot([VSS_boot[:,4,2],VSS_boot[:,4,4]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2","4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2")
+savefig(p_40_2,plot_folder_extra*"/VSS_boot_40scenarios_2.png")
+# VSS only 50 scenarios - boot
+p = boxplot([VSS_boot[:,5,1],VSS_boot[:,5,2],VSS_boot[:,5,3],VSS_boot[:,5,4], VSS_boot[:,5,5], 
+VSS_boot[:,5,6],VSS_boot[:,5,7], VSS_boot[:,5,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:8, ["1","2","3","4","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2")
+p_50_1 = boxplot([VSS_boot[:,5,1],VSS_boot[:,5,3], VSS_boot[:,5,5], VSS_boot[:,5,6],
+VSS_boot[:,5,7], VSS_boot[:,5,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:6, ["1","3","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2")
+savefig(p_50_1,plot_folder_extra*"/VSS_boot_50scenarios_1.png")
+p_50_2 = boxplot([VSS_boot[:,5,2],VSS_boot[:,5,4]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2","4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "VSS",           # axis labels
+        title = "Value of Stochastic Solution - SGM 2")
+savefig(p_50_2,plot_folder_extra*"/VSS_boot_50scenarios_2.png")
+
+#####################################################################################
+#####################################################################################
+#####################################################################################
+# plot EVPI
+println(EVPI_boot[:,1,7])
+println(EVPI_boot[5,1,7])
+println(sto_obj_fitted_boot[5,1,7])
+
+# 10 scenarios - boot
+# one was infeasible
+temp = vcat(EVPI_boot[1:4,1,7], EVPI_boot[6:10,1,7])
+temp = EVPI_boot[[1:4],1,7]
+p_10 = boxplot([EVPI_boot[:,1,1],#EVPI_boot[:,1,2], EVPI_boot[:,1,3],#EVPI_boot[:,1,4],
+EVPI_boot[:,1,5], EVPI_boot[:,1,6],temp,
+#EVPI_boot[:,1,8]
+]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["1","3","5","6","7"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 2\n 10 scenarios")
+savefig(p_10,plot_folder*"/EVPI_boot_10scenarios_1.png")
+p_10_1 = boxplot([EVPI_boot[:,1,2], EVPI_boot[:,1,4]];#,
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2","4",]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 2\n 10 scenarios")
+savefig(p_10_1,plot_folder*"/EVPI_boot_10scenarios_2.png")
+# is infeasible
+p_10_2 = boxplot([sto_obj_fitted_boot[:,1,8] .- Deterministic_Solution[8].objective];#,
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:1, ["8",]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 2\n 10 scenarios")
+savefig(p_10_2,plot_folder*"/EVPI_boot_10scenarios_3_instance8_is_infeasible.png")
+
+###### EVPI 20 scenarios - boot
+p = boxplot([EVPI_boot[:,2,1],EVPI_boot[:,2,2], EVPI_boot[:,2,3],EVPI_boot[:,2,4],
+    EVPI_boot[:,2,5], EVPI_boot[:,2,6],EVPI_boot[:,2,7],EVPI_boot[:,2,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:8, ["1","2","3","4","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 2\n 10 scenarios")
+EVPI_boot[:,2,1]
+p_20_1 = boxplot([EVPI_boot[:,2,1], EVPI_boot[:,2,3],
+            EVPI_boot[:,2,5], EVPI_boot[:,2,6],EVPI_boot[:,2,7]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["1","3","5","6","7"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 2\n 20 scenarios")
+savefig(p_20_1,plot_folder_extra*"/EVPI_boot_20scenarios_1.png")
+p_20_2 = boxplot([EVPI_boot[:,2,2], EVPI_boot[:,2,4]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2","4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 2\n 20 scenarios")
+savefig(p_20_2,plot_folder_extra*"/EVPI_boot_20scenarios_2.png")
+
+###### EVPI 30 scenarios - boot
+p = boxplot([EVPI_boot[:,3,1],EVPI_boot[:,3,2], EVPI_boot[:,3,3],EVPI_boot[:,3,4],
+    EVPI_boot[:,3,5], EVPI_boot[:,3,6],EVPI_boot[:,3,7],EVPI_boot[:,3,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:8, ["1","2","3","4","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 2\n 10 scenarios")
+p_30_1 = boxplot([EVPI_boot[:,3,1], EVPI_boot[:,3,3],
+            EVPI_boot[:,3,5], EVPI_boot[:,3,6],EVPI_boot[:,3,7]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["1","3","5","6","7"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 2\n 30 scenarios")
+savefig(p_30_1,plot_folder_extra*"/EVPI_boot_30scenarios_1.png")
+p_30_2 = boxplot([EVPI_boot[:,3,2], EVPI_boot[:,3,4]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2","4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 2\n 30 scenarios")
+savefig(p_30_2,plot_folder_extra*"/EVPI_boot_30scenarios_2.png")
+
+###### EVPI 40 scenarios - boot
+p = boxplot([EVPI_boot[:,4,1],EVPI_boot[:,4,2], EVPI_boot[:,4,3],EVPI_boot[:,4,4],
+    EVPI_boot[:,4,5], EVPI_boot[:,4,6],EVPI_boot[:,4,7],EVPI_boot[:,4,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:8, ["1","2","3","4","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 2\n 40 scenarios")
+println(EVPI_boot[:,4,8])
+temp = vcat(EVPI_boot[8,4,8],EVPI_boot[10,4,8])
+p_40_1 = boxplot([EVPI_boot[:,4,1], EVPI_boot[:,4,3],
+            EVPI_boot[:,4,5], EVPI_boot[:,4,6],EVPI_boot[:,4,7],temp]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:6, ["1","3","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 2\n 40 scenarios")
+savefig(p_40_1,plot_folder_extra*"/EVPI_boot_40scenarios_1.png")
+p_40_2 = boxplot([EVPI_boot[:,4,2], EVPI_boot[:,4,4]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2","4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 2\n 40 scenarios")
+savefig(p_40_2,plot_folder_extra*"/EVPI_boot_40scenarios_2.png")
+
+###### EVPI 50 scenarios - boot
+p = boxplot([EVPI_boot[:,5,1],EVPI_boot[:,5,2], EVPI_boot[:,5,3],EVPI_boot[:,5,4],
+    EVPI_boot[:,5,5], EVPI_boot[:,5,6],EVPI_boot[:,5,7],EVPI_boot[:,5,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:8, ["1","2","3","4","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 2\n 50 scenarios")
+println(EVPI_boot[:,5,8])
+temp = vcat(EVPI_boot[3,5,8],EVPI_boot[9,5,8],EVPI_boot[10,5,8])
+p_50_1 = boxplot([EVPI_boot[:,5,1], EVPI_boot[:,5,3],
+            EVPI_boot[:,5,5], EVPI_boot[:,5,6],EVPI_boot[:,5,7]];#,temp]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["1","3","5","6","7"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 2\n 50 scenarios")
+savefig(p_50_1,plot_folder_extra*"/EVPI_boot_50scenarios_1.png")
+p_50_2 = boxplot([EVPI_boot[:,5,2], EVPI_boot[:,5,4],temp]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:3, ["2","4","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 2\n 50 scenarios")
+savefig(p_50_2,plot_folder_extra*"/EVPI_boot_50scenarios_2.png")
+
+
+###################################################################
+###################################################################
+###################################################################
+# 10 scenarios - gen
+EVPI_gen[:,1,6]
+p_10 = boxplot([EVPI_gen[:,1,1],#EVPI_gen[:,1,2], 
+EVPI_gen[:,1,3],#EVPI_gen[:,1,4],
+EVPI_gen[:,1,5],EVPI_gen[:,1,7],
+#EVPI_boot[:,1,8]
+]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:4, ["1","3","5","7"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 1\n 10 scenarios")
+savefig(p_10,plot_folder*"/EVPI_gen_10scenarios_1.png")
+p_10_2 = boxplot([EVPI_gen[:,1,6]
+]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:1, ["6"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 1\n 10 scenarios")
+savefig(p_10_2,plot_folder*"/EVPI_gen_10scenarios_2.png")
+p_10_3 = boxplot([EVPI_gen[:,1,2], EVPI_gen[:,1,4]
+]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2","4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 1\n 10 scenarios")
+savefig(p_10_3,plot_folder*"/EVPI_gen_10scenarios_3.png")
+
+###### EVPI 20 scenarios - gen
+p = boxplot([EVPI_gen[:,2,1],EVPI_gen[:,2,2], EVPI_gen[:,2,3],EVPI_gen[:,2,4],
+    EVPI_gen[:,2,5], EVPI_gen[:,2,6],EVPI_gen[:,2,7],EVPI_gen[:,2,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:8, ["1","2","3","4","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 1\n 20 scenarios")
+p_20_1 = boxplot([EVPI_gen[:,2,1], EVPI_gen[:,2,3],
+    EVPI_gen[:,2,5], EVPI_gen[:,2,6],EVPI_gen[:,2,7]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["1","3","5","6","7"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 1\n 20 scenarios")
+savefig(p_20_1,plot_folder_extra*"/EVPI_gen_20scenarios_1.png")
+p_20_2 = boxplot([EVPI_gen[:,2,2], EVPI_gen[:,2,4]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2","4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 1\n 20 scenarios")
+savefig(p_20_2,plot_folder_extra*"/EVPI_gen_20scenarios_2.png")
+
+###### EVPI 30 scenarios - gen
+p = boxplot([EVPI_gen[:,3,1],EVPI_gen[:,3,2], EVPI_gen[:,3,3],EVPI_gen[:,3,4],
+    EVPI_gen[:,3,5], EVPI_gen[:,3,6],EVPI_gen[:,3,7],EVPI_gen[:,3,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:8, ["1","2","3","4","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 1\n 30 scenarios")
+p_30_1 = boxplot([EVPI_gen[:,3,1], EVPI_gen[:,3,3],
+    EVPI_gen[:,3,5], EVPI_gen[:,3,6],EVPI_gen[:,3,7]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["1","3","5","6","7"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 1\n 30 scenarios")
+savefig(p_30_1,plot_folder_extra*"/EVPI_gen_30scenarios_1.png")
+p_30_2 = boxplot([EVPI_gen[:,3,2], EVPI_gen[:,3,4]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2","4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 1\n 30 scenarios")
+savefig(p_30_2,plot_folder_extra*"/EVPI_gen_30scenarios_2.png")
+
+###### EVPI 40 scenarios - gen
+p = boxplot([EVPI_gen[:,4,1],EVPI_gen[:,4,2], EVPI_gen[:,4,3],EVPI_gen[:,4,4],
+    EVPI_gen[:,4,5], EVPI_gen[:,4,6],EVPI_gen[:,4,7],EVPI_gen[:,4,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:8, ["1","2","3","4","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 1\n 40 scenarios")
+p_40_1 = boxplot([EVPI_gen[:,4,1], EVPI_gen[:,4,3],
+    EVPI_gen[:,4,5], EVPI_gen[:,4,6],EVPI_gen[:,4,7]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:5, ["1","3","5","6","7"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 1\n 40 scenarios")
+savefig(p_40_1,plot_folder_extra*"/EVPI_gen_40scenarios_1.png")
+p_40_2 = boxplot([EVPI_gen[:,4,2], EVPI_gen[:,4,4]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:2, ["2","4"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 1\n 40 scenarios")
+savefig(p_40_2,plot_folder_extra*"/EVPI_gen_40scenarios_2.png")
+
+###### EVPI 50 scenarios - gen
+p = boxplot([EVPI_gen[:,5,1],EVPI_gen[:,5,2], EVPI_gen[:,5,3],EVPI_gen[:,5,4],
+    EVPI_gen[:,5,5], EVPI_gen[:,5,6],EVPI_gen[:,5,7],EVPI_gen[:,5,8]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:8, ["1","2","3","4","5","6","7","8"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 1\n 50 scenarios")
+p_50_1 = boxplot([EVPI_gen[:,5,1], EVPI_gen[:,5,3],
+    EVPI_gen[:,5,5], #EVPI_gen[:,5,6],
+    EVPI_gen[:,5,7]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:4, ["1","3","5","7"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 1\n 50 scenarios")
+savefig(p_50_1,plot_folder_extra*"/EVPI_gen_50scenarios_1.png")
+p_50_2 = boxplot([EVPI_gen[:,4,2], EVPI_gen[:,4,4],EVPI_gen[:,5,6]]; 
+        #labels = ["Instance 1", "Instance 3", "Instance 5 C",
+        #"Instance 6", "Instance 7"],    # custom labels for each box
+        labels = "",
+        xticks = (1:3, ["2","4","6"]),
+        #color = [:teal, :orange, :purple],            # fill colors for the boxes
+        xlabel = "Instance", 
+        ylabel = "EVPI",           # axis labels
+        title = "Expected Value of Perfect Information - SGM 1\n 50 scenarios")
+savefig(p_50_2,plot_folder_extra*"/EVPI_gen_50scenarios_2.png")
+
+
+###################################################################
+###################################################################
+###################################################################
+###################################################################
+
+# comparing ballast water used to deterministic
+ballast_w_boot = Array{Any}(undef, length(HPC_folders))
+ballast_w_gen = Array{Any}(undef, length(HPC_folders))
+for i in 1:length(HPC_folders)
+    temp = getfield.(Stochastic_boot_fitted[:,1,1,i], :ballast_weight)
+    temp = filter(x -> x != 0.0, temp) # remove zero ballast water which is from infeasible solutions
+    if length(temp)>0
+        ballast_w_boot[i] = mean(temp) - Deterministic_Solution[i].ballast_weight
+    else
+        ballast_w_boot[i] = [0.0]
+    end
+    temp = getfield.(Stochastic_gen_fitted[:,1,1,i], :ballast_weight)
+    temp = filter(x -> x != 0.0, temp) # remove zero ballast water which is from infeasible solutions
+    if length(temp)>0
+        ballast_w_gen[i] = mean(temp) - Deterministic_Solution[i].ballast_weight
+    else
+        ballast_w_gen[i] = [0.0]
+    end
+end
+println(ballast_w_boot)
+println(ballast_w_gen)
+p = plot(ballast_w_boot[1:7], title = "Mean ballast water difference between\nstochastic and deterministic solution",
+label = "SGM 2", xlabel = "Instance", ylabel = "Difference in ballast water")
+plot!(p, ballast_w_gen[1:7], label = "SGM 1")
+savefig(p, plot_folder*"/ballast_water_difference_10.png")
+
+
+
+##############################################################################
+##############################################################################
+##############################################################################
+##############################################################################
+##############################################################################
+##############################################################################
 # plot 
 plot_folder = "Plots/Results/Finlandia_plots/"
 # Create folder for plots
@@ -148,6 +1302,8 @@ ballast_water_boot = Array{Any}(undef,repetitions, sc,length(HPC_folders))
 ballast_water_gen = Array{Any}(undef,repetitions, sc,length(HPC_folders))
 objective_val_gen = zeros(repetitions, sc,length(HPC_folders))
 objective_val_boot = zeros(repetitions, sc,length(HPC_folders))
+time_gen = zeros(repetitions, sc,length(HPC_folders))
+time_boot = zeros(repetitions, sc,length(HPC_folders))
 for l in 1:length(HPC_folders)
     for i in 1:repetitions
         for j in 1:sc
@@ -172,6 +1328,9 @@ for l in 1:length(HPC_folders)
             # 
             objective_val_gen[i, j,l] = Stochastic_gen[i, j, 1,l].objective
             objective_val_boot[i, j,l] = Stochastic_boot[i, j, 1,l].objective
+
+            time_gen[i, j,l] = Stochastic_gen[i, j, 1,l].time
+            time_boot[i, j,l] = Stochastic_boot[i, j, 1,l].time
         end
     end
 end
@@ -184,6 +1343,7 @@ mean_diff_gen = means_gen_light .- mean_heavy_gen
 
 pvalues_gen = zeros(sc,length(light_rows))
 pvalues_boot = zeros(sc,length(light_rows))
+conf_int = Array{Any}(undef, sc, length(light_rows))
 for i in 1:length(light_rows)
     for j in 1:sc
         x1 = gaps_gen[:,j,light_rows[i]]
@@ -197,13 +1357,64 @@ for i in 1:length(light_rows)
         x2 = gaps_boot[:,j,heavy_rows[i]]
         t_test = EqualVarianceTTest(x1, x2)
         pvalues_boot[j,i] = round(pvalue(t_test),digits=4)
+        conf_int[j,i] = round.(confint(t_test),digits=4)
         if pvalues_boot[j,i] < 0.05
             println("Instance $(light_rows[i]) and $(heavy_rows[i]) are significantly different for scenario $(j) with p-value: ", pvalues_boot[j,i])
         end
     end
 end 
+x1 = gaps_boot[:,1,light_rows[2]]
+x2 = gaps_boot[:,1,heavy_rows[2]]
+t_test = EqualVarianceTTest(x1, x2)
+t_test2 = UnequalVarianceTTest(x1, x2)
+round.(confint(t_test))
+confint(t_test)
+round(pvalue(t_test),digits=4)
 pretty_table(pvalues_gen)
 pretty_table(pvalues_boot)
+pretty_table(conf_int[:,[2,4]])
+println(conf_int)
+
+
+mean_time_gen = dropdims(mean(time_gen,dims=1),dims =1)
+mean_time_boot = dropdims(mean(time_boot,dims=1),dims = 1)
+p = plot([i for i in 1:length(HPC_folders)],
+    mean_time_gen[1,:],
+    title = "Mean time for solving stochastic problem - SGM 1",
+    xlabel = "Instance",
+    ylabel = "Time (s)",
+    label = "10 scenarios",
+)
+for j in 2:sc
+    plot!(p,[i for i in 1:length(HPC_folders)],
+    mean_time_gen[j,:],
+    title = "Mean time for solving stochastic problem - SGM 1",
+    xlabel = "Instance",
+    ylabel = "Time (s)",
+    label = "$(scenarios[j]) scenarios",
+)
+end
+display(p)
+savefig(p, plot_folder*"/MeanTime_gen.png")
+p1 = plot([i for i in 1:length(HPC_folders)],
+    mean_time_boot[1,:],
+    title = "Mean time for solving stochastic problem - SGM 2",
+    xlabel = "Instance",
+    ylabel = "Time (s)",
+    label = "10 scenarios",
+)
+for j in 2:sc
+    plot!(p1,[i for i in 1:length(HPC_folders)],
+    mean_time_boot[j,:],
+    title = "Mean time for solving stochastic problem - SGM 2",
+    xlabel = "Instance",
+    ylabel = "Time (s)",
+    label = "$(scenarios[j]) scenarios",
+)
+end
+display(p1)
+savefig(p1, plot_folder*"/MeanTime_boot.png")
+
 
 # One test is fucked - running same problem through HPC again to see if it happens again
 getfield.(Stochastic_boot[:,5,1,8], :n_cargo_loaded)
@@ -492,6 +1703,8 @@ for i in 1:length(HPC_folders)
         end
     end
 end
+
+######################################################
 
 # Scenarios
 plot_folder_scenarios = "Plots/Data/Scenarios/"
